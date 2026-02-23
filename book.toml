@@ -1,0 +1,6 @@
+[book]
+title = "Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路"
+authors = ["Yii Chen", "Dorara"]
+language = "zh-TW"
+multilingual = false
+src = "src"
