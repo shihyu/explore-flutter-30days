@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 40：燚！揭秘 Source Gen｜Flutter 代碼生成 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-40燚揭秘-source-genflutter-代碼生成"><a class="header" href="#day-40燚揭秘-source-genflutter-代碼生成">Day 40：燚！揭秘 Source Gen｜Flutter 代碼生成</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10328283">Day 10：燚！揭秘 Source Gen｜Flutter 代碼生成</a></p>
+</blockquote>
+<p>在上一篇文章中，我們深入探索了 Flutter 中的 Metadata，介紹了許多有趣的 Annotation。當然，光是了解 Metadata 只是冰山一角，今天我們要繼續深挖，帶大家認識 Flutter 中另一個強大的工具—— <code>source_gen</code>。</p>
+<h2 id="引言"><a class="header" href="#引言">引言:</a></h2>
+<p>哈囉！各位 Flutter 愛好者，還記得我們上次提到，要讓自己的 Annotation 產生實際的影響，需要配合 <code>GeneratorForAnnotation</code> 嗎？那麼這次，我們就來深入瞭解這個與其相關的 library - <code>source_gen</code>，它如何協助我們自動生成代碼，以及其強大的應用場景。</p>
+<p>首先，讓我們理解 <code>source_gen</code> 是什麼。它是 Dart 的一個代碼生成工具，並非 Flutter 獨有，主要用於構建 Annotations 和生成器。它可以自動為我們生成常見的模板代碼，減少手動編寫的冗餘。</p>
+<h3 id="如何運作"><a class="header" href="#如何運作">如何運作</a></h3>
+<p>當我們為某個特定的類或函數添加 Annotation 後，<code>source_gen</code> 會基於這些 Annotation 和相對應的生成器，自動為我們產生相應的程式碼。例如，有了 <code>json_serializable</code>，我們就不需要手動編寫 JSON 的序列化和反序列化代碼了，這一切都可以由 <code>source_gen</code> 幫我們完成。那接下來我們就來自己動手寫看看自動化代碼生成吧！</p>
+<h3 id="基本的使用"><a class="header" href="#基本的使用">基本的使用</a></h3>
+<p>要使用 <code>source_gen</code>，我們首先需要在 <code>pubspec.yaml</code> 中添加相應的依賴。如果只是自己開發使用可以放在 <code>dev_dependencies</code>，如果是要寫成 package 提供給其他人用，記得放在 <code>dependencies</code> 哦！</p>
+<pre><code class="language-yaml">dependencies:
+flutter:
+sdk: flutter
+
+dev_dependencies:
+build_runner: ^2.0.0
+source_gen: ^1.0.0
+
+</code></pre>
+<p>接著，在你的 Dart 檔案中新增 Annotations，如同上一篇談到的 Annotation 可以是任何一個 class，這裡的命名可以自己決定，我們就先取最簡單的 <code>TestMetadata</code>。</p>
+<pre><code class="language-dart">class TestMetaData {
+const TestMetaData();
+}
+
+</code></pre>
+<p>再來寫一個 <code>test.dart</code>，他會被加上 Annotation ，並在稍後被加上生成的程式碼，作為這次測試的對象</p>
+<pre><code class="language-dart">import 'package:flutter_day_10_build_runner/test_annotation.dart';
+
+@TestMetaData("doraralab")
+class MyClass {}
+
+</code></pre>
+<p>完成 Annotation 後，我們接下來寫最重要的部分，如何解析這個 Annotation。首先新增一個 TestGenerator 的檔案，這裡需要 extends <code>GeneratorForAnnotation</code>，用來告訴 build runner 我們要解析的 Annotation 是什麼 ，並且應該要如何生成程式碼。</p>
+<p>當中 <code>generateForAnnotatedElement</code> 是必須實作的函數，裡面包含三個參數 <code>element</code>, <code>annotation</code>, <code>buildStep</code>，稍後會再來講解他們有什麼作用。現在只關注於他最後產生的結果：生成 <code>class TestMetaDataFromGenerator{}</code>的程式碼。</p>
+<pre><code class="language-dart">import 'package:flutter_day_10_build_runner/test_annotation.dart';
+import 'package:source_gen/source_gen.dart';
+
+class TestGenerator extends GeneratorForAnnotation {
+@override
+generateForAnnotatedElement(element, annotation, buildStep) {
+/// 生成以下程式
+return "class TestMetaDataFromGenerator{}";
+}
+}
+
+</code></pre>
+<p>然後建立一個 Builder，用來告知 Build Runner 有哪些 Generator 需要去檢查，需要特別注意 <code>Builder</code>，是引用自 <code>'package:build/build.dart'</code>，可不是我們平常使用的 <code>material.dart</code>。</p>
+<p>現在支援的 Builder 有三種，分別是 <code>PartBuilder</code>、<code>LibraryBuilder</code> 和 <code>SharedPartBuilder</code>。簡單介紹一下：</p>
+<ul>
+<li><strong>PartBuilder</strong>:<code>PartBuilder</code> 應該是我們最常會碰到的，如 <code>json_annotation</code> 生成的檔案。它用於生成部分代碼文件（通常是 <code>.g.dart</code> 文件）。當你看到如下註解時，這表示這個文件是由其他生成器產生的：</li>
+</ul>
+<pre><code class="language-dart">part 'filename.g.dart';
+
+</code></pre>
+<p>使用 <code>PartBuilder</code> 時，首先需要確定你的原始文件已經包含了這個 <code>part</code> 註解。然後使用 <code>PartBuilder</code> 定義你的生成器：</p>
+<pre><code class="language-dart">import 'package:source_gen/source_gen.dart';
+import 'package:build/build.dart';
+
+Builder myBuilder(BuilderOptions options) =&gt;
+PartBuilder([MyGenerator()], '.g.dart');
+
+</code></pre>
+<ul>
+<li><strong>LibraryBuilder</strong>:<code>LibraryBuilder</code> 用於生成一個完整的庫文件，而不是部分文件。當使用 <code>LibraryBuilder</code> 時，不需要 <code>part</code> 註解，因為它會生成一個完整的新文件。</li>
+</ul>
+<pre><code class="language-dart">Builder myLibraryBuilder(BuilderOptions options) =&gt;
+LibraryBuilder(MyGenerator(), generatedExtension: '.mygenerator.dart');
+
+</code></pre>
+<ul>
+<li><strong>SharedPartBuilder</strong>:<code>SharedPartBuilder</code> 允許多個生成器共享同一個部分文件。這在你希望將多個生成器的輸出放入同一個 <code>.g.dart</code> 文件時非常有用。</li>
+</ul>
+<pre><code class="language-dart">Builder sharedBuilder(BuilderOptions options) =&gt;
+SharedPartBuilder([MyGenerator()], 'shared_part');
+
+</code></pre>
+<p>這裡只做簡單的示範，所以選擇最容易做的 <code>LibraryBuilder</code>，並填入在上面完成的 <code>TestGenerator</code> 就完成摟！</p>
+<pre><code class="language-dart">import 'package:build/build.dart';
+import 'package:flutter_day_10_build_runner/generator.dart';
+import 'package:source_gen/source_gen.dart';
+
+Builder testBuilder(options) =&gt; LibraryBuilder(TestGenerator());
+
+</code></pre>
+<p>終於來到最後一步配置，為了要跑動 Build Runner 我們必須要新增一個 <code>build.yaml</code> 到根目錄，然後填上相應的配置：</p>
+<p>import 要根據上面的 <code>testBuilder</code> 的位置自行修改哦</p>
+<pre><code class="language-yaml">builders:
+testBuilder:
+# builder 所在處
+import: 'package:your_package_name/builder.dart'
+# 有哪些 builder 方法
+builder_factories: ['testBuilder']
+# 生成的新文件后缀
+build_extensions: { '.dart': ['.g.part'] }
+auto_apply: root_package
+build_to: source
+
+</code></pre>
+<p>最後，只需要在命令行中運行以下命令，就可以看到我們自動化產生的程式碼摟：</p>
+<pre><code class="language-bash">flutter packages pub run build_runner build
+
+</code></pre>
+<p>完成後就能看到 <code>source_gen</code> 基於你的 Annotations 和生成器，為你生成 <code>test.g.dart</code> 文件 🎉</p>
+<pre><code class="language-dart">// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// TestGenerator
+// **************************************************************************
+
+class TestMetaDataFromGenerator {}
+
+</code></pre>
+<p>到這邊相信大家已經對 <code>source_gen</code> 是如何運作的有了基礎的了解，我們再回到 <code>TestMetaData</code> 的部分，這次我們加上一點小變化，讓 <code>TestMetaData</code> 是可以加入參數的的。例如我們加上 <code>className</code> 這個參數。</p>
+<pre><code class="language-dart">class TestMetaData {
+final String className;
+const TestMetaData(this.className);
+}
+
+</code></pre>
+<p>修改 <code>test.dart</code>，加上 <code>className</code></p>
+<pre><code class="language-dart">import 'package:flutter_day_10_build_runner/test_annotation.dart';
+
+@TestMetaData("doraralab")
+class MyClass {}
+
+</code></pre>
+<p>這次我們要針對 generator 做一些修改，讓他可以去讀懂 <code>TestMetaData</code>，並取出 <code>className</code> 讓我們使用。這裡就來補充剛剛要補充的 <code>element</code>, <code>annotation</code>, <code>buildStep</code>。</p>
+<ul>
+<li>
+<p><strong><code>element</code></strong>：表示被註解的元素。我們可以通過 <code>element.kind</code> 知道被你註解的元素是 class 或是 function 甚至可能是 enum ，不管是哪一種都有對應的 kind。通過 <code>element.displayName</code> 可以拿到這個被註解元素的名稱，簡而言之你可以通過這個參數來訪問有關被註解元素的所有信息。</p>
+</li>
+<li>
+<p><strong><code>buildStep</code></strong>：用來控制寫入與讀取檔案的功能，這部分比較少更動。</p>
+</li>
+<li>
+<p><strong><code>annotation</code></strong>：這裡的 <code>annotation</code> 就是我們上面提供的 TestMetaData，不過我們沒辦法直接把他當成 class 的實體操作，而是要透過 <code>.read</code> 或是 <code>.peek</code> 的方法來拿到內部 parameter 的值。兩個不同是 <code>.read</code> 如果遇到不知道的參數會拋出錯誤，而 <code>.peek</code> 會返回 null，下面直接看我們要更改的程式碼。</p>
+</li>
+</ul>
+<pre><code class="language-dart">import 'package:flutter_day_10_build_runner/test_annotation.dart';
+import 'package:source_gen/source_gen.dart';
+
+class TestGenerator extends GeneratorForAnnotation {
+@override
+generateForAnnotatedElement(element, annotation, buildStep) {
+// 用 peek 的話就要去 handle null 的情況，.read 則是可以直接噴錯讓 build runner 失敗
+return "class ${annotation.peek("className")?.stringValue ?? "Unknown"}{}";
+}
+}
+
+</code></pre>
+<p>重新跑 <code>flutter packages pub run build_runner build</code>，就可以找到我們的 <code>test.g.dart</code>，成為我們想要的結果摟！</p>
+<pre><code class="language-dart">// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// TestGenerator
+// **************************************************************************
+
+class doraralab {}
+
+</code></pre>
+<p>💡小提示：如果你是使用 vscode，想要 debug 整個 build runner 的過程，可以把下面這段加入到你的 <code>launch.json</code>，就可以瞜</p>
+<pre><code class="language-dart">{
+"name": "Debug  Generator",
+"request": "launch",
+"program": ".dart_tool/build/entrypoint/build.dart",
+"type": "dart",
+"args": ["build"]
+},
+
+</code></pre>
+<h2 id="結語"><a class="header" href="#結語">結語:</a></h2>
+<p>代碼自動生成不僅可以為開發者省去大量的時間，更重要的是，它確保了代碼的一致性和品質。透過 source_gen 的使用，我們能更高效地完成日常的開發工作，並避免許多手工編寫代碼時可能出現的錯誤。希望這篇文章可以幫助你更深入地了解 Flutter 背後的工具與技巧，並激發你進一步探索其它強大的功能。未來的開發之路，願我們能更快、更好、更強!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day39.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day41.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day39.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day41.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

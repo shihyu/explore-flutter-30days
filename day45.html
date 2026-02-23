@@ -1,0 +1,448 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 45：Flutter 狀態管理：深入理解 Riverpod (上) - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-45flutter-狀態管理深入理解-riverpod-上"><a class="header" href="#day-45flutter-狀態管理深入理解-riverpod-上">Day 45：Flutter 狀態管理：深入理解 Riverpod (上)</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10331828">Day 15：Flutter 狀態管理：深入理解 Riverpod (上)</a></p>
+</blockquote>
+<p>Flutter 在開發之初，並沒有一個完美的狀態管理解決方案。於是各路民間大神，從過往的軟體開發中提出了很多不同的解決方案。我在過往參與過的專案中，就經歷過 Bloc, Redux, GetX 和 Provide 每一個都有他的好與壞，但是都沒有今天要介紹的 Riverpod 讓人著迷。</p>
+<h3 id="riverpod-是什麼-"><a class="header" href="#riverpod-是什麼-">Riverpod 是什麼 ?</a></h3>
+<p>Riverpod 其實是 Provider 的字母重組，從這裡你就可以看出 Riverpod 與 Provider 的淵源。沒錯！他們是由相同的開發者 （Rémi Rousselet）所維護的。那相對於 Provider Riverpod 提供了哪些額外的好處？</p>
+<p>這裡順便推薦一下 Rémi Rousselet 的 <a href="https://twitter.com/remi_rousselet?lang=zh-Hant">X</a> 帳號，他對 Flutter 社群有著巨大的貢獻，常常也會發表一些 Flutter 的小 tips 。</p>
+<p><strong>解耦 BuildContext</strong></p>
+<p>Riverpod 最明顯的特點就是他移除了對 BuildContext 的依賴，這對開發者來說是個天大的好消息，我們終於可以好好的分開邏輯與 UI ，並且可以更輕鬆地去做任何的測試，而不用擔心 BuildContext 的問題。</p>
+<p>因為解決了上述的問題 Riverpod 完全可以勝任 Singletons、Service Locators 或者 InheritedWidgets 等模式，讓我們省去很多麻煩。</p>
+<p><strong>輕鬆結合多種狀態</strong></p>
+<p>在很多開發上，可能在一個狀態的按鈕，需要同時聆聽多個狀態。舉個例子，一個登入按鈕就同時需要檢查 網路狀態、密碼長度、必填欄位，在其他狀態管理方法上，要統合這些狀態非常困難，但是 Riverpod 提供了很好的結合狀態的方法。</p>
+<pre><code class="language-dart">final filedState = StateProvider((ref) =&gt; false);
+final networkState = StateProvider((ref) =&gt; false);
+final passwordFieldState = StateProvider((ref) =&gt; false);
+
+final loginState = StateProvider((ref) {
+final filed = ref.watch(filedState);
+final network = ref.watch(networkState);
+final password = ref.watch(passwordFieldState);
+return filed &amp;&amp; network &amp;&amp; password;
+});
+
+</code></pre>
+<p>由於網路上已經有許多關於 Riverpod 用法的文章，這裡就不做過多贅述，我們馬上來看看 Riverpod 是如何幫我們實現這些方便的功能！</p>
+<p>在要使用 Riverpod 時，常見的做法是先套上 ProviderScope。</p>
+<pre><code class="language-dart">
+void main() {
+runApp(
+const ProviderScope(
+child: MyApp(),
+),
+);
+}
+
+</code></pre>
+<p>當要把 ProviderScope 套到 WidgetTree 最頂端的時候，相信一些敏銳的同學已經察覺到了，這件事肯定跟 <code>InheritedWidget</code> 脫離不了關係。那 <code>ProviderScope</code>究竟是什麼呢？我們一起來看一下原始碼：</p>
+<pre><code class="language-dart">
+@sealed
+class ProviderScope extends StatefulWidget {
+/// {@macro riverpod.providerscope}
+const ProviderScope({
+super.key,
+this.overrides = const [],
+this.observers,
+this.parent,
+required this.child,
+});
+
+/// Read the current [ProviderContainer] for a [BuildContext].
+static ProviderContainer containerOf(
+BuildContext context, {
+bool listen = true,
+}) {
+UncontrolledProviderScope? scope;
+
+if (listen) {
+scope = context //
+.dependOnInheritedWidgetOfExactType();
+} else {
+scope = context
+.getElementForInheritedWidgetOfExactType()
+?.widget as UncontrolledProviderScope?;
+}
+
+if (scope == null) {
+throw StateError('No ProviderScope found');
+}
+
+return scope.container;
+}
+
+final ProviderContainer? parent;
+
+/// The part of the widget tree that can use Riverpod and has overridden providers.
+final Widget child;
+
+/// The listeners that subscribes to changes on providers stored on this [ProviderScope].
+final List? observers;
+
+/// Information on how to override a provider/family.
+final List overrides;
+
+@override
+ProviderScopeState createState() =&gt; ProviderScopeState();
+}
+
+/// Do not use: The [State] of [ProviderScope]
+@visibleForTesting
+@sealed
+@internal
+class ProviderScopeState extends State {
+/// The [ProviderContainer] exposed to [ProviderScope.child].
+@visibleForTesting
+// ignore: diagnostic_describe_all_properties
+late final ProviderContainer container;
+ProviderContainer? _debugParentOwner;
+var _dirty = false;
+
+@override
+void initState() {
+super.initState();
+
+final parent = _getParent();
+assert(
+() {
+_debugParentOwner = parent;
+return true;
+}(),
+'',
+);
+
+container = ProviderContainer(
+parent: parent,
+overrides: widget.overrides,
+observers: widget.observers,
+);
+}
+
+ProviderContainer? _getParent() {
+if (widget.parent != null) {
+return widget.parent;
+} else {
+final scope = context
+.getElementForInheritedWidgetOfExactType()
+?.widget as UncontrolledProviderScope?;
+
+return scope?.container;
+}
+}
+
+@override
+void didUpdateWidget(ProviderScope oldWidget) {
+super.didUpdateWidget(oldWidget);
+_dirty = true;
+
+if (oldWidget.parent != widget.parent) {
+FlutterError.reportError(
+FlutterErrorDetails(
+library: 'flutter_riverpod',
+exception: UnsupportedError(
+'Changing ProviderScope.parent is not supported',
+),
+context: ErrorDescription('while rebuilding ProviderScope'),
+),
+);
+}
+}
+
+@override
+Widget build(BuildContext context) {
+assert(
+() {
+if (widget.parent != null) {
+// didUpdateWidget already takes care of widget.parent change
+return true;
+}
+final parent = _getParent();
+
+if (parent != _debugParentOwner) {
+throw UnsupportedError(
+'ProviderScope was rebuilt with a different ProviderScope ancestor',
+);
+}
+return true;
+}(),
+'',
+);
+if (_dirty) {
+_dirty = false;
+container.updateOverrides(widget.overrides);
+}
+
+return UncontrolledProviderScope(
+container: container,
+child: widget.child,
+);
+}
+
+@override
+void dispose() {
+container.dispose();
+super.dispose();
+}
+}
+
+
+</code></pre>
+<p>原來 ProviderScope 也只是一個 StatefulWidget 並且包裹了一個 <code>UncontrollerProviderScope</code>，秉持小偵探的精深，我們繼續往下挖一下：</p>
+<pre><code class="language-dart">@sealed
+class UncontrolledProviderScope extends InheritedWidget {
+/// {@macro riverpod.UncontrolledProviderScope}
+const UncontrolledProviderScope({
+super.key,
+required this.container,
+required super.child,
+});
+
+/// The [ProviderContainer] exposed to the widget tree.
+final ProviderContainer container;
+
+@override
+bool updateShouldNotify(UncontrolledProviderScope oldWidget) {
+return container != oldWidget.container;
+}
+
+@override
+// ignore: library_private_types_in_public_api
+_UncontrolledProviderScopeElement createElement() {
+return _UncontrolledProviderScopeElement(this);
+}
+}
+
+</code></pre>
+<p>果然罪證確鑿，是一個 <code>InheritedWidget</code>，符合我們最一開始的猜測，在這個 <code>InheritedWidget</code> 中，我們希望流傳下去的就是 <code>ProviderContainer</code>，<code>ProviderContainer</code> 就相當於是整個 Riverpod 系統中的心臟，負責記憶各種的 Provider State。至此，我們就可以知道為什麼 Riverpod 不依賴 BuildContext，因為他是透過 <code>ProviderContainer</code> 去記錄當前狀態。而 <code>ProviderScope</code> 是讓 Widget 方便讀取 <code>ProviderContainer</code> 的工具。</p>
+<h2 id="小結"><a class="header" href="#小結">小結</a></h2>
+<p>今天我們了解了 ProviderScope 是如何工作的，明天來繼續講解 ProviderContainer 又扮演了什麼樣的角色！敬請期待</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day44.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day46.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day44.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day46.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

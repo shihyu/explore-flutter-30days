@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 8: MediaQuery 優化後與 InheritedModel 如何進行指定更新 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-8-mediaquery-優化後與-inheritedmodel-如何進行指定更新"><a class="header" href="#day-8-mediaquery-優化後與-inheritedmodel-如何進行指定更新">Day 8: MediaQuery 優化後與 InheritedModel 如何進行指定更新</a></h1>
+<ul>
+<li>發布時間：2023-09-23 19:12:32</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10325740">https://ithelp.ithome.com.tw/articles/10325740</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 8 篇</li>
+</ul>
+<p><img src="images/20120687yx53qPafiN.png" alt="" /></p>
+<p>上一篇我們討論了 MediaQuery 是什麼、它的正常使用方式，並稍微帶大家分析背後源碼的運作流程。本文要了解在 Flutter 3.10 改版後，<strong>InheritedWidget</strong> 做了哪些改動，以及我們如何更高效的去存取 <strong>MediaQueryData</strong>，提升 APP 整體品質。</p>
+<hr />
+<p>我們在存取 MediaQueryData 時很常會使用 <code>MediaQuery.of(context)</code> 方法，進行整包資料的訂閱，並在有任意資料變動的時候收到通知，很容易造成不必要的 rebuild，影響 APP 性能與運行。</p>
+<h2 id="specific-dependency-指定依賴"><a class="header" href="#specific-dependency-指定依賴">Specific dependency 指定依賴</a></h2>
+<p>原本的 <code>MediaQuery.of(context)</code> 屬於依賴整包資料，有任更新都會收到通知。指定依賴就是我們可以只依賴我們需要的屬性就好，只有它更新的時候通知我就好，其他的我不需要理會，這個方式也比較符合我們大部分的開發場景。一開始先展示實際範例，讓大家能快速了解新的用法<br />
+<img src="images/20120687qTgUcG5lfy.png" alt="" /></p>
+<pre><code class="language-dart">// 18種靜態方法，針對18個屬性
+MediaQuery.sizeOf(context)
+MediaQuery.orientationOf(context)
+MediaQuery.devicePixelRatioOf(context)
+MediaQuery.textScaleFactorOf(context)
+MediaQuery.platformBrightnessOf(context)
+MediaQuery.paddingOf(context)
+MediaQuery.viewInsetsOf(context)
+MediaQuery.systemGestureInsetsOf(context)
+MediaQuery.viewPaddingOf(context)
+MediaQuery.alwaysUse24HourFormatOf(context)
+MediaQuery.accessibleNavigationOf(context)
+MediaQuery.invertColorsOf(context)
+MediaQuery.highContrastOf(context)
+MediaQuery.disableAnimationsOf(context)
+MediaQuery.boldTextOf(context)
+MediaQuery.navigationModeOf(context)
+MediaQuery.gestureSettingsOf(context)
+MediaQuery.displayFeaturesOf(context)
+</code></pre>
+<p>此範例中 HomePage 在 <code>didChangeDependencies()</code> 裡使用 <code>MediaQuery.sizeOf(context)</code>，只有訂閱 size 屬性，需要再它有變化時通知我。<br />
+<img src="images/20120687bP8w5DjofQ.png" alt="" /></p>
+<p>ScondPage 一樣將寫法更改為 <code>MediaQuery.platformBrightnessOf(context)</code>，監聽 platformBrightness 屬性的變化，可以了解 APP 是否使用深色模式。<br />
+<img src="images/20120687A10dv630Hu.png" alt="" /></p>
+<p>最後跟上一篇文章一樣，我們在 ThirdPage 使用了 TextField 輸入框，讓使用者可以輸入文字。當鍵盤彈出和關閉時，會頻繁更新 MediaQueryData 裡的 <strong>padding</strong> 屬性，光打開就會更新 20 幾次。<br />
+<img src="images/20120687tQPgTmWnTf.png" alt="" /></p>
+<p>可以看到實際運行的狀況，前面的 HomePage 和 SecondPage 絲毫沒有受影響，因為它們本身是依賴 <strong>size</strong> 和 <strong>platformBrightness</strong> 屬性，不會因爲其他數值的更新而收到通知，也不會因此 rebuild。<br />
+<img src="images/eucEFJy.gif" alt="gif" /></p>
+<p>在現在的 Flutter 版本，讓我們可以精準的去存取 MediaQueryData，進行指定依賴，原有專案也只需要簡單做個修改，整體性能就能有所提升，這個 MediaQuery 優化真的很重要。</p>
+<hr />
+<p>當然，不免俗的我們還是要進入源碼分析環節，了解實際上背後做了什麼改動，以及它的更新流程。以下稍微列出了幾個重點：</p>
+<ul>
+<li><code>_MediaQueryAspect</code> → enum，需依賴的資料類型</li>
+<li><code>inheritFrom({aspect})</code> → 幫 Widget 產生依賴，決定依賴全部屬性還是指定屬性</li>
+<li><code>updateShouldNotifyDependent()</code> → 檢查資料是否異動，並通知依賴者</li>
+</ul>
+<p>首先看到 MediaQuery 本身，會發現繼承的對象換了，是 <code>InheritedModel</code>，泛型待著一個 <code>_MediaQueryAspect</code>，InheritedModel 實際上繼承 InheritedWidget，也就是多封裝了一層，它存在的目的就是讓我們可以只依賴 Model 的一小部分。</p>
+<p>另外我們也可以自定義 InheritedModel 跟 aspect enum，讓 InheritedModel 可以根據我們的依賴，僅通知跟 aspect 相關的元件進行更新<br />
+<img src="images/20120687BAgleV0uB2.png" alt="" /><br />
+<img src="images/20120687GiRhAc7qEy.png" alt="" /></p>
+<p>我們來看看 MediaQuery 使用到的 <code>_MediaQueryAspect</code>，單純是一個 enum，裡面的 type 對應 MediaQueryData 的18個屬性，讓我們可以區別實際上依賴哪個資料<br />
+<img src="images/20120687y6I4Oy5hPJ.png" alt="" /></p>
+<p>先隨邊挑選一個靜態方法，來看它做了哪些事情，<code>sizeOf(context)</code> 實際上 call 了內部方法 <code>of(context, MediaQueryAspect.size)</code>，跟以前不同的是多了第二個參數，給予 size 這個 MediaQueryAspect enum。<br />
+<img src="images/20120687Nwmdn32wQg.png" alt="" /></p>
+<p>原有的 MediaQuery 使用方式 <code>of(context)</code>，裡面都是使用 <code>_of(context)</code> 內部方法，但就沒有給予 aspect type，因為它是監聽整個 MediaQueryData。</p>
+<p>接下來可以看到重點部分 <code>InheritedModel.inheritFrom(context, aspect)</code></p>
+<ol>
+<li>一開始先檢查 aspect 是否為 null，是的話就跟直接回傳 <code>dependOnInheritedWidgetOfExactType()</code>，依賴整包資料</li>
+<li>檢查 Element Tree 上的所有 InheritedElement，取得泛型為 MediaQuery 且有提供這個 aspect 資料的 InheritedElement list。使用 <code>_findModels()</code> 方法查找，接著會透過 <code>isSupportedAspect()</code> 檢查 Element 是否有提供</li>
+<li>取出最後一個拿到的 InheritedElement，接著透過 <code>dependOnInheritedElement()</code> 取得對應的 InheritedWidget，也就是 MediaQuery<br />
+<img src="images/20120687ehDtMI2ksG.png" alt="" /><br />
+<img src="images/20120687Iu3vyuOTdk.png" alt="" /></li>
+</ol>
+<p>到這裡我們已經了解大概的依賴流程，那資料更新時如何通知呢？就需要看另一個重要環節 <code>updateShouldNotifyDependent(oldWidget, dependencies)</code>，當 MediaQueryData 其中有一個屬性有變動後就會檢查每個有依賴這些資料的 Element，看他們跟現在變動的數據是否有依賴關係，這時候會呼叫 <code>updateShouldNotifyDependent()</code> 進行檢查。它本身有兩個參數，第一個是舊的 MediaQuery，第二個是那些有變動的 aspect type 資料。<br />
+<img src="images/20120687oN3I4EuF1g.png" alt="" /></p>
+<p>一開始針對這些變動資料執行迴圈，根據每個 <code>_MediaQueryAspect</code> type 檢查原本的屬性值跟新的屬性值是否不一樣，不一樣代表有變化，所以返回 true，通知依賴者、元件的 Element 要執行更新任務，呼叫 <code>didChangeDependencies()</code>。<br />
+<img src="images/20120687ETzDyB5pa0.png" alt="" /><br />
+最後 State 的 <code>.didChangeDependencies()</code> 和 <code>build()</code> 就會陸續被觸發，進行 rebuild。</p>
+<hr />
+<p>MediaQueryData 整個的依賴、更新流程就是這樣，是不是慢慢的看過後會更熟悉它，實際上也沒有非常複雜的邏輯去處理。當懂原理後，在往後的開發會知道如何去思考作法，讓一切都在自己的掌控範圍，整個過程也會更有意思。</p>
+<hr />
+<h2 id="延伸閱讀"><a class="header" href="#延伸閱讀">延伸閱讀</a></h2>
+<p><a href="https://ithelp.ithome.com.tw/articles/10325095">Day 7: MediaQuery 是什麼？很方便但如何正確在 Flutter 使用，順便跟你說它的缺點</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day07.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day09.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day07.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day09.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

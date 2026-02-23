@@ -1,0 +1,581 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 14: Flutter 效能優化，良好的開發觀念與技巧！(上) - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-14-flutter-效能優化良好的開發觀念與技巧上"><a class="header" href="#day-14-flutter-效能優化良好的開發觀念與技巧上">Day 14: Flutter 效能優化，良好的開發觀念與技巧！(上)</a></h1>
+<ul>
+<li>發布時間：2023-09-29 17:51:36</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10330647">https://ithelp.ithome.com.tw/articles/10330647</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 14 篇</li>
+</ul>
+<p><img src="images/20120687vVwg8lTVBc.png" alt="" /></p>
+<p>當我們開發 Flutter 一段時間後，想必都會有自己習慣的開發方式跟技巧，但有時候很方便、速度快的方式卻不代表是好的，有可能開發上很省時卻導致性能有缺陷，記憶體使用過多。有實際去了解並驗證過嗎？當我們熟悉開發技巧、熟悉產品後，就會想要往高品質前進，希望提供的給用戶的東西是很棒的，這點沒錯吧！而良好的開發習慣也能幫助到自己或是團隊，不管是效率、程式碼可讀性、專案可維護性等等，這些是本文想要跟大家分享的內容，希望一起養成好習慣，我們馬上往下開始吧！</p>
+<hr />
+<h2 id="static-final-修飾"><a class="header" href="#static-final-修飾">static final 修飾</a></h2>
+<ul>
+<li>定義不太變更的固定的實體物件，在相同類型的物件上不需要創建重複的記憶體，第一次類別初始化後可以在所有實體上分享，提高效能</li>
+<li>可以很快速了解變數在哪裡被初始化，並且不會再被更改，提升可讀性與維護性</li>
+</ul>
+<h2 id="late-final-修飾"><a class="header" href="#late-final-修飾">late final 修飾</a></h2>
+<ul>
+<li>主要特性是擁有 <code>lazy computation</code> (惰性計算) 的特性，使用的時候才初始化，節省記憶體成本，並且只能對它賦值一次，在初始化後是無法改變的。我們可以在一開始給予數值或是使用方法的回傳值</li>
+<li>適合昂貴的操作和存取，例如：存取檔案。如果內容是固定的話，就不適合使用，可以選擇 <code>static const</code> 和 <code>static final</code></li>
+</ul>
+<pre><code class="language-dart">// 1.
+late final String result = 'Hi';
+
+// 2.
+late final String result2 = _getComplexTaskResult();
+
+String _getComplexTaskResult() {
+    return 'I am Yii.';
+}
+</code></pre>
+<blockquote>
+<p>提醒：使用 <code>late</code> 的前提是必須知道你在做什麼，而不是盲目使用它，否則可能會發生不可預期的錯誤。因為已經跟 compiler 承諾，所以發生錯誤時是在 Runtime</p>
+</blockquote>
+<h2 id="元件分子原則"><a class="header" href="#元件分子原則">元件分子原則</a></h2>
+<p>盡可能地分離、縮小 Widget，建議 Widget 開發基於原子設計(Atomic Design)，將頁面切分開來、將大區塊切割開來，每個元件都是基於其他元件而組成。</p>
+<h4 id="優點"><a class="header" href="#優點">優點</a></h4>
+<ol>
+<li>耦合度低，在某個元件更新後也不太會影響到其他地方，達到有效隔離</li>
+<li>小的元件也會更容易讓人了解每個元件的關聯性，有效幫助開發且避免重複</li>
+<li>將元件切分後，進而能確保一些元件為 <code>const</code>，有效避免 build 複雜的 Widget Tree</li>
+<li><strong>Widget Inspector</strong> 上查看 Widget Tree，一目了然，很好理解當前的階層關係，輕鬆追蹤問題</li>
+</ol>
+<h4 id="元件腫大的缺點"><a class="header" href="#元件腫大的缺點">元件腫大的缺點</a></h4>
+<ol>
+<li><strong>可閱讀性低，很難理解</strong>。當元件又大又複雜的時候，大腦一次接收太多資訊會更難理解內容，而且就像大家詬病的洋蔥式寫法，閱讀上會變得比較沒耐心</li>
+<li>**難找錯誤。**如果想修正錯誤發生的區塊，甚至是進行替換，可能需要先閱讀大量代碼，再進行逐步調整，會佔用我們寶貴的時間</li>
+<li>**容易重寫相同元件代碼。**如果元件已經臃腫、拆分麻煩的時候，很多開發者第一直覺會直接撰寫新的重複元件</li>
+</ol>
+<h2 id="盡量使用-const-元件"><a class="header" href="#盡量使用-const-元件">盡量使用 const 元件</a></h2>
+<ol>
+<li>使用 <code>const</code>，可以在編譯期間就確認內容，不需要在 Runtime 時計算、檢查，也不能修改，提升整體效能和穩定性</li>
+<li>藉此固定相同類型實體的記憶體，並在需要一樣物件時的重複使用，可節省記憶體，避免重建造成多餘的效能消耗，讓 Flutter 只處理應該更新的元件</li>
+</ol>
+<pre><code class="language-dart">x = SizedBox.shrink();
+y = SizedBox.shrink();
+x == y // false
+
+x = const SizedBox.shrink();
+y = const SizedBox.shrink();
+x == y // true
+</code></pre>
+<h2 id="使用-widget-代替-helper-methodfunctional-widget"><a class="header" href="#使用-widget-代替-helper-methodfunctional-widget">使用 Widget 代替 helper method、functional-widget</a></h2>
+<p>使用 Custom Widget 的好處有哪些以下幫你列出來：</p>
+<ol>
+<li>可以讓元件擁有 <code>const</code> constructor，並且當沒有動態參數要設置時，可以使用 <code>const</code>。在每次的 rebuild 都可以省略此元件的處理，使用相同記憶體相同實體，不需要其他消耗</li>
+<li>元件可以在 DevTools 的 <strong>Widget Inspector</strong> 上瀏覽與快速定位，看到很長的 Widget Tree 也不會害怕</li>
+<li>元件發生錯誤、例外、崩潰時，可以在 <strong>Stack Trace</strong> 上顯示精確位置，有效縮短查找時間</li>
+<li>在 UI code 或是 Widget Inspector 查看時有良好的可讀性</li>
+<li>每個獨立元件可擁有自己的 <code>context</code>，在進行一些 context 操作上會更適合，例如：存取 InheritedWidget，監聽狀態後的觸發刷新，可以精準處理而不會影響到其他元件，造成資源浪費。當然你可以使用 Builder 包裹來處理，但這不是最好的解法</li>
+</ol>
+<h4 id="不建議"><a class="header" href="#不建議">不建議</a></h4>
+<ol>
+<li>
+<p>使用 functional-widget 沒辦法賦予 <code>const</code>，每次 rebuild 都是一個消耗，記憶體使用上升<br />
+<img src="images/20120687CdAjhXKd73.png" alt="" /></p>
+</li>
+<li>
+<p><strong>Widget Inspector</strong> 上查看到的會是第一個包裹元件，以例子來看就都是 Container，這裡不會顯示 function 名稱，在龐大的樹中你很難了解這是什麼元件、它在 APP 上的樣子<br />
+<img src="images/20120687cMBiEEP99Y.png" alt="" /></p>
+</li>
+<li>
+<p>當錯發生時可以知道是哪個 function 出問題，不過資訊顯示上會比較多<br />
+<img src="images/20120687CblxpeMsjX.png" alt="" /></p>
+</li>
+<li>
+<p>假設有使用 <strong><strong>Crashlytics</strong></strong> 或是 <strong>Sentry</strong> 這類的錯誤捕捉服務，資訊會有所不同。以 Sentry 範例來看，標題為是顯示哪個 Route，也就是哪個頁面發生問題，沒有辦法精準定位。<br />
+<img src="images/20120687yK3SBPnVaZ.png" alt="" /></p>
+</li>
+</ol>
+<h4 id="正確方式"><a class="header" href="#正確方式">正確方式</a></h4>
+<ol>
+<li>
+<p>當我們使用自定義的元件，在沒有動態參數的情境下，可以給予 <code>const</code>，有效節省資源。並且可讀性、穩定性高<br />
+<img src="images/20120687imSAsVs6xR.png" alt="" /></p>
+</li>
+<li>
+<p><strong>Widget Inspector</strong> 上的瀏覽很簡單、輕鬆，直接看出來是哪些元件，可讀性高，會更讓人願意使用工具幫忙解決問題<br />
+<img src="images/20120687B9lHzSG90n.png" alt="" /></p>
+</li>
+<li>
+<p>當發生錯誤時，在 <strong>Stack Trace</strong> 可以直接知道是哪個元件發生問題，資訊顯示上更精簡<br />
+<img src="images/20120687ZVJE29zwQ9.png" alt="" /><br />
+<img src="images/20120687nhPk9ShIBy.png" alt="" /></p>
+</li>
+<li>
+<p><strong>Sentry</strong> 能搜集到的資訊也更明確，標題直接顯示哪個檔案的哪個元件有問題，下方的 <strong>Stack Trace</strong> 流程一樣很好理解<br />
+<img src="images/20120687fcl6rigdVo.png" alt="" /></p>
+</li>
+</ol>
+<blockquote>
+<p>請養成創建元件的習慣，除了好處多以外，也幫專案品質跟團隊想想吧，讓自己和大家都能夠輕鬆開發。</p>
+</blockquote>
+<h2 id="空白元件請使用-sizedbox-代替-container"><a class="header" href="#空白元件請使用-sizedbox-代替-container">空白元件請使用 SizedBox 代替 Container</a></h2>
+<h4 id="container"><a class="header" href="#container">Container</a></h4>
+<ol>
+<li>預設在一開始創建的時候就會適應 Parent 給的約束，自動帶有長寬、限定大小，而且因為會根據 Parent 而動態更新，導致無法設置 <code>const</code> constructor</li>
+<li>在這種情況之下，我們每使用一個 Container 就會創建一個新的實體，也代表記憶體使用會持續增加<br />
+<img src="images/20120687r0SQTPjctc.png" alt="" /></li>
+</ol>
+<h4 id="sizedbox"><a class="header" href="#sizedbox">SizedBox</a></h4>
+<ol>
+<li>大部分的使用上都可以為 <code>const</code>，有設置 <code>const</code> 建構子，長寬不需設置也不會被約束影響，能以高效的方式實現空白 placeholder</li>
+<li>以最常使用的 <code>SizedBox.shrink()</code> 來看，一開始就設置長寬為 0，不會佔 UI 任何空間</li>
+<li>直接面對 <strong>SingleChildRenderObjectWidget</strong> 本身，裡面只有針對 <strong>BoxConstraints</strong> 去做設置，內容很單純<br />
+<img src="images/20120687IwinUeELlQ.png" alt="" /></li>
+</ol>
+<h2 id="使用-statefulbuilder-進行局部更新"><a class="header" href="#使用-statefulbuilder-進行局部更新">使用 StatefulBuilder 進行局部更新</a></h2>
+<p>如果專案裡沒有使用其他狀態管理框架，或是 Widget tree 龐大時，更新一個狀態就會導致整顆樹重建，這是個會降低性能的操作。這時候可以使用 StatefulBuilder 包裹提供元件，其中的 <code>setState</code> 可以用來更新指定元件，使用方式都一樣，讓其他不相關的元件可以保持原樣，不受影響。也很適合 Dialog 和 BottomSheet 相關元件使用，很方便的進行更新。</p>
+<pre><code class="language-dart">await showDialog&lt;void&gt;(
+  context: context,
+  builder: (BuildContext context) {
+    int? selectedRadio = 0;
+
+    return AlertDialog(
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: List&lt;Widget&gt;.generate(4, (int index) {
+              return Radio&lt;int&gt;(
+                value: index,
+                groupValue: selectedRadio,
+                onChanged: (int? value) {
+                  setState(() =&gt; selectedRadio = value);
+                },
+              );
+            }),
+          );
+        },
+      ),
+    );
+  },
+);
+</code></pre>
+<h2 id="維持-synchronous-buildcontexts"><a class="header" href="#維持-synchronous-buildcontexts">維持 Synchronous BuildContexts</a></h2>
+<ul>
+<li>因為 UI 在 <code>build()</code> 執行時是同步處理，但通常在跟使用者互動後(手勢操作、點擊按鈕…)有可能會觸發非同步任務，如果任務處理完後需要進行一些 <code>context</code> 的存取和操作，必須確保 Widget Tree 是否創建完成並且 element 沒有解除綁定(因為 context 本身就是 element)，否則會出錯和崩潰</li>
+<li>context 操作包含 <code>of(context)</code> 靜態函式的 InheritedWidget 存取</li>
+</ul>
+<p>預設的 <code>flutter_lints</code> 都會即時顯示提醒，說明不要在執行非同步任務後存取 <strong>BuildContexts</strong>。<br />
+<img src="images/20120687GQwnGG04h7.png" alt="" /></p>
+<p>需要在存取 BuildContexts 之前，先透過 <code>mounted</code> 確保 State 跟隨 Element 在樹，如果沒有則不進行後續處理。</p>
+<pre><code class="language-dart">ElevatedButton(
+    onPressed: () async {
+        await Future.delayed(const Duration(seconds: 2), () {});
+        if (!mounted) return;
+
+        Navigator.of(context).pop();
+    },
+    child: const Text('Pop page.'),
+),
+</code></pre>
+<p>還有另一種方式，可先暫存需要的物件或資源，等非同步處理完後再透過物件進行操作。</p>
+<pre><code class="language-dart">ElevatedButton(
+    onPressed: () async {
+        ScaffoldMessengerState messengerState = ScaffoldMessenger.of(context);
+
+        await Future.delayed(const Duration(seconds: 2), () {});
+
+        messengerState.showSnackBar(const SnackBar(content: Text('Pop!')));
+    },
+    child: const Text('Pop page.'),
+),
+</code></pre>
+<h2 id="避免-animationcontroller-搭配-setstate-更新動畫"><a class="header" href="#避免-animationcontroller-搭配-setstate-更新動畫">避免 AnimationController 搭配 setState() 更新動畫</a></h2>
+<ol>
+<li>不要使用 <code>addListener()</code> 監聽動畫更新後，在裡面使用 <code>setState()</code> 刷新元件。<code>setState()</code> 的目的是刷新整個 Widget Tree，但實際在大部分情境上，會受動畫數值影響的元件只是其中一小部分，這個錯誤的使用方式將導致重建整個 UI，影響到其他元件，可能會讓畫面延遲、卡頓，造成體驗不佳</li>
+<li>盡量搭配 <strong>AnimatedBuilder</strong> 包裹指定區塊、對應元件，準確地刷新元件，動畫才能以最順暢的方式呈現。</li>
+</ol>
+<h4 id="錯誤方式"><a class="header" href="#錯誤方式">錯誤方式</a></h4>
+<pre><code class="language-dart">void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 1),
+    );
+    _animationController.addListener(() =&gt; setState(() {}));
+    _animationController.forward();
+}
+</code></pre>
+<p><img src="images/20120687RHuIR4UOFt.png" alt="" /></p>
+<h4 id="正確方式-1"><a class="header" href="#正確方式-1">正確方式</a></h4>
+<pre><code class="language-dart">void initState() {
+    _animationController = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 1),
+    );
+    // No addListener() and setState()
+    _animationController.forward();
+}
+</code></pre>
+<p>在使用 <strong>AnimatedBuilder</strong> 時，記得將不需要動畫、不會受動畫影響的子元件透過 <code>child</code> 參數設置，並在 <code>builder</code> 裡拿來使用。<br />
+<img src="images/20120687JjhLwabgHy.png" alt="" /><br />
+<img src="images/Js1IiPg.gif" alt="AnimatedBuilder" /></p>
+<h2 id="避免-opacity-搭配-animation"><a class="header" href="#避免-opacity-搭配-animation">避免 Opacity 搭配 Animation</a></h2>
+<ol>
+<li>改變透明度本身是一個昂貴且耗效能的工作，對於引擎處理上會花費更多成本</li>
+<li>實現淡入淡出的替代方案，可以使用 <strong>FadeTransition</strong> 或 <strong>AnimatedOpacity</strong></li>
+<li><strong>FadeTransition</strong> 本身是 <strong>SingleChildRenderObjectWidget</strong>，運行上更精簡、高效，不需要像 AnimatedBuilder 觸發 builder 來繪製UI，實際上更新會在核心 RenderObject 中 Layout 和 Paint 之間進行，直接透過 <code>markNeedsPaint()</code> 直接刷新</li>
+</ol>
+<h4 id="不建議-1"><a class="header" href="#不建議-1">不建議</a></h4>
+<pre><code class="language-dart">AnimatedBuilder(
+    animation: _animationController,
+    child: Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(20),
+        ),
+    ),
+    builder: (context, child) {
+        return Opacity(
+            opacity: _animationController.value,
+            child: child,
+        );
+    },
+),
+</code></pre>
+<h4 id="正確方式-2"><a class="header" href="#正確方式-2">正確方式</a></h4>
+<ol>
+<li>使用 AnimationController 搭配 <strong>FadeTransition</strong> 直接透過 <strong>RenderObject</strong> 優化效能，沒有多餘處理</li>
+</ol>
+<pre><code class="language-dart">FadeTransition(
+    opacity: _animationController,
+    child: Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(20),
+        ),
+    ),
+),
+</code></pre>
+<ol start="2">
+<li>使用 <strong>AnimatedOpacity</strong>，可以讓我們根據狀態給予指定數值，在兩數值間進行漸變。實際上本身在內部也是使用了 <strong>FadeTransition</strong>，只是多包了一層</li>
+</ol>
+<pre><code class="language-dart">AnimatedOpacity(
+    opacity: isVisible ? 0 : 1,
+    duration: const Duration(seconds: 1),
+    child: Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(20),
+        ),
+    ),
+),
+</code></pre>
+<p><img src="images/20120687lEvWne1k9s.png" alt="" /><br />
+<img src="images/CHTLOyG.gif" alt="AnimatedOpacity" /></p>
+<h2 id="滾動元件-scrollable-widget"><a class="header" href="#滾動元件-scrollable-widget">滾動元件 Scrollable Widget</a></h2>
+<h4 id="盡量使用-builder-建構子來創建"><a class="header" href="#盡量使用-builder-建構子來創建">盡量使用 <strong><strong>builder 建構子來創建</strong></strong></a></h4>
+<p><code>builder()</code> 代表只創建即將顯示和在畫面上的元件，這些 item 屬於 lazy loaded。一般的建構子方式，會導致如果有 1000 個元件，全部都會在一開始就創建，體驗上很差。</p>
+<ol>
+<li><strong>SliverList</strong> → <code>SliverList.builder()</code></li>
+<li><strong>SliverGrid</strong> → <code>SliverGrid.builder()</code></li>
+<li><strong>ListView</strong> → <code>ListView.builder()</code></li>
+<li><strong>GridView</strong> → <code>GridView.builder()</code></li>
+<li><strong>InteractiveViewer</strong> → <code>InteractiveViewer.builder()</code></li>
+<li><strong>TableView</strong> → <code>TableView.builder()</code>。表格瀏覽，跟隨 Flutter 3.13 推出，可安裝 <a href="https://pub.dev/packages/two_dimensional_scrollables?fbclid=IwAR13u0gn-q7r4OWfLHORHlMcXOzrZYYdpRPOGWXN2rX8EV6Idhntuh-aacM">two_dimensional_scrollables</a> 套件使用</li>
+</ol>
+<h3 id="設置-itemextent"><a class="header" href="#設置-itemextent">設置 itemExtent</a></h3>
+<ol>
+<li>主要可以固定列表上的子元件長寬，如果是垂直滾動代表是高度; 如果是水平滾動代表是寬度</li>
+<li>有助於 Flutter 計算 ListView 的滾動位置，提前知道子元件的範圍，而不是創建時計算每個元件的資訊(尤其是在滾動位置頻繁變化時)，可以節省成本，讓整體的滾動體驗更好</li>
+<li>類似的元件 <strong>SliverFixedExtentList</strong>，可以使用 <code>prototypeItem</code> 屬性設置，提升效能</li>
+</ol>
+<pre><code class="language-dart">ListView.builder(
+    itemCount: 500,
+    itemExtent: 100,
+    itemBuilder: (context, index) {
+        return Container();
+    },
+),
+</code></pre>
+<h3 id="避免使用-shrinkwrap"><a class="header" href="#避免使用-shrinkwrap">避免使用 shrinkWrap</a></h3>
+<ol>
+<li>ScrollView 在一般情況下會需要延展到 <code>scrollDirection</code> 指定方向的最大範圍，先確認滑動空間。所以我們都會使用 <strong>Expanded</strong> 來包裹 ScrollView，否則會報錯</li>
+<li>如果不想要預設佔滿的話就可以設置 <code>shrinkWrap</code> 為 true，但是這個情境下 ScrollView 就會根據內容的變動、多寡來頻繁計算需要顯示的滾動空間，以達成收縮效果，它的代價就是成本很高，一樣會影響 APP 性能</li>
+</ol>
+<pre><code class="language-dart">ListView.builder(
+    itemCount: 500,
+    itemExtent: 100,
+    shrinkWrap: true,
+    itemBuilder: (context, index) {
+        return Container();
+    },
+),
+</code></pre>
+<h3 id="列表載入多張高像素圖片"><a class="header" href="#列表載入多張高像素圖片">列表載入多張高像素圖片</a></h3>
+<p>預設情況下 item-widget 保持活動狀態，不會再重新繪製，也不會在可視範圍之外被垃圾回收。實際使用者操作滾動時，原本的 item 雖然沒有在畫面上顯示，但是一樣存在，滾動回來後直接顯示，不需要繪製消耗資源，為了確保滑動順暢</p>
+<pre><code class="language-dart">// 預設為true，讓每個item保持活動，不被銷毀
+addAutomaticKeepAlives: true
+
+// 預設為true，每個item都用RepainBoundry包裝，它只繪製一次以獲得更高的性能
+addRepaintBoundaries: true
+</code></pre>
+<h4 id="但是"><a class="header" href="#但是">但是</a></h4>
+<ol>
+<li>加載大量的高像素圖片後，因為沒有被釋放肯定會消耗大量記憶體，最終可能會 OOM 使 APP 崩潰。可以輕鬆地禁用它們，這樣不可見的 item 就會被自動處理和被垃圾回收。</li>
+<li>將參數設置為 <code>false</code>，可能會導致使用更多 CPU 和 GPU 工作，因為需要重新繪製並管理狀態，但它可以解決記憶體問題，並且同時獲得所需情境下的效果。</li>
+</ol>
+<blockquote>
+<p>不過還是要根據實際狀況來評估，請嘗試後再做決定，透過 DevTools 協助我們</p>
+</blockquote>
+<pre><code class="language-dart">ListView.builder(
+    itemCount: 500,
+    itemExtent: 100,
+    addAutomaticKeepAlives: false,
+    addRepaintBoundaries: false,
+    itemBuilder: (context, index) {
+        return Image.asset('assets/images/big_image.png');
+    },
+)
+</code></pre>
+<hr />
+<h2 id="總結"><a class="header" href="#總結">總結</a></h2>
+<p>本文說明了一些提高 APP 性能的開發觀念與技巧，讓我們可以在節省資源的情況下發揮最好表現，讓產品順暢運行且保持穩定。很多問題都是由細小的原因累積而成，不要覺得隨意開發專案還是保持順暢，可能只是我們覺得，實際上在用戶的裝置上並不理想，所以開發時的每個細節都很重要。同時記得要透過 DevTools 協助開發，養成好習慣，以後會感謝自己的。</p>
+<h2 id="延伸閱讀"><a class="header" href="#延伸閱讀">延伸閱讀</a></h2>
+<ul>
+<li><a href="https://ithelp.ithome.com.tw/articles/10331424">Day 15: Flutter 效能優化，良好的開發觀念與技巧！(下)</a></li>
+</ul>
+<h2 id="參考與相關資源"><a class="header" href="#參考與相關資源">參考與相關資源</a></h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=bzWaMpD1LHY&amp;ab_channel=Flutter">https://www.youtube.com/watch?v=bzWaMpD1LHY&amp;ab_channel=Flutter</a></li>
+<li><a href="https://www.youtube.com/watch?v=qax_nOpgz7E&amp;t=19s&amp;ab_channel=Flutter">https://www.youtube.com/watch?v=qax_nOpgz7E&amp;t=19s&amp;ab_channel=Flutter</a></li>
+<li><a href="https://stackoverflow.com/questions/53234825/what-is-the-difference-between-functions-and-classes-to-create-reusable-widgets/53234826#53234826">https://stackoverflow.com/questions/53234825/what-is-the-difference-between-functions-and-classes-to-create-reusable-widgets/53234826#53234826</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day13.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day15.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day13.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day15.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

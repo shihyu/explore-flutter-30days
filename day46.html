@@ -1,0 +1,390 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 46：Flutter 狀態管理：深入理解 Riverpod (下) - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-46flutter-狀態管理深入理解-riverpod-下"><a class="header" href="#day-46flutter-狀態管理深入理解-riverpod-下">Day 46：Flutter 狀態管理：深入理解 Riverpod (下)</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10332302">Day 16：Flutter 狀態管理：深入理解 Riverpod (下)</a></p>
+</blockquote>
+<p>中秋節大家有好好賞月嗎，趁著連假有空的時候，繼續把 Riverpod 內容繼續讀完，上班時間可沒那麼多體裡可以把它嗑完。那廢話不多說就開始吧！</p>
+<p><strong>ProviderContainer 是如何交互的</strong></p>
+<p>由昨天所提到的部分，我們可以知道 <code>ProviderContainer</code> 才是那個真正記錄所有狀態的核心，不過在平常開發中，大部分的時間我們並沒有直接操作他，而是透過 <code>ref.raed</code> 或 <code>ref.watch</code>，去查看當前 provider 的狀態，今天要講的部分就是這中間的過程是如何完成的。</p>
+<p><strong>如何建立 Provider</strong></p>
+<p>首先先從如何建立 Provider 開始看起，要建立每一個 Provider 都需要提供一個  <code>_createFn: (ref)⇒false</code>，那 <code>_createFn</code> 實際上到底是做了什麼呢？</p>
+<pre><code class="language-dart">final myProvider = Provider((ref) =&gt; false);
+
+</code></pre>
+<p>那我們就必須深入 Provider 的程式碼裡面，在這裡你可以看到每個 Provider 類型都被需要去繼承一個方法就是 <code>_create</code>，這裡定義了在每個 Provider 被建立出實體時，也會一併去建立一個相對應的 <code>ProviderElement</code>。</p>
+<pre><code class="language-dart">class Provider extends InternalProvider
+with AlwaysAliveProviderBase {
+/// {@macro riverpod.provider}
+Provider(
+this._createFn, {
+super.name,
+super.dependencies,
+@Deprecated('Will be removed in 3.0.0') super.from,
+@Deprecated('Will be removed in 3.0.0') super.argument,
+@Deprecated('Will be removed in 3.0.0') super.debugGetCreateSourceHash,
+}) : super(
+allTransitiveDependencies:
+computeAllTransitiveDependencies(dependencies),
+);
+
+...
+
+final Create&gt; _createFn;
+
+@override
+State _create(ProviderElement ref) =&gt; _createFn(ref);
+
+@override
+ProviderElement createElement() =&gt; ProviderElement(this);
+
+...
+}
+
+</code></pre>
+<p><strong>Provide 與 Element的關聯</strong></p>
+<p>這裡的 element 與三棵樹里的 element 並不相同，不過我認為取這個名稱也是有意義的，因為 Provider 本身就像是 Widget 一樣只是描述如何建立一個 State，Element 才是管理真正實際內容的地方。</p>
+<p><strong>State 更新機制</strong></p>
+<p>另一個有意思的地方，在每一個 ProvideElement 中，如果 state 被更改了了，有一個 <code>setState</code> 用 <code>_notifyListeners</code> 提醒訂閱者，也是和 Flutter 的 <code>setState</code> 相互呼應。</p>
+<pre><code class="language-dart">void setState(State newState) {
+assert(
+() {
+_debugDidSetState = true;
+return true;
+}(),
+'',
+);
+final previousResult = getState();
+final result = _state = ResultData(newState);
+
+if (_didBuild) {
+_notifyListeners(result, previousResult);
+}
+}
+
+</code></pre>
+<p><strong>小總結</strong></p>
+<p>現在我們先一起喘口氣，對目前為止的內容做一下小總結：</p>
+<ul>
+<li>
+<p><code>ProviderScope</code> 對 WidgetTree 注入 <code>ProviderContainer</code></p>
+</li>
+<li>
+<p><code>ProviderContainer</code> 掌管所有的 Provider state</p>
+</li>
+<li>
+<p>Provider 透過 <code>_createFn</code> 建立 <code>ProviderElement</code> 管理當前的狀態</p>
+</li>
+<li>
+<p>透過 setState 去提醒所有訂閱 <code>ProviderElement</code> 的人 State 已經被更新</p>
+</li>
+</ul>
+<p><strong>Widget 與 ProviderElement 的連接</strong></p>
+<p>深吸一口氣，我們一起來看最後一個關鍵，Widget 要怎麼跟 ProviderElement 串連起來，達到更新 Widget 的方法。</p>
+<p><strong>ConsumerStatefulWidget 的角色</strong></p>
+<p>那接下來的步驟，大家應該都猜到了吧！下一個要解剖的就是 <code>ConsumerStatefulWidget</code> 啦。你說為什麼不看 <code>ConsumerWidget</code> ? 因為 <code>ConsumerWidget</code> 也是繼承自 <code>ConsumerStatefulWidget</code> 🌝</p>
+<pre><code class="language-dart">abstract class ConsumerWidget extends ConsumerStatefulWidget {
+...
+
+</code></pre>
+<p>那 <code>ConsumerStatefulWidget</code> 實際上做了什麼呢？他 override 了 createElement 的方法，替換成 <code>ConsumerStatefulElement</code>，以達到我們先前說的 <code>ProviderElement</code> 的注入。</p>
+<pre><code class="language-dart">abstract class ConsumerStatefulWidget extends StatefulWidget {
+/// A [StatefulWidget] that can read providers.
+const ConsumerStatefulWidget({super.key});
+
+@override
+// ignore: no_logic_in_create_state
+ConsumerState createState();
+
+@override
+ConsumerStatefulElement createElement() {
+return ConsumerStatefulElement(this);
+}
+}
+
+</code></pre>
+<p>另一點則是在 <code>_ConsumerState</code> 裡面放入 ref，作為我們可以拿來操作的對象，下一段會說明為什麼 <code>Buildcontext</code> 可以直接變成 <code>WidgetRef</code></p>
+<pre><code class="language-dart">class _ConsumerState extends ConsumerState {
+@override
+WidgetRef get ref =&gt; context as WidgetRef;
+
+@override
+Widget build(BuildContext context) {
+return widget.build(context, ref);
+}
+}
+
+</code></pre>
+<p><strong>WidgetRef 的定義與功能</strong></p>
+<p>這裡可以看到 <code>ConsumerStatefulElement</code> 繼承了 <code>StatefulElement</code> 並實作 <code>WidgetRef</code>。我們知道 <code>StatefulElement</code> 是 <code>BuildContext</code> 的子類別，所以 <code>WidgetRef</code> 也是 <code>BuildContext</code> 的一個子類別的實現。</p>
+<p>簡言之 <code>WidgetRef</code> 就是 <code>BuildContext</code> 的擴展，讓他可以勝任操作 watch, read 與 <code>ProviderContainer</code> 互動的功能。</p>
+<pre><code class="language-dart">/// The [Element] for a [ConsumerStatefulWidget]
+class ConsumerStatefulElement extends StatefulElement implements WidgetRef {
+/// The [Element] for a [ConsumerStatefulWidget]
+ConsumerStatefulElement(ConsumerStatefulWidget super.widget);
+
+late ProviderContainer _container = ProviderScope.containerOf(this);
+...
+}
+
+</code></pre>
+<p>所以我們可以看到在 <code>ConsumerStatefulElement</code> 在 <code>didChangeDependencies</code> 就會去重新讀取 <code>ProviderContainer</code>，以達到更新 Provider 內容的作用。</p>
+<pre><code class="language-dart">class ConsumerStatefulElement extends StatefulElement implements WidgetRef {
+...
+@override
+void didChangeDependencies() {
+super.didChangeDependencies();
+final newContainer = ProviderScope.containerOf(this);
+if (_container != newContainer) {
+_container = newContainer;
+for (final dependency in _dependencies.values) {
+dependency.close();
+}
+_dependencies.clear();
+}
+}
+
+</code></pre>
+<p>至此大家應該對 Riverpod 如何透過 Element 達到串連 Widget 的效果有了初步的理解。這次的 Riverpod 解析也先告一段落，下次有機會再繼續展開！</p>
+<h1 id="結論"><a class="header" href="#結論">結論</a></h1>
+<p>在本文中，我們深入探討了 Riverpod 狀態管理工具的核心概念與運作機制。透過對<code>ProviderContainer</code>、<code>Provider</code>、<code>ProviderElement</code>以及<code>ConsumerStatefulWidget</code>的解析，可以看出 Riverpod 是如何與 Flutter 的 Widget 系統結合，提供靈活且強大的狀態管理。</p>
+<ul>
+<li>
+<p><strong>核心掌控</strong>：<code>ProviderContainer</code>確實成為了狀態管理的核心，儲存且跟踪所有providers的狀態。</p>
+</li>
+<li>
+<p><strong>靈活性</strong>：Riverpod提供的<code>ref.read</code>和<code>ref.watch</code>功能，使得開發者能夠輕鬆地查看和互動當前的provider狀態。</p>
+</li>
+<li>
+<p><strong>與 Flutter 的緊密結合</strong>：透過<code>ConsumerStatefulWidget</code>和<code>ConsumerStatefulElement</code>，Riverpod 與 Flutter 建立了密切的聯繫，使得 Widgets 可以更加直觀地反映狀態變化。</p>
+</li>
+</ul>
+<p>希望你們喜歡今天的分享，明天繼續 🌝</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day45.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day47.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day45.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day47.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

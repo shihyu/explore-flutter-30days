@@ -1,0 +1,585 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 54：原來還能這樣用 ！｜StoryBook 加速創作的方法 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-54原來還能這樣用-storybook-加速創作的方法"><a class="header" href="#day-54原來還能這樣用-storybook-加速創作的方法">Day 54：原來還能這樣用 ！｜StoryBook 加速創作的方法</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10337108">Day 24：原來還能這樣用 ！｜StoryBook 加速創作的方法</a></p>
+</blockquote>
+<p>今天一起來看看 UI 開發工具的好幫手 StoryBook 在深入探索Flutter Storybook的用法之前，首先讓我們了解其背後的起源和概念。</p>
+<p><strong>Storybook</strong> 起初是為React社區設計的開放原始碼工具，用於開發UI元件於隔離的環境中。隨著時間的推移，它已經擴展到支援許多其他的前端框架，如 Vue、Angular、Svelte 以及當然還有 Flutter。這個工具的主要目標是使開發人員能夠單獨開發和測試UI元件，而不必擔心整個應用程式的上下文或狀態。</p>
+<p>Storybook的主要優勢：</p>
+<ul>
+<li>
+<p><strong>隔離開發</strong>：您可以單獨製作和優化UI元件，無需擔心其他應用程式邏輯或數據。</p>
+</li>
+<li>
+<p><strong>可視化檢查</strong>：提供了一個界面，可以在各種不同的狀態和輸入下檢視和互動您的元件。</p>
+</li>
+<li>
+<p><strong>可重用性</strong>：由於元件是在隔離的環境中開發的，因此它們往往更加模塊化和可重用。</p>
+</li>
+<li>
+<p><strong>協作</strong>：設計師和開發人員可以密切合作，以確保元件的視覺效果和功能都達到期望的效果。</p>
+</li>
+</ul>
+<h3 id="flutter-storybook"><a class="header" href="#flutter-storybook">Flutter StoryBook</a></h3>
+<p>Flutter 相關的 StoryBook Package 也不少，目前社群比較多人用的應該是：</p>
+<p><strong>widgetbook 和 storybook_flutter 這兩個</strong> Package：</p>
+<p>目前我們採用的是 <strong>widgetbook</strong> ，因為他的 usecase 更方便也有提供 Annotation 做自動化可以省下很多功夫，文件跟社群也比較活躍。所以我們接下來會以 <strong>widgetbook</strong> 做下面的相關介紹。</p>
+<h3 id="setup"><a class="header" href="#setup">Setup</a></h3>
+<p>安裝可以直接參考<a href="https://docs.widgetbook.io/getting-started/install">官網</a>這裡就快速帶過。</p>
+<p>安裝依賴</p>
+<pre><code class="language-bash">flutter pub add widgetbook_annotation widgetbook
+flutter pub add widgetbook_generator  build_runner --dev
+
+</code></pre>
+<p>建立一個 widgetbook.dart 的檔案</p>
+<pre><code class="language-bash">// widgetbook.dart
+
+import 'package:flutter/material.dart';
+import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+// Import the generated directories variable
+import 'widgetbook.directories.g.dart';
+
+void main() {
+runApp(const WidgetbookApp());
+}
+
+@widgetbook.App()
+class WidgetbookApp extends StatelessWidget {
+const WidgetbookApp({Key? key}) : super(key: key);
+
+@override
+Widget build(BuildContext context) {
+return Widgetbook.material(
+// Use the generated directories variable
+directories: directories,
+addons: [],
+);
+}
+}
+
+</code></pre>
+<p>跑 build_runner</p>
+<pre><code class="language-bash">flutter pub run build_runner build
+
+</code></pre>
+<p>開始運行 widgetbook</p>
+<pre><code class="language-bash">flutter run -t lib/widgetbook.dart -d macos
+
+</code></pre>
+<p>到這裡我們就可以看到成功運行的畫面摟，目前支援 macos, windows linux  web 版本，選擇適合你的方式即可。成功的畫面就像下面這樣：</p>
+<p><img src="images/20117363n0lZauQJtX.png" alt="" /></p>
+<h3 id="component"><a class="header" href="#component">Component</a></h3>
+<p>在完成基本的框架後，接下來就是要把自己的 Widget 加入畫面中摟！我們要使用的叫做 <code>@UseCase</code>，他拿來定義我們每一個被加入的 Widget 有哪些使用範例。這裡我們寫一個綠色的正方體做示範：</p>
+<p>這些 Widget Function 都必須給定一個 <code>BuildContext</code> 作為傳入的參數</p>
+<pre><code class="language-bash">import 'package:flutter/material.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+@widgetbook.UseCase(
+name: 'with green color',
+type: Container,
+)
+Widget greenContainerUseCase(BuildContext context) {
+return Column(
+children: [
+Container(
+color: Colors.green,
+child: const SizedBox.square(
+dimension: 100,
+),
+),
+],
+);
+}
+
+</code></pre>
+<p>完成後要再跑 build_runner 就會替我們生成 usecase 到 widgetbook 中摟</p>
+<pre><code class="language-bash">flutter pub run build_runner build
+
+</code></pre>
+<p>結果：</p>
+<p><img src="images/20117363eMJfkMCUuj.png" alt="" /></p>
+<h3 id="knobs"><a class="header" href="#knobs">Knobs</a></h3>
+<p>knobs 代表的是我們可以調整的參數，讓我們可以帶入任意的參數作為使用，可以快速看到不同參數底下 Widget 的結果。</p>
+<p>目前 widgetbook 支援這些 Knobs，透過這些參數我們就能做出許多調整了</p>
+<p>Name
+Type</p>
+<p>boolean
+bool</p>
+<p>booleanOrNull
+bool?</p>
+<p>string
+String</p>
+<p>stringOrNull
+String?</p>
+<p>double.slider
+double</p>
+<p>doubleOrNull.slider
+double?</p>
+<p>double.input
+num</p>
+<p>doubleOrNull.input
+num?</p>
+<p>list
+T</p>
+<p>listOrNull
+T?</p>
+<p>duration
+Duration</p>
+<p>durationOrNull
+Duration?</p>
+<p>Knobs 也支援自訂義可以參考<a href="https://docs.widgetbook.io/knobs/custom-knob">官網文件</a></p>
+<p>嘗試做一個可以自行控制 title 的 widget</p>
+<pre><code class="language-dart">// title_widget.dart
+
+import 'package:flutter/material.dart';
+import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+@widgetbook.UseCase(name: 'with different title', type: Container)
+Widget myWidget(BuildContext context) {
+return Text(
+context.knobs.string(
+label: 'Title Label',
+initialValue: 'HomePage',
+),
+);
+}
+
+</code></pre>
+<p>或是一個點點產生器</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+@widgetbook.UseCase(name: 'with different title', type: Container)
+Widget myWidget(BuildContext context) {
+return Wrap(
+crossAxisAlignment: WrapCrossAlignment.center,
+children: [
+...(List.generate(
+context.knobs.double
+.slider(
+label: "Dots",
+initialValue: 1,
+min: 1,
+max: 30,
+divisions: 29,
+)
+.toInt(),
+(index) =&gt; Container(
+margin: const EdgeInsets.all(2),
+decoration: const BoxDecoration(
+shape: BoxShape.circle,
+color: Colors.white,
+),
+width: 20,
+height: 20,
+),
+))
+],
+);
+}
+
+</code></pre>
+<p>記得完成以後要再跑一次 build runner 就可以摟</p>
+<p><img src="images/giphy.gif" alt="" /></p>
+<h3 id="addon"><a class="header" href="#addon">Addon</a></h3>
+<p>WidgetBook 也提供 Addon 可以來補足他不足的地方，這裡我們拿 Device Frame Addon 來簡單做一個示範：</p>
+<p><strong>Device Frame Addon</strong></p>
+<p>在做 Widget book 時，為了讓畫面更逼真或是更貼近現實，希望可以看到 Widget 在手機上的模擬畫面，這時候就可以靠他幫忙實現。只要在 <code>addons</code> 裡面加上 <code>DeviceFrameAddon</code> 再 hotreload 一下就可以摟！</p>
+<pre><code class="language-dart">@widgetbook.App()
+class WidgetbookApp extends StatelessWidget {
+const WidgetbookApp({Key? key}) : super(key: key);
+
+@override
+Widget build(BuildContext context) {
+return Widgetbook.material(
+directories: directories,
+addons: [
+DeviceFrameAddon(
+devices: [Devices.ios.iPhone13],
+initialDevice: Devices.ios.iPhone13,
+)
+],
+);
+}
+}
+
+</code></pre>
+<p>如果想要隱藏也可以側邊欄的 Addon 去做調整</p>
+<p><img src="images/20117363pls5tfY9a9.png" alt="" /></p>
+<h3 id="其他案例數位藝術創作"><a class="header" href="#其他案例數位藝術創作">其他案例：數位藝術創作</a></h3>
+<p>在看完這些功能以後，除了一般 UI 的直觀操作，widgetbook 的 Knobs 和 addon 其實也提供給數位藝術創作很好的發揮舞台。通常我們在做藝術創作時，調整參數其實花費很大的時間，因為要不停改各個參數之間的互動，以達到最好的藝術效果。在 JS 我們通常會用 <code>dat.gui</code> 這個 pakcage ，但是 Flutter 目前並沒有一個好用的 package 來做這件事，Knobs 其實就可以拿來替代這個功能。那我們就來寫一個簡單的範例吧：</p>
+<p>這個範例需要用到一個 package，可以幫我們拿到時間變數，熱騰騰昨天才寫好的：</p>
+<pre><code class="language-dart">digital_art_toolkit: ^0.0.1
+
+</code></pre>
+<p>接下來開始我們的創作，這裡主要是畫無數的正方形框框，然後讓他依照時間做出抖動的效果</p>
+<pre><code class="language-dart">import 'dart:math';
+
+import 'package:flutter/material.dart';
+
+class AnimatedSkewBox extends StatefulWidget {
+final double time;
+final int amount;
+
+const AnimatedSkewBox({super.key, required this.time, required this.amount});
+
+@override
+State createState() =&gt; _AnimatedSkewBoxState();
+}
+
+class _AnimatedSkewBoxState extends State {
+late double lastTime;
+@override
+void initState() {
+lastTime = widget.time;
+super.initState();
+}
+
+@override
+void didUpdateWidget(covariant AnimatedSkewBox oldWidget) {
+if (widget.time - lastTime &gt; 0.06) {
+lastTime = widget.time;
+}
+super.didUpdateWidget(oldWidget);
+}
+
+@override
+Widget build(BuildContext context) {
+return CustomPaint(
+painter: SkewPainter(
+time: widget.time,
+amount: widget.amount,
+shouldRepaintWidget: widget.time == lastTime,
+),
+size: const Size(200, 200),
+);
+}
+}
+
+class SkewPainter extends CustomPainter {
+final double time;
+final int amount;
+final bool shouldRepaintWidget;
+
+SkewPainter(
+{required this.time,
+required this.amount,
+required this.shouldRepaintWidget});
+
+double getRandomSkewValue() {
+Random random = Random();
+double skewValue = random.nextDouble() * 3 +
+7; // This will generate a random value between 5 and 10
+return random.nextBool()
+? skewValue
+: -skewValue; // Randomly make it negative
+}
+
+@override
+void paint(Canvas canvas, Size size) {
+var paint = Paint()
+..color = Colors.white
+..strokeWidth = 0.1
+..style = PaintingStyle.stroke;
+for (var i = 0; i &lt; amount; i++) {
+double squareSize = 10;
+final randomSkewX = getRandomSkewValue();
+final randomSkewY = getRandomSkewValue();
+// Calculate the center of the square
+double centerX = squareSize / 2;
+double centerY = squareSize / 2;
+
+canvas.save();
+
+// Translate to the center of the square
+canvas.translate(centerX, centerY);
+
+// Apply the skew
+canvas.skew(randomSkewX, randomSkewY);
+
+// Translate back from the center
+canvas.translate(-centerX, -centerY);
+// Draw the square
+canvas.drawRect(Rect.fromLTWH(0, 0, squareSize, squareSize), paint);
+canvas.restore();
+}
+}
+
+@override
+bool shouldRepaint(CustomPainter oldDelegate) {
+return shouldRepaintWidget;
+}
+}
+
+</code></pre>
+<p>然後搭配上 knobs 操作台：</p>
+<pre><code class="language-dart">import 'package:digital_art_toolkit/dat_builder.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_day_23_storybook/widgets/digital_art.dart';
+import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+@widgetbook.UseCase(
+name: 'with box amount',
+type: Container,
+)
+Widget squareBox(BuildContext context) {
+return Center(
+child: DatBuilder(builder: (context, time, mouseOffset) {
+return AnimatedSkewBox(
+time: time,
+amount: context.knobs.double
+.slider(
+label: "Square amount",
+initialValue: 8,
+min: 1,
+max: 20,
+divisions: 20,
+)
+.toInt(),
+);
+}),
+);
+}
+
+</code></pre>
+<p>接下來就可以看到成果摟：</p>
+<p><img src="images/giphy.gif" alt="" /></p>
+<p>有了 Storybook 的幫忙，我可以更專心在創作上面。</p>
+<h2 id="總結"><a class="header" href="#總結">總結</a></h2>
+<p>透過這篇文章，我們深入地探索了 StoryBook 這項強大的 UI 開發工具，尤其是在 Flutter 領域中的應用。從 StoryBook 的起源和概念，到具體的設置步驟、元件、Knobs 和 Addon，都進行了詳盡的介紹。可以看到，StoryBook 不僅能夠幫助開發者更方便地製作和優化 UI 元件，也提供了高度的可視化功能，使得協作、測試和創作都變得更加簡單。</p>
+<p>特別值得一提的是，通過 StoryBook 的 Knobs 和 addon，我們還能夠擴展其應用，例如數位藝術創作，快速調整參數和視覺效果，極大地提高了創作效率。總的來說，無論是日常的 UI 開發，還是特定的藝術創作，StoryBook 都提供了強大的支援，是每位開發者的必備工具。</p>
+<p>最後，希望這篇文章能夠幫助到想要更深入了解 StoryBook 的讀者，也期待看到更多精彩的應用和創作！</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day53.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day55.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day53.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day55.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

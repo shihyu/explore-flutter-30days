@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 31：好想成為 Senior 工程師 🌝 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-31好想成為-senior-工程師-"><a class="header" href="#day-31好想成為-senior-工程師-">Day 31：好想成為 Senior 工程師 🌝</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10317176">Day 1：好想成為 Senior 工程師 🌝</a></p>
+</blockquote>
+<p>Hi 各位 it 幫的朋友們！我是 Dorara，目前任職於 KryptoGO ，負責區塊連錢包的開發工作。希望透過這系列的文章，總結目前學到的技術，也希望讓更多台灣人看到 Flutter 的優點，並加入這個大家庭，話不多說故事開始。</p>
+<p>開篇先來聊聊 Flutter 以外的事。
+<img src="images/201173634qiJHVnW2s.png" alt="" /></p>
+<p>在工作了 3~5 年後，基本技能已經得到完善，在專業領域上擁有獨立作業與成長的能力，那接下來呢？如何自我突破一直是人生最大的課題，下面的文章是我做為 Senior 工程師路上的求道者，與大家分享我的思考，希望能達到拋磚引玉的效果，讓更多人一起攻克這些難題。</p>
+<p>在深入主題之前，什麼樣的條件才算是一名 Senior 工程師？有個政治不正確，但卻是簡單的判斷標準：<strong>薪資水平</strong>。如果你的薪資處於所在領域的中上游或者更高的水平，那麼你很可能已經是一名 Senior 工程師。當然，以上純屬玩笑話，下面來說點認真的。</p>
+<p>在剛入行初期，我總是對自己能不能成為 Senior 工程師有很多自我懷疑，在學校我不是名列前茅，程式能力也稱不上頂尖，這樣的我真的能在這條路走下去嗎？</p>
+<p>剛開始很容易認為技術力就是工程師的最重要核心，但是對於一個項目來說，往往只要求你符合這個專案大小的能力即可，這裡不是要貶低技術力。相反地，技術力的高低可以決定你價值的上下限，但卻不能直接代表你的價值。但隨著經驗的累積，<strong>發揮你的價值</strong>才是我們要追求的目標。</p>
+<p>所以不能單單只是鑽研技術，其他軟實力也必須要培養。少數人可以依靠卓越的自身能力成為單幹超人，但對大多數人而言，我們必須要做好更多綜合實力的儲備，成為蝙蝠俠：<strong>準備充分的普通人</strong>。我想說的是，每個準備充分的人都有能力和資格成為 Senior 工程師！（也是對自己的喊話 🌝）。</p>
+<p>所以，我自己是如何定義 Senior 工程師的呢？</p>
+<ul>
+<li>熟練的專業技能</li>
+</ul>
+<p>想快速評估自己的能力，可以參考 <a href="https://roadmap.sh/flutter">roadmap</a> ，看看自己是否真的掌握全部的技能。除了已經掌握的技能，同時也必須時常去了解最新的技術，以提供團隊更多的選擇與機會。</p>
+<ul>
+<li>誠信</li>
+</ul>
+<p>要承擔更多或更重要的目標，首要的條件就是你的誠信基礎。但誠信是一個門實踐的藝術，只能從日常不斷累積，從每個任務的準時交付，到對於會議規則的遵守，這些方方面面都形塑了你是什麼樣的一個人。誠信不管是在工作上，乃至於日常生活，都是必須不斷努力完成的目標。</p>
+<ul>
+<li>快速理解並拆解目標</li>
+</ul>
+<p>越高的職階很多時候代表你必須要承擔更多的責任，並負責更長遠的目標。能負責的目標大小，絕對是一個重要的能力指標，不能只著眼於完成自己手上的工作，還需要具有快速理解和實施解決方案的能力，能定義模糊的需求，甚至是用自身的專業提出更好的解決辦法，這些都是你能發揮價值的地方。</p>
+<ul>
+<li>溝通能力</li>
+</ul>
+<p>在這個階段，你無法避免的會需要與團隊內外的成員溝通，為了不要成為怪獸上司或是討厭的同事，溝通能力十分重要，很多時候溝通的效率很直接地影響到你負責的專案產出，對內必須要交代清楚目標，對外必須讓其他人理解你的工作成果：向下能闡述清楚的目標，對上能夠對齊想法。</p>
+<p>要成為一名 Senior 工程師，所需的技能絕不僅僅限於專業（ Flutter）。除了掌握核心的開發語言，你還需要熟悉各種測試和 CI/CD 工具，以及做好心態上的準備。接下來三十天我會盡量分享自己所學，期待能對跟我處在相同階段的人有所幫助！</p>
+<p>主題分為以下的幾個大項</p>
+<ul>
+<li>
+<p>Flutter 複習</p>
+</li>
+<li>
+<p>CI/CD 與版本控制</p>
+</li>
+<li>
+<p>測試與監控</p>
+</li>
+<li>
+<p>軟實力</p>
+</li>
+</ul>
+<p>感謝你們看到這裡，如果對後續的系列感興趣，歡迎大家持續追縱，留言指教！</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day30.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day32.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day30.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day32.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 26: 想跑 Flutter 測試但卻不想寫嗎， 試看看 Maestro UI Testing， 整合 CICD 沒問題！ - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-26-想跑-flutter-測試但卻不想寫嗎-試看看-maestro-ui-testing-整合-cicd-沒問題"><a class="header" href="#day-26-想跑-flutter-測試但卻不想寫嗎-試看看-maestro-ui-testing-整合-cicd-沒問題">Day 26: 想跑 Flutter 測試但卻不想寫嗎， 試看看 Maestro UI Testing， 整合 CICD 沒問題！</a></h1>
+<ul>
+<li>發布時間：2023-10-11 22:45:03</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10337944">https://ithelp.ithome.com.tw/articles/10337944</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 26 篇</li>
+</ul>
+<p><img src="images/20120687DU2MqFXQ10.png" alt="" /></p>
+<p><strong>Maestro</strong> 是一個完整的 <strong>UI</strong> 自動化測試框架與解決方案，提供豐富的文件和 API 給開發者使用，其中的連續模式就很符合人性化，像是自動 <strong>hot-reload</strong> 一樣，能夠有效幫助撰寫測試，而且讓非開發者也能參與，這點非常加分，整體來說體驗很不錯。</p>
+<p>本文除了提供基本的測試範例，也使用 Script 進行自動化多 <strong>flow</strong> 驗證，然後提供結果報告，最後將 Maestro 添加到 Gitlab CICD 中，透過它協助檢查 Flutter 應用。過程會使用腳本啟動本地模擬器、執行多流程驗證並顯示報告、最後關閉模擬器，接著建置 App 安裝檔，然後將它部署到 App Center，讓開發者與 QA 人員可以在手機上操作。</p>
+<hr />
+<p>快速了解 Maestro 的幾個特點：</p>
+<ul>
+<li>E2E 測試框架，使用 yaml 定義測試流程</li>
+<li>容忍非同步和延遲，預設會自動等待操作完成，無需撰寫 <code>sleep()</code></li>
+<li>運行後能夠持續監控測試文件的變動，並在它們發生變化時重新運行，不需要再次編譯</li>
+<li>支援 <strong>CI Integration</strong>，自動上傳到 Maestro 平台進行測試。<a href="https://www.notion.so/Maestro-80cfa567d9e94eccbe44f95413f36f52?pvs=21">link</a></li>
+<li>支援 <strong><strong>Pull Request Integration</strong></strong>，發 PR 後自動進行測試驗證以及性能分析。<a href="https://cloud.mobile.dev/getting-started/pull-request-integration">link</a></li>
+<li>支援 <strong>Crash Analysis</strong>，每個情況都附有螢幕錄影、Log、StackTrace</li>
+<li>支援 <strong>APP Size</strong> <strong>Analysis</strong>，了解哪個部分佔比較大，可以進行特定優化</li>
+<li>支援 <strong>Memory</strong> <strong>Leaks Analysis</strong>，查看洩漏狀況與原因</li>
+<li>支援 <strong>Performance</strong> <strong>Analysis</strong>，測量啟動時間、執行時間，查看函式的呼叫以及耗時</li>
+</ul>
+<p>目前主流 Mobile 平台都有支援：<br />
+<img src="images/20120687yP7gCkGQvN.png" alt="" /></p>
+<ul>
+<li>Android - Views</li>
+<li>Android - Jetpack Compose</li>
+<li>iOS - UIKit</li>
+<li>iOS - SwiftUl</li>
+<li>React Native</li>
+<li>Flutter</li>
+<li>Web Views</li>
+<li>NET MAUI iOS</li>
+<li>NET MAUI Android</li>
+</ul>
+<h2 id="安裝-maestro-cli"><a class="header" href="#安裝-maestro-cli">安裝 Maestro CLI</a></h2>
+<pre><code class="language-bash">curl -Ls "https://get.maestro.mobile.dev" | bash
+</code></pre>
+<p><img src="images/20120687qHQ2qFgFBy.png" alt="" /></p>
+<h2 id="ios-設備的前置設定"><a class="header" href="#ios-設備的前置設定">iOS 設備的前置設定</a></h2>
+<ul>
+<li>需要 <strong>Facebook IDB(iOS Debug Bridge)</strong> 工具，就像是 Android adb 工具，可以跟設備互動，查看資訊、安裝、監控還能模擬手勢操作，非常適合自動化測試</li>
+</ul>
+<pre><code class="language-bash">brew tap facebook/fb
+brew install facebook/fb/idb-companion
+</code></pre>
+<p><img src="images/20120687sC46G8KvT3.png" alt="" /></p>
+<p>💡查看設備清單與ID</p>
+<pre><code class="language-bash">xcrun simctl list
+</code></pre>
+<p>![images/20120687mBNmxvKFOA.png]</p>
+<p>💡啟動要運行測試的模擬器</p>
+<pre><code class="language-bash">idb_companion --boot &lt;id of the iOS device&gt;
+</code></pre>
+<p>💡連結測試模擬器，驗證是否正常，沒問題就可以將此運行關閉</p>
+<pre><code class="language-bash">idb_companion --udid &lt;id of the iOS device&gt;
+</code></pre>
+<p>💡關閉模擬器</p>
+<pre><code class="language-hljs">idb_companion --shutdown F7CABB3C-DD6F-432D-A86F-5884287D2261
+</code></pre>
+<blockquote>
+<p>提醒：測試目前無法跑在實際的手機設備</p>
+</blockquote>
+<h3 id="運行-app"><a class="header" href="#運行-app">運行 APP</a></h3>
+<p>在測試執行前要確保已經有安裝過 APP 到模擬器，Maestro 會根據 <strong>packageName</strong> 或 <strong>bundleId</strong> 自動尋找到指定 APP 並啟動執行測試驗證</p>
+<ol>
+<li>IDE 運行安裝 APP</li>
+<li>Android 指令安裝</li>
+<li>iOS 指令安裝</li>
+</ol>
+<p><strong>Android 安裝</strong></p>
+<pre><code class="language-bash">adb install sample.apk
+</code></pre>
+<p><strong>iOS 安裝</strong></p>
+<pre><code class="language-bash">xcrun simctl install Booted Test.app
+</code></pre>
+<h3 id="撰寫測試"><a class="header" href="#撰寫測試">撰寫測試</a></h3>
+<p>請查看我在 Medium 撰寫的文章，有講解所有的操作指令，點擊以下連結跳轉</p>
+<blockquote>
+<p><a href="https://medium.com/flutter-formosa/%E4%BD%A0%E7%9F%A5%E9%81%93-maestro-%E5%97%8E-%E5%85%BC%E5%85%B7%E4%BA%BA%E6%80%A7%E7%9A%84%E8%87%AA%E5%8B%95%E5%8C%96%E6%B8%AC%E8%A9%A6%E6%A1%86%E6%9E%B6-flutter-%E5%93%81%E8%B3%AA%E5%B0%B1%E9%9D%A0%E5%AE%83%E4%BA%86-part-2-%E6%8C%87%E4%BB%A4%E8%88%87%E6%93%8D%E4%BD%9C-e6327ed5ac04">指令與操作</a></p>
+</blockquote>
+<h3 id="執行-debug-連續測試"><a class="header" href="#執行-debug-連續測試">執行 Debug 連續測試</a></h3>
+<ul>
+<li>運行 <strong>Continuous Mode</strong></li>
+<li>運行時皆為 Hot reload 模式，即時監聽 yaml 檔案的更新，不需要重新編譯即可重新運行</li>
+<li>測試過程的檢查條件會根據操作逐一確認</li>
+<li><strong>Enter</strong> → 點擊後刷新重來</li>
+</ul>
+<pre><code class="language-bash">maestro test -c flows/LaunchApp.yaml
+</code></pre>
+<p><img src="images/20120687a1aMadvP7o.png" alt="" /><br />
+<img src="images/YeQ0V2C.gif" alt="Continuous Testing" /></p>
+<p>當 <strong>yaml</strong> 檔的流程撰寫有誤時，會即時提醒<br />
+<img src="images/20120687Oo398RzLzs.png" alt="" /></p>
+<h3 id="執行單一-flow-測試"><a class="header" href="#執行單一-flow-測試">執行單一 Flow 測試</a></h3>
+<p>整個流程會自動執行操作，並完成驗證，最後顯示通過結果</p>
+<pre><code class="language-bash">maestro test maestro/flows/GoThirdAndScroll.yaml
+</code></pre>
+<p><img src="images/MbxVoYb.gif" alt="Single Flow" /></p>
+<h3 id="執行完整多-flow-測試"><a class="header" href="#執行完整多-flow-測試">執行完整多 Flow 測試</a></h3>
+<ul>
+<li>測試整個資料夾，每個情境都驗證，並在運行後生成測試報告</li>
+<li>不包含子資料夾</li>
+<li>加上 <code>--format junit</code> 生成 XML 結果報告</li>
+<li>加上 <code>—-output result.xml</code> 修改匯出名稱</li>
+</ul>
+<pre><code class="language-bash">maestro test flows/
+
+maestro test --format junit flows/
+</code></pre>
+<p><img src="images/20120687ApK7wa898f.png" alt="" /><br />
+<img src="images/20120687hBF0ZZPJ84.png" alt="" /><br />
+<img src="images/201206875SkmAlZFzH.png" alt="" /></p>
+<h3 id="缺點"><a class="header" href="#缺點">缺點</a></h3>
+<ol>
+<li>多 Flow 運行</li>
+</ol>
+<p>當需要驗證多個 flow 測試時會無法正常完成，從第二個 flow 開始不會自動操作，例如：點擊按鈕、滾動等互動行為，必須手動操作畫面讓 <strong>Maestro</strong> 檢查，是個很不方便的過程。</p>
+<p>這時候就自行優化囉，透過撰寫 Shell Script 來解決問題，逐一進行個別的 flow 驗證，可以查看專案的 <code>/scripts/run_test.sh</code> 檔案。</p>
+<p>主要的想法就是把測試目錄裡的每個 flow 檔案都進行逐一驗證，並記錄成功與失敗的數量，最後顯示我需要的結果報告，並附帶測試通過率。如果需要的話，後續就能夠接著整合 CI，測試沒問題才能進行後續的 APP 建置。<br />
+<img src="images/20120687d5wcUAfoil.png" alt="" /><br />
+<img src="images/20120687Qbpg0kMbBW.png" alt="" /></p>
+<p>以下展示透過 script 驗證多個 flow 測試，最後提供結果<br />
+<img src="images/20120687JtophFNx0x.png" alt="" /><br />
+<img src="images/20120687fWphFuLtDs.png" alt="" /><br />
+<img src="images/UgW0KrM.gif" alt="Optimize" /></p>
+<ol start="2">
+<li>
+<p>不支援 Flutter Key 偵測。而如果同時存在 <strong>semanticLabel</strong> 和 <strong>Text Label</strong>，則會以 semantic 優先</p>
+</li>
+<li>
+<p>無法在 Flutter Desktop 以及 Flutter Web 上運行</p>
+</li>
+</ol>
+<h3 id="maestro-studio"><a class="header" href="#maestro-studio">Maestro Studio</a></h3>
+<ul>
+<li>開發輔助工具，就像是 Flutter DevTools</li>
+<li>可抓取所有的 UI 元素，也可以搜尋關鍵字</li>
+<li>生成每個 UI 元素的基本測試指令，讓使用者可以直接複製使用</li>
+</ul>
+<p><img src="images/20120687JuNF6DaTA7.png" alt="" /><br />
+<img src="images/20120687UzVtGwqZi7.png" alt="" /><br />
+<img src="images/NQ4ZzZ2.gif" alt="Maestro Studio" /></p>
+<h3 id="錄製影片"><a class="header" href="#錄製影片">錄製影片</a></h3>
+<p>支援方便的錄影功能，不需要清空桌面與調整視窗位置，Maestro 會自動幫你調整為合適位置並進行錄製，最後產出一個下載連結。非常適合需要向外部展示、分享的時候，是個貼心的功能。</p>
+<pre><code class="language-bash">maestro record test.yaml
+</code></pre>
+<p><img src="images/20120687sGDTtGvfV1.png" alt="" /><br />
+<img src="images/XCEFrjk.gif" alt="Recording" /></p>
+<p>Maestro 錄製完成的影片，是不是非常方便，搭配簡潔好看的背景，一目了然。<br />
+<img src="images/S853srn.gif" alt="Recording 2" /></p>
+<hr />
+<h2 id="maestro-in-cicd"><a class="header" href="#maestro-in-cicd">Maestro in CICD</a></h2>
+<p>首先我們先看 Maestro Test 整合到 <strong>Gitlab CI</strong> 的樣子，期望除了有 Flutter Test 驗證之外還要多一層防護罩，就是跑使用者流程的操作測試，確認都沒問題後再進行後續的 build 和 deploy，而一但發現有錯誤的話則停止動作，通知負責人員。<br />
+<img src="images/20120687lsvVoZ2Y6n.png" alt="" /></p>
+<p>實際就是讓 <strong>Gitlab Runner</strong> 在機器上跑的時候可以主動啟動模擬器，接著開始進行測試驗證，當然如果你的 CICD 環境是在雲端的話可能就沒辦法使用 Maestro 了，除非是官方的 <strong>Maestro Cloud</strong>，很方便很好用，但是跑一個 flow 需要 0.1 美元，結果就是會花很多錢，對我們來說應該不是個很好的選擇。</p>
+<h3 id="executor"><a class="header" href="#executor">Executor</a></h3>
+<p>Maestro CI 需要的 Shell Script，我這邊規劃有三個</p>
+<ol>
+<li><code>boot_simulator.sh</code> → 啟動模擬器</li>
+<li><code>run_test.sh</code> → 執行測試驗證</li>
+<li><code>shutdown_simulator.sh</code> → 關閉模擬器</li>
+</ol>
+<h4 id="boot_simulatorsh"><a class="header" href="#boot_simulatorsh">boot_simulator.sh</a></h4>
+<p>裡面其實很簡單，就是透過 idb 幫我們開啟模擬器，準備待會跑測試。裡面的參數為 Simulator Deivce ID</p>
+<pre><code class="language-bash">#!/bin/sh
+
+# idb_companion --boot &lt;id of the iOS device&gt;
+# excute 'xcrun simctl list' in terminal to check device list.
+idb_companion --boot $1
+</code></pre>
+<p><img src="images/TLi8k6Z.gif" alt="boot_simulator" /></p>
+<h3 id="run_testsh"><a class="header" href="#run_testsh">run_test.sh</a></h3>
+<ol>
+<li>指令要測試的 <code>flows/</code> 目錄</li>
+<li>驗證每個 Flow 流程，將失敗和成功的次數記錄下來</li>
+<li>顯示自定義的結果報告，包含總次數、失敗次數、成功次數和通過率，根據通過率檢查是否正常，一旦有測試流程失敗的情況則暫停 CICD</li>
+</ol>
+<pre><code class="language-bash">#!/bin/sh
+
+directory=../maestro/flows/
+
+successedCount=0
+failedCount=0
+
+for entry in "$directory"*
+do
+    number=$(caculate $successedCount+$failedCount+1)
+    echo "---------------------- Flow $number ------------------------"
+   
+    log=$(maestro test "$entry")
+
+    if [[ $log == *"FAILED"* ]]; then
+        let failedCount=failedCount+1
+        continue
+    fi
+
+    let successedCount=successedCount+1
+
+done
+
+echo "------------------------------------------------"
+echo
+
+totalCount="$(($successedCount+$failedCount))"
+echo "Total: $totalCount"
+echo "Success: $successedCount"
+echo "Failure: $failedCount"
+
+percent=$(caculate $successedCount/$totalCount*100)
+percent=${percent%.*}
+echo "Pass: $successedCount/$totalCount, $percent%"
+
+echo
+
+goodEmoji='\xE2\x9C\x85'
+badEmoji='\xE2\x9D\x8C'
+if [ "$percent" = "100" ] 
+then
+    echo $goodEmoji$goodEmoji$goodEmoji
+else
+    echo $badEmoji
+fi
+
+echo
+
+if [[ $percent == *"100"* ]]; then
+    echo "Maestro tests passed!"
+else
+    echo "Maestro tests failed."
+    echo
+    
+    exit 1 
+fi
+
+echo
+</code></pre>
+<p><img src="images/hlFEoKv.gif" alt="run_test" /></p>
+<h3 id="shutdown_simulatorsh"><a class="header" href="#shutdown_simulatorsh">shutdown_simulator.sh</a></h3>
+<p>顧名思義，就是關閉模擬器，節省機器的資源</p>
+<pre><code class="language-bash">idb_companion --shutdown $1
+</code></pre>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<ol>
+<li>首先取得模擬器的設備資訊，記好要跑測試的 Device ID，Android 或 iOS 設備都可以</li>
+</ol>
+<pre><code class="language-bash">xcrun simctl list
+</code></pre>
+<p><img src="images/20120687YdDxx0oSZY.png" alt="" /></p>
+<ol start="2">
+<li>啟動模擬器，參數為要測試的 Device ID</li>
+</ol>
+<pre><code class="language-bash">./boot_simulator.sh F7CABB3C-DD6F-432D-A86F-5884287D2261
+</code></pre>
+<ol start="3">
+<li>運行測試</li>
+</ol>
+<pre><code class="language-bash">./run_test.sh
+</code></pre>
+<ol start="4">
+<li>關閉模擬器，參數為要測試的 Device ID</li>
+</ol>
+<pre><code class="language-bash">./shutdown_simulator.sh F7CABB3C-DD6F-432D-A86F-5884287D2261
+</code></pre>
+<h2 id="demo"><a class="header" href="#demo">Demo</a></h2>
+<p><img src="images/1P3oTQl.gif" alt="Demo" /><br />
+<img src="images/20120687dCvThFrHXc.png" alt="" /></p>
+<hr />
+<h2 id="總結"><a class="header" href="#總結">總結</a></h2>
+<p>本文的最後提到 CICD，使用 Maestro 整合的部分需要做個補充。在流程開始會先驗證所有測試，都正常才會進行後續的 build 和 deploy，也因為 Maestro 需要模擬器的協助，所以需要確保你的 CICD 可以和自己準備的環境溝通。如果像 Codemagic 服務都在雲端運行的話可能就無法使用 Maestro，還是要根據需求去決定使用哪種方式。</p>
+<p>最終，所有的測試還是必須與自動化流程結合，才能有效節省時間成本，而 Maestro 本身有這個能力，它讓不是開發者的其他人也可以很容易地編寫測試細節。如果大家正在煩惱沒時間寫測試，或是現在才知道 E2E Test，Maestro 都值得你和團隊嘗試一次，從中運行過玩過才會知道是否適合產品。</p>
+<p>總而言之，Maestro 是一個很完整且穩定的第三方測試服務，官方不僅活躍也有自己的 Slack 空間，有興趣的朋友可以持續關注接下來的進展與版本更新，有任何想法也都歡迎跟我討論哦～</p>
+<h2 id="相關資源"><a class="header" href="#相關資源">相關資源</a></h2>
+<ul>
+<li><a href="https://maestro.mobile.dev/">https://maestro.mobile.dev/</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day25.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day27.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day25.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day27.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

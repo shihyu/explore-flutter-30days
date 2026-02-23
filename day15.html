@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 15: Flutter 效能優化，良好的開發觀念與技巧！(下) - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-15-flutter-效能優化良好的開發觀念與技巧下"><a class="header" href="#day-15-flutter-效能優化良好的開發觀念與技巧下">Day 15: Flutter 效能優化，良好的開發觀念與技巧！(下)</a></h1>
+<ul>
+<li>發布時間：2023-09-30 21:29:41</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10331424">https://ithelp.ithome.com.tw/articles/10331424</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 15 篇</li>
+</ul>
+<p><img src="images/20120687OWotWHTFg3.png" alt="" /></p>
+<p>延續上一篇的內容，本文繼續跟大家分享一些正確觀念，為了就是在開發時可以撰寫出品質好的程式碼，寫的任何一個元件都很重要，它們為何存在，使用的優缺點是什麼，都應該清楚了解。如果是以好習慣寫出來的畫面，當然除了性能表現佳之外，後續需要解決的問題也會變少，是很值得前期重視的投資哦！</p>
+<hr />
+<h2 id="謹慎使用-savelayer"><a class="header" href="#謹慎使用-savelayer">謹慎使用 saveLayer()</a></h2>
+<ol>
+<li><code>saveLayer()</code> 也稱為<strong>離屏渲染</strong>，是引擎在針對某些情境處理渲染時會使用到的操作，本身屬於高成本、高耗時。</li>
+<li>主要是用來呈現各種 UI 視覺效果，<strong>渲染形狀</strong>、<strong>裁剪</strong>、<strong>透明度</strong>與<strong>重疊效果</strong>，有些都會使用到</li>
+<li>過程中會分配一個 <code>螢幕外緩衝區(off-screen buffer)</code>，並且將內容繪製到這裡，GPU 處理時會進行渲染目標的轉換，跳轉到另一個 Layer，導致運行緩慢****</li>
+<li>有些 Widget 跟 Package 可能有在使用，過多的話造成 UI 卡頓，允許的話在使用前稍微閱讀過源碼會更有保障，否則會發現效能被拖慢的現象</li>
+<li>相關元件與操作
+<ul>
+<li>Opacity</li>
+<li>ClipRRect</li>
+<li>ShaderMask</li>
+<li>ColorFilter</li>
+<li>Chip → <code>disabledColorAlpha ≠ 0xff</code></li>
+<li>Text → <code>overflowShader</code></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>提醒：可使用 Skia Screenshot 協助我們檢查渲染過程，詳細的說明可閱讀另一篇文章(等待上傳)</p>
+</blockquote>
+<p><img src="images/20120687bsy5Fi3kM5.png" alt="" /></p>
+<h3 id="opacity-操作"><a class="header" href="#opacity-操作">Opacity 操作</a></h3>
+<ul>
+<li>除非必要，否則減少使用</li>
+<li>處理顏色的透明度，建議選用 <code>withOpacity()</code> 方法來添加不透明層</li>
+</ul>
+<pre><code class="language-dart">Container(color: Colors.blue.withOpacity(0.5)),
+ColoredBox(color: Colors.blue.withOpacity(0.6)),
+Text('Hi!', style: TextStyle(color: Colors.blue.withOpacity(1))),
+
+// Image
+Image.network(
+  'images/70760bf1e88b184bb1bc.png',
+    opacity: _animationController,
+),
+Image.network(
+  'images/70760bf1e88b184bb1bc.png',
+    opacity: AlwaysStoppedAnimation(_animationController.value),
+),
+</code></pre>
+<h3 id="clipping-操作"><a class="header" href="#clipping-操作">Clipping 操作</a></h3>
+<ol>
+<li>本身不會調用 <code>saveLayer()</code>，不會跟 Opacity ****一樣麻煩，但還是有成本，默認情況下裁剪被禁用為 <code>Clip.none</code> ，除非使用 <code>Clip.antiAliasWithSaveLayer</code></li>
+<li>如果要有帶圓角的矩形，可以多使用 BoxDecoration 裡的 <code>borderRadius</code> 屬性去實現，而不要使用 ClipRRect 裁切矩形，實際上圖形引擎在處理的過程會比較輕鬆，性能比較好</li>
+<li>避免在動畫中進行裁剪，盡量在執行動畫之前先裁剪完成</li>
+</ol>
+<pre><code class="language-dart">Container(
+    width: 200,
+    height: 200,
+    decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(20),
+    ),
+),
+</code></pre>
+<h3 id="檢測-savelayer"><a class="header" href="#檢測-savelayer">檢測 saveLayer()</a></h3>
+<ul>
+<li>App 元件，設置 <code>checkerboardOffscreenLayers</code> 為 true</li>
+<li>檢查畫面上的元件是否有使用到 <code>saveLayer()</code> 相關操作，有的話會透過棋盤格呈現<br />
+<img src="images/20120687SviWtD2ph8.png" alt="" /></li>
+</ul>
+<h2 id="使用-repaintboundary-重繪邊界"><a class="header" href="#使用-repaintboundary-重繪邊界">使用 RepaintBoundary 重繪邊界</a></h2>
+<ol>
+<li>緩存並防止不必要的繪製，有需要才動作，不會因其他狀態的刷新或改變而影響，提高性能。當只有一小部分元件需要刷新，而其他UI部分是靜態且固定的，這個情況很適合使用 <code>RepaintBoundary</code> 包裹不需要更新的元件，例如：動畫元件</li>
+<li>將內容繪製到螢幕外的緩衝區 (off-screen buffer) 接著進行合成到畫面，可以減少需要重繪的 View 數量。過程中會創建一個獨立的 <code>display list(一連串輸出圖像的命令)</code>，包含許多元件，可以將主要渲染元件與其他元件分割，不同 <strong>Layer</strong> 的分離，實現只繪製內容發生變化的 <code>subtree</code>，告訴 Flutter 這些元件應該在不同的 WidgetTree，處理自己的繪製，不會被其他不相關的繪製影響</li>
+<li>有助於限制 <code>markNeedsPaint()</code> 和 <code>paintChild()</code> 的使用，避免同一層的相關 RenderObject 被重新繪製。通常只要<code>child.isRepaintBoundary</code> 為 false，那麼就會執行 <code>paint</code> 方法，重新繪製子元件</li>
+<li>ListView 預設使用了 RepaintBoundary，當滾動列表的時候 item-widget 會保留且不再重新繪製</li>
+</ol>
+<blockquote>
+<p>注意：Raster Cache 光柵緩存，創建成本高，會佔用大量 GPU 效能，濫用會造成過多的記憶體使用，因為需要緩存更多資訊</p>
+</blockquote>
+<h4 id="另外"><a class="header" href="#另外">另外</a></h4>
+<p>在 main 可以設置 <code>debugRepaintRainbowEnabled</code> 為 true，畫面會將元件透過顏色線條框起來，可幫助發現正在被繪製的區塊，有刷新的話線條顏色會一直變換。</p>
+<h3 id="相關檢測"><a class="header" href="#相關檢測">相關檢測</a></h3>
+<ul>
+<li>App 元件，設置 <code>checkerboardRasterCacheImages</code> 為 true</li>
+<li>瀏覽圖片光柵緩存的情況，檢查有沒有給靜態圖像做緩存，沒有的話會導致每次 build 都重新繪製，以棋盤格呈現。</li>
+<li>引擎會自動判斷圖像是否複雜到需要 RepaintBoundry，協助我們作出優化決策<br />
+<img src="images/20120687WlilX8gG4m.png" alt="" /></li>
+</ul>
+<h2 id="模糊效果使用-imagefilter-代替-backdropfilter"><a class="header" href="#模糊效果使用-imagefilter-代替-backdropfilter">模糊效果，使用 ImageFilter 代替 BackdropFilter</a></h2>
+<ul>
+<li>兩者都能實現模糊，但是 <code>ImageFilter</code> 的渲染速度更快</li>
+<li>適當地搭配 <code>RepaintBoundry</code> ，以減少重新渲染模糊效果的頻率</li>
+</ul>
+<pre><code class="language-dart">// Bad. BackdropFilter
+Stack(
+  children: [
+    Image.asset(
+        'images/70760bf1e88b184bb1bc.png',
+        width: 50,
+        height: 50,
+    ),
+    BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: Container(
+            color: Colors.grey.withOpacity(0.6),
+        ),
+    ),
+  ],
+),
+
+// Good. ImageFiltered
+Container(
+    color: Colors.blue.withOpacity(0.5),
+    child: ImageFiltered(
+        imageFilter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: Image.asset(
+            'images/70760bf1e88b184bb1bc.png',
+            width: 50,
+            height: 50,
+        ),
+    ),
+),
+</code></pre>
+<h2 id="使用懶加載的-indexedstack"><a class="header" href="#使用懶加載的-indexedstack">使用懶加載的 IndexedStack</a></h2>
+<p>如果是一般 TabBar 和 TabView，它會在首次加載時實體化所有頁面、元件，而對於多個頁面的情境，這可能會導致一開始載入或是跳轉的過渡動畫有嚴重卡頓，幀數過低。</p>
+<p>以下範例的寫法可以只載入需要顯示的畫面元件，減少資源的消耗：</p>
+<pre><code class="language-dart">late final List&lt;bool&gt; _pageActivateds = List&lt;bool&gt;.filled(4, false);
+
+Widget build(BuildContext context) {
+    _pageActivateds[widget.index] = true;
+
+    final children = List.generate(
+        _pageActivateds.length,
+        (i) =&gt; _pageActivateds[i] ? pages[i] : const SizedBox(),
+    );
+
+    return IndexedStack(children: children);
+}
+</code></pre>
+<blockquote>
+<p>相關套件：<a href="https://pub.dev/packages/lazy_load_indexed_stack/example">lazy_load_indexed_stack</a></p>
+</blockquote>
+<h2 id="準確地使用-globalkey"><a class="header" href="#準確地使用-globalkey">準確地使用 GlobalKey</a></h2>
+<ul>
+<li>GlobalKey 可以將元件的 <strong>Element</strong> 和 <strong>RenderObject</strong> 保存起來，即便元件已經從樹上離開了，只要轉移到其他的樹狀結構或是階層，它就能確保使用相同的 Element 和 RenderObject，所以 State 也會跟剛才一樣，不會被重置</li>
+<li>對於會頻繁更換階層、消失又再次出現的元件，特別是很大的 Widget Tree，在這種情況下也許就適合給予一個 GlobalKey</li>
+</ul>
+<pre><code class="language-dart">// FROM
+final complextWidget = Container();
+
+return isGood ? Container(child: complextWidget) : complextWidget,
+
+// TO
+final complextWidgetKey = GlobalKey();
+final complextWidget = Container(key: complextWidgetKey);
+
+return isGood ? Container(child: complextWidget) : complextWidget,
+</code></pre>
+<blockquote>
+<p>提醒：使用 GlobalKey 這個過程也稱為 <strong>Tree Sugery</strong>，很方便但也很危險，使用成本高，濫用的情況下會很大的影響效能，很可能會造成卡頓、不順暢</p>
+</blockquote>
+<h2 id="在-state-使用-dispose"><a class="header" href="#在-state-使用-dispose">在 State 使用 dispose()</a></h2>
+<ol>
+<li>釋放資源，避免記憶體洩漏，影響性能</li>
+<li>常用情境，使用 <strong>TextEditingController</strong>、<strong>AnimationController</strong>、<strong>Ticker</strong> 等等，在不需要時釋放</li>
+<li><code>super.dispose()</code> 需作為最後一個執行函式，資源釋放需要在之前執行，如果在後面則不會處理</li>
+</ol>
+<pre><code class="language-dart">@override
+void dispose() {
+    _animationController.dispose();
+
+    super.dispose();
+}
+</code></pre>
+<h2 id="壓縮數據"><a class="header" href="#壓縮數據">壓縮數據</a></h2>
+<p>進行數據壓縮後可有效節省記憶體，需要時再解壓縮並使用。如果需要將某些資料儲存到本地，例如：文件、SharedPreference 等等，可以先將資料壓縮後再儲存。不過，還是根據實際場景決定是否真的需要。</p>
+<pre><code class="language-dart">final jsonString = await rootBundle.loadString('assets/food.json');
+
+// compressed
+final original = utf8.encode(jsonString);
+final compressed = gzip.encode(original);
+
+// decompressed
+final decompressed = gzip.decode(compressed);
+final jsonString = utf8.decode(decompressed);
+</code></pre>
+<h2 id="使用-isolates-處理複雜任務"><a class="header" href="#使用-isolates-處理複雜任務">使用 Isolates 處理複雜任務</a></h2>
+<p>當此任務在同步和非同步處理時可能會花很長且不可預期的時間，或是跟原生平台的互動，都適合使用 Isolate，例如：大量的文字解析、圖像處理、大型檔案的存取，都可能會堵塞 Main Isolate，影響到 Rendering Pipeline。適當地使用 Isolate 可以提升性能並優化整體的使用者體驗。</p>
+<p>以下是簡易範例：</p>
+<pre><code class="language-dart">void createIsolate() async {
+    Isolate? isolate;
+    ReceivePort receivePort = ReceivePort();
+
+    try {
+        isolate = await Isolate.spawn(_worker, receivePort.sendPort);
+        receivePort.listen((dynamic message) {
+        debugPrint(message.toString());
+        });
+    } catch (e) {
+        debugPrint(e.toString());
+    } finally {
+        isolate?.addOnExitListener(receivePort.sendPort, response:  "isolate has been killed");
+    }
+
+    isolate?.kill();
+}
+
+void _worker(SendPort sendPort) {
+    // Do complex task..
+}
+</code></pre>
+<blockquote>
+<p>詳細的 Isolate 說明我有在另一篇文章提及，有興趣請點擊連結深入了解。<br />
+<a href="https://ithelp.ithome.com.tw/articles/10327324">Day 10: Async 和 Isolates 差異在哪裡？正確使用才能確保流暢體驗！</a></p>
+</blockquote>
+<h2 id="保持-flutter-為最新版本"><a class="header" href="#保持-flutter-為最新版本">保持 Flutter 為最新版本</a></h2>
+<p>不要忘記持續追蹤 Flutter Repo，在每個版本中，Flutter 都進行了許多優化，以現在來看，近期都在處理 Dart 3、Impeller Renderer、Material 3、Widget API、Document，當然也包含很多原生平台的更新，效能持續提升，以整體來看大部分情境下是好處多的。同時呼籲大家更新後，如果有發現任何 Bug 問題，都不要吝嗇的發 Issue 到 Flutter Repo，大家的積極只會讓 Flutter 進步更快，我們共勉之。</p>
+<pre><code class="language-dart">flutter upgrade
+</code></pre>
+<p><img src="images/pvCrmP6.gif" alt="Upgrade" /><br />
+<img src="images/201206870deFLmkM5e.png" alt="" /></p>
+<hr />
+<h2 id="總結"><a class="header" href="#總結">總結</a></h2>
+<p>本文的 <strong>saveLayer</strong> 與 <strong>RepaintBoundary</strong> 操作都是 UI 的開發重點，如何以性能較好的方式去撰寫，需要養成習慣。而除了上述提到的內容大部分都與 UI 有關，也包含資料處理和 Isolate 使用，建議有時間的話，可以嘗試理解每個開發選擇和優化的由來，相信對於未來實作上的理解會更不一樣。</p>
+<p>對於優化與觀念部分，喜歡的話請留言讓我知道，會在整理一些能幫助大家的內容。本系列已經到一半了，不覺得時間過很快嗎，休息放鬆一下，我們繼續加油！</p>
+<h2 id="延伸閱讀"><a class="header" href="#延伸閱讀">延伸閱讀</a></h2>
+<ul>
+<li><a href="https://ithelp.ithome.com.tw/articles/10330647">Day 14: Flutter 效能優化，良好的開發觀念與技巧！(上)</a></li>
+</ul>
+<h2 id="參考與相關資源"><a class="header" href="#參考與相關資源">參考與相關資源</a></h2>
+<ul>
+<li><a href="https://api.flutter.dev/flutter/dart-ui/Canvas/saveLayer.html">https://api.flutter.dev/flutter/dart-ui/Canvas/saveLayer.html</a></li>
+<li><a href="https://docs.flutter.dev/perf/best-practices">https://docs.flutter.dev/perf/best-practices</a></li>
+<li><a href="https://blog.gskinner.com/archives/2022/09/flutter-rendering-optimization-tips.html?linkId=8208387">https://blog.gskinner.com/archives/2022/09/flutter-rendering-optimization-tips.html?linkId=8208387</a></li>
+</ul>
+<hr />
+<h2 id="下冊day-16-30"><a class="header" href="#下冊day-16-30">下冊（Day 16-30）</a></h2>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day14.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day16.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day14.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day16.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 59：Flutter 架構概覽｜前世與今生 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-59flutter-架構概覽前世與今生"><a class="header" href="#day-59flutter-架構概覽前世與今生">Day 59：Flutter 架構概覽｜前世與今生</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10339045">Day 29：Flutter 架構概覽｜前世與今生</a></p>
+</blockquote>
+<h3 id="出生背景"><a class="header" href="#出生背景">出生背景</a></h3>
+<p>在理解 Flutter 的架構以前，我們先來聊一下出生背景。Flutter 的前身稱為 “Sky”，於 2015 年首次亮相。它早期的目標是開發用於 Google Fuchsia 操作系統的 SDK。後來，Flutter 不斷發展壯大，成為一個獨立的開源項目。（而 Google Fuchsia 呢？感覺準備退出歷史舞台）</p>
+<p>有興趣可以看看 Flutter 初次露出的珍貴影像：</p>
+<p><a href="https://www.youtube.com/watch?v=PnIWl33YMwA"><img src="images/0.jpg" alt="" /></a></p>
+<p>Google Fuchsia 本來的立意就是想打造跨平台的 OS，所以 Flutter 這些得天獨厚的條件都要感謝 Fuchsia 。</p>
+<h2 id="flutter-架構概覽"><a class="header" href="#flutter-架構概覽">Flutter 架構概覽</a></h2>
+<p>有興趣的人可以到 <a href="https://docs.flutter.dev/resources/architectural-overview">Flutter</a> 網站上看，我這裡只做重點的節錄：</p>
+<h2 id="architectural-layers"><a class="header" href="#architectural-layers">Architectural layers：</a></h2>
+<p>Flutter 的架構分為三個主要的層，分別是：Embedder 層、Engine 層和 Framework 層。下面是這些層的詳細說明：</p>
+<ul>
+<li><strong>Embedder 層</strong>：</li>
+</ul>
+<p>這是 Flutter 架構中的最底層，主要負責與特定操作系統交互，使 Flutter 可以運行在不同的平台上。</p>
+<ul>
+<li>
+<p>Embedder 層負責處理必要的操作，以便將 Flutter 語言與特定操作系統相互翻譯。</p>
+</li>
+<li>
+<p>管理事件循環（Event loop）。</p>
+</li>
+<li>
+<p><strong>Engine 層</strong>：</p>
+</li>
+</ul>
+<p>Engine 層主要是用 C/C++ 編寫的，所以有在各個平台支援的能力，讓 Flutter 可以被帶到各個平台。</p>
+<ul>
+<li>
+<p>負責光柵化（rasterizing）組合好的場景。</p>
+</li>
+<li>
+<p>此層負責低級 API 的實現，管理幀的渲染，網絡支持等。</p>
+</li>
+</ul>
+<p>光柵化指的是把向量圖繪製成點陣圖的過程，在 Flutter 就是 RenderObject 組成 Layer 後再繪製到畫面上的過程。</p>
+<ul>
+<li><strong>Framework 層</strong>：</li>
+</ul>
+<p>Framework 層是用 Dart 程序語言編寫的，開發者主要在此層中工作，以理解和使用 Flutter。</p>
+<ul>
+<li>此層提供了豐富的 widgets 和庫，使開發人員可以高效地開發 Flutter 應用程序。</li>
+</ul>
+<p>Flutter 的架構可以想像成一座由下至上建造的大樓，每一層都依賴於它下面的層，就像大樓的每一層都需要依賴於它下面的結構。這樣的架構讓 Flutter 有很好的擴展性和組織性。</p>
+<p>每個層都不是單一的結構，而是由一系列獨立的庫組成，這些庫只依賴於它們下面的層的功能。這樣的設計讓第三方開發者能夠輕鬆地添加擴展到 Flutter SDK，並且這些層的結構使得每個層都不具有對下層的特權訪問，每個層只能使用由下層公開的 API。</p>
+<p><img src="images/201173637GcGwmCORl.png" alt="" /></p>
+<h2 id="rendering-and-layout"><a class="header" href="#rendering-and-layout">Rendering and layout</a></h2>
+<p>如開頭講到 Flutter 的目標是讓開發者能夠用一套代碼來開發多平台的應用，而不需要為每個平台編寫不同的代碼。而且開發初期，是以 OS 為目標所以 Flutter 的初始做法就不是去考慮要發佈在 Android 或 iOS 上，而是直接操作渲染引擎。這裡 Flutter 團隊可能參考的就是 Android 的做法：</p>
+<p><strong>Android 渲染：</strong></p>
+<ul>
+<li>
+<p>在傳統的 Android 應用中，當你想要繪制某些東西（比如一個按鈕或者文字）時，你會首先使用 Android 的框架（主要是用 Java 寫的）來告訴它你想要繪制什麼。</p>
+</li>
+<li>
+<p>接著，Android 會使用一個叫做 Skia 的圖形引擎（用 C/C++ 編寫）來真正的繪制你想要的畫面。</p>
+</li>
+<li>
+<p>最後，這個繪制好的畫面會由你的手機的 CPU 或 GPU 顯示出來。</p>
+</li>
+</ul>
+<p><strong>其他跨平台 Framework 作法（如：React Native）：</strong></p>
+<ul>
+<li>
+<p>大多數跨平台框架會在 Android 和 iOS 的原生 UI 庫之上加上一層“包裝”，讓開發者可以用一套代碼來編寫應用。</p>
+</li>
+<li>
+<p>但這種方式會增加一些額外的步驟和開銷，因為你的代碼（通常是用 JavaScript 寫的）需要通過這層“包裝”來與原生的系統庫交互。</p>
+</li>
+</ul>
+<p><strong>Flutter 的獨特之處</strong>:</p>
+<ul>
+<li>
+<p>不同於其他跨平台框架，Flutter 選擇了一條不同的路。它有自己的小部件庫，不依賴於原生的 UI 庫。</p>
+</li>
+<li>
+<p>你的 Flutter 代碼會直接編譯成本地代碼，並且利用 Skia 來繪制畫面。這樣就避免了那些額外的“包裝”步驟，提高了效率。</p>
+</li>
+<li>
+<p>這也意味著，不管你的應用是在 Android、iOS 還是其他平台上運行，它的性能都會很不錯，因為它直接與底層的繪圖引擎交互，避免了很多不必要的開銷。</p>
+</li>
+</ul>
+<p>通過這種方式，Flutter 能夠提供高效的渲染效能，並且讓開發者能夠用一套代碼來開發多平台的應用，節省了很多時間和精力。</p>
+<h2 id="build-from-widget-to-element"><a class="header" href="#build-from-widget-to-element">Build: from Widget to Element</a></h2>
+<p>假設我們現在有一個 Widget 長得像下面這樣：</p>
+<pre><code class="language-dart">Container(
+color: Colors.blue,
+child: Row(
+children: [
+Image.network('images/1.png'),
+const Text('A'),
+],
+),
+);
+
+</code></pre>
+<p>我們知道， 在 Flutter 裡面每個 Widget 都有可能包含其他 Widget 。到 Container 的 build 方法裡面可以找到，如果 color ≠ null 他會回傳一個 ColoredBox 的 Widget 給我。</p>
+<pre><code class="language-dart">if (color != null)
+current = ColoredBox(color: color!, child: current);
+
+</code></pre>
+<p>這也就是為什麼你在用 Flutter Inspector 的時候， Widget Tree 會比你寫的程式碼要長的多。</p>
+<p>在各種 Widget 追到最後，會發現他們被分為兩種：</p>
+<ul>
+<li>
+<p><code>ComponentElement</code>, 其他 Element 的 host。</p>
+</li>
+<li>
+<p><code>RenderObjectElement</code>, 參與佈局或繪畫階段的 Element。</p>
+</li>
+</ul>
+<p>他們之間的關係可以被理解為： <strong><code>RenderObject</code></strong> 是負責渲染的基本組件，而 <strong><code>ComponentElement</code></strong> 是負責創建和管理 <strong><code>RenderObject</code></strong></p>
+<p>以圖片來看就是像下面這樣：</p>
+<p><img src="images/20117363zWqeYiGqKb.png" alt="" /></p>
+<p>接下來就到繪製的步驟了：<strong>佈局和渲染</strong>的過程主要涉及以下幾個步驟：</p>
+<ul>
+<li>
+<p><strong>佈局</strong>：Flutter 首先需要對 widget 層次結構進行佈局，確定每個元素的大小和位置。</p>
+</li>
+<li>
+<p><strong>建立 Render Tree</strong>：通過 <code>RenderObject</code> 和 <code>RenderObjectElement</code> 來建立渲染樹，每個節點在渲染樹中對應一個 <code>RenderObject</code>。</p>
+</li>
+<li>
+<p><strong>繪製</strong>：<code>RenderObject</code> 定義了繪製的抽象模型，例如 <code>RenderParagraph</code> 用於渲染文本，<code>RenderImage</code> 用於渲染圖像，而 <code>RenderTransform</code> 用於在繪製其子元素之前應用變換。</p>
+</li>
+</ul>
+<p><img src="images/20117363sSzTCvhkov.png" alt="" /></p>
+<p>更深入的講解可以看 Flutter 的官方頻道：</p>
+<p><a href="https://www.youtube.com/watch?v=996ZgFRENMs"><img src="images/0.jpg" alt="" /></a></p>
+<h2 id="render-場景"><a class="header" href="#render-場景">Render 場景</a></h2>
+<p><strong>Aggressive composability</strong></p>
+<p>Flutter 採用了一個叫做 <strong>Aggressive composability</strong> 的策略，它盡可能地讓每個 Widget 都是其他 Widget 組合而來。而這些 Widget 本身則是由越來越基礎的 Widget 組合而成。例如，Padding 是一個 Widget ，而不是其他 Widget 的屬性。</p>
+<p><strong>Aggressive composability</strong>  這個哲學貫穿了整個 Flutter 的設計思想，從架構到底層實現都是統一遵照這套邏輯。</p>
+<p><strong>Sublinear layout</strong></p>
+<p>為了要貫徹 <strong>Aggressive composability</strong>，不可避免的就會讓我們的 Widget Tree 越來越龐大。所以 Flutter 必須依靠更快速的渲染流程來支持，也需要更好的方式來管理 Widget 避免出現錯誤，Flutter 有了下面幾個解套方案：</p>
+<ul>
+<li><strong>由上到下的渲染：</strong>
+Flutter 的佈局算法每幀執行一次，並且在單次傳遞中完成。
+在每一幀中：</li>
+</ul>
+<p>Constraint 由父對象通過調用其子對象的 layout 方法向下傳遞。</p>
+<ul>
+<li>子對象遞歸地執行自己的 layout，然後通過從其 layout 方法 return 要繪製的幾何圖形。</li>
+</ul>
+<p>因此佈局期間，每個渲染對象最多被訪問兩次：一次是在樹向下的過程中，另一次是在樹向上的過程中。</p>
+<p><img src="images/20117363VJToCHG8ca.png" alt="" /></p>
+<ul>
+<li><strong>immutable Widget：</strong>
+我們可以看到在 Flutter 中 每個 Widget 實際上都是 <code>immutable</code>的，所以我們建立 Widget Tree 之後，他是無法被修改的，這樣有這些好處</li>
+</ul>
+<p><strong>效能</strong>: 有助於 Flutter 高效地重建 UI。每次狀態改變時，Flutter 可以快速地比對新舊 widget 來確定實際需要重繪的部分。</p>
+<ul>
+<li>
+<p><strong>狀態管理的簡化</strong>: 通過將 UI (widget) 和狀態分離，Flutter 鼓勵使用更預測和可維護的狀態管理模式。在 Flutter 中，當狀態改變時，你會創建一個新的 widget 樹。與此同時，狀態本身可能會被存儲在 <strong><code>State</code></strong> 對象中，這是 mutable 的，但它的生命週期和相關的 widget 生命週期是分開的。</p>
+</li>
+<li>
+<p><strong>減少錯誤</strong>: 不可變性減少了由於多處修改同一個物件而引起的錯誤。因為 widget 是不可變的，你不必擔心其他代碼意外地修改它。</p>
+</li>
+<li>
+<p><strong>Functional Programming</strong>: Flutter 的不可變 widget 設計也體現了 Functional Programming 的一些理念。它鼓勵使用純函數和不可變數據結構。這有助於減少副作用，使代碼更易於理解和測試。</p>
+</li>
+</ul>
+<pre><code class="language-dart">@immutable
+abstract class Widget extends DiagnosticableTree {
+...
+}
+
+</code></pre>
+<ul>
+<li><strong>Linear reconciliation</strong>
+如上所說，每個 Widget 的內容並不能直接被修改，我們要做的更新或移除，都是發生在整個 Widget Tree 上面，而 Flutter 採用的方法並不是常見的 tree-diffing algorithm（在最壞的情況下，比較兩棵樹的時間複雜度是 O(n^3)，n 是節點的數量）。而是通過一些其他方法來達到理想上是 O(n) 的情況：
+<strong>最佳化場景</strong>：</li>
+</ul>
+<p>舊的子列表是空的。</p>
+<ul>
+<li>
+<p>兩個列表完全相同。</p>
+</li>
+<li>
+<p>列表中只在一個地方插入或移除了一個或多個小部件。</p>
+</li>
+<li>
+<p>如果每個列表都包含具有相同鍵的小部件，則這兩個小部件會被匹配。</p>
+</li>
+</ul>
+<p>在比對過程中，會把新舊兩個 Widget Tree 拉出來，並透過比較裡面所有 Widget Key 組成的 hash 值，來確認 Widget Tree 是否有被變動過。另外還能透過被稱為 tree surgery 的方法，來重用那些被你移動的 Widget Tree，來提高畫面效能減少重新繪製！</p>
+<p>根據上述的分析，我們可以看出 Flutter 在渲染和佈局方面的策略有別於其他框架。不僅如此，由於其特有的 “Aggressive composability” 和 “Sublinear layout” 策略，Flutter 在多平台應用開發中表現出顯著的效能優勢。</p>
+<h2 id="結論"><a class="header" href="#結論">結論</a></h2>
+<p>透過對 Flutter 架構的深入探討，我們可以看到其設計之巧妙。Flutter不僅僅是一個開發框架，它更是一種哲學，鼓勵 <strong>Aggressive composability</strong>、高效的渲染流程和 immutable 的 Widget 設計。這些特性使得Flutter既能確保性能，又能保持代碼的組織性和維護性。最終，不管你是開發者還是終端用戶，Flutter都提供了一個順暢、高效和獨特的體驗。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day58.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day60.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day58.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day60.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

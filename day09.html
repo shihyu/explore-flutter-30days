@@ -1,0 +1,368 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 9: 深入 setState()，觀察它如何進行 UI 刷新！ - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-9-深入-setstate觀察它如何進行-ui-刷新"><a class="header" href="#day-9-深入-setstate觀察它如何進行-ui-刷新">Day 9: 深入 setState()，觀察它如何進行 UI 刷新！</a></h1>
+<ul>
+<li>發布時間：2023-09-24 18:29:15</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10326495">https://ithelp.ithome.com.tw/articles/10326495</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 9 篇</li>
+</ul>
+<p><img src="images/20120687p2HQD6OA4w.png" alt="" /></p>
+<p>每次執行 <code>flutter create &lt;name&gt;</code> 創建新的專案後，預設都會在主頁面看到很熟悉的計數器功能，在點擊 FloatingActionButton 後會執行 _incrementCounter() 方法，裡面使用了 <code>setState()</code> 方法，並在第一個參數使用匿名 callback，讓開發者將一些狀態放在區塊內更新，接著頁面、元件就會在下一幀刷新並進行 rebuild，顯示新的畫面跟效果給使用者。<br />
+<img src="images/2012068750F88iqiF0.png" alt="" /></p>
+<p>當 <code>setState()</code> 呼叫後，根據 StatefulWidget 的生命週期，就會在執行一次 <code>build()</code>，讓整個 Widget Tree 可以根據新的狀態、配置去顯示。</p>
+<blockquote>
+<p>有關 LifeCycle 的部分可以去閱讀另一篇文章<br />
+<a href="https://ithelp.ithome.com.tw/articles/10321406">Day 5: Flutter 的 StatefulWidget 和 State 生命週期，先熟悉它們再開發吧！</a></p>
+</blockquote>
+<p><img src="images/20120687db3x6FKfUb.png" alt="" /></p>
+<ul>
+<li>主要透過 Element 呼叫了 <code>markNeedsBuild()</code>，進行重新 rebuild</li>
+<li>神奇的魔法，實際上不管變動的狀態是否有放在 callback 裡面，整棵樹都會被重置。如果將狀態或一些操作寫在 callback 裡面，就要確保不能有非同步操作，也就是 Future 回傳值</li>
+</ul>
+<blockquote>
+<p>建議：將需要更新的狀態操作放在 callback，其他則在方法外面，提高整體可讀性</p>
+</blockquote>
+<pre><code class="language-jsx">setState(() {
+    _counter = _counter + 1;
+});
+
+// or
+
+_counter = _counter + 1;
+setState(() {});
+</code></pre>
+<p>提醒一下，在 <code>setState()</code> 或是 <code>context</code> 操作之前如果有進行非同步操作，記得呼叫時要先檢查 <code>mounted</code> 屬性，確認 Widget 與 Element 都有在樹上，才能確保後續的 rebuild 刷新，否則如果剛好 Widget 銷毀了或是進行樹上的移動，這時就會報錯，記得保持好習慣哦。有使用 <strong>flutter_lint</strong> 通常會出現 <code>use_build_context_synchronously</code> 提醒，以下是範例：</p>
+<pre><code class="language-dart">Future&lt;void&gt; _incrementCounter() async {
+  await Future.delayed(const Duration(seconds: 1));
+
+  if (!mounted) {
+    return;
+  }
+
+  setState(() {
+    _counter++;
+  });
+}
+</code></pre>
+<h4 id="其實"><a class="header" href="#其實">其實</a></h4>
+<p>當初為 Flutter 開發人員做了 UX 的研究，原本只有一個 <code>markNeedsBuild()</code> 的時候，發現大家把它當成保命符，在不確定的情況下都會呼叫它，導致濫用的情況。後來改成同步的 <code>setState()</code> 後，大家開始謹慎使用了，發生問題的機率也變小了。 本身 <code>setState()</code> 是一個跟心理層面影響的 API。</p>
+<p>以下是相關資訊：</p>
+<ul>
+<li><a href="https://github.com/flutter/flutter/issues/12296">https://github.com/flutter/flutter/issues/12296</a></li>
+<li><a href="https://stackoverflow.com/questions/44379366/why-does-setstate-take-a-closure/44379367#44379367">https://stackoverflow.com/questions/44379366/why-does-setstate-take-a-closure/44379367#44379367</a></li>
+</ul>
+<hr />
+<p>那實際上到底 <code>setState()</code> 做了什麼事？如何告訴 Flutter 有東西改變了你要處理一下，我們來挖掘它，看看實際的過程。</p>
+<h3 id="state-的-setstate"><a class="header" href="#state-的-setstate">State 的 setState</a></h3>
+<p><code>setState()</code> 是 State 的方法，State 由 _MyHomePageState 繼承 所以我們能使用它。可以看到參數就是一個 VoidCallback，沒有回傳值的方法，很常在開發中看到或用到，例如：元件要暴露點擊事件的話就可以使用 VoidCallback 撰寫。</p>
+<ol>
+<li>
+<p>一開始使用 <code>asset()</code> 進行狀態檢查，必須確保 State 的狀態不是 <strong>defunct</strong>，這時候代表本身已使用 <code>dispose()</code> 要被銷毀了<br />
+<img src="images/20120687Pi7VPZtVDW.png" alt="" /><br />
+<img src="images/20120687YkfwZzmHMW.png" alt="" /></p>
+</li>
+<li>
+<p>第二層檢查，確認 State 的狀態不是剛創建而且還沒綁定到 Element Tree 上，使用 <code>mounted</code> 屬性檢查，這時候去刷新頁面是沒有作用的<br />
+<img src="images/20120687Xbg1mYABqV.png" alt="" /></p>
+</li>
+<li>
+<p>第三層檢查，確認外部給予的 Callback 不是非同步方法，檢查是不是 Future，裡面也不會 await，因為實際上整個 Flutter 的繪製、渲染流程是同步的，不允許有非同步操作的影響，需要確保整體是順暢的運行<br />
+<img src="images/20120687zl7rJFJEU2.png" alt="" /></p>
+</li>
+<li>
+<p>最後都沒有問題後，透過 element 呼叫 <code>markNeedsBuild()</code>，標記這個元件為 dirty 髒的，代表需要 rebuild，下一幀更新</p>
+</li>
+</ol>
+<h3 id="element-的-markneedsbuild"><a class="header" href="#element-的-markneedsbuild">Element 的 markNeedsBuild()</a></h3>
+<p>到這裡對 <code>setState()</code> 應該有一點了解了吧，接下來繼續看 Element 做了哪些事情，繼續往深處挖掘。我們看到 <code>markNeedsBuild()</code> 執行大部分工作之前都必須檢查生命週期，在正確的時候做正確的事情才能確保高效、順暢。</p>
+<ol>
+<li>
+<p>一樣進行幾個檢查，確認對應的 Element 本身不是 <strong>defunct</strong> 銷毀狀態，需要是 <strong>active</strong> 狀態</p>
+</li>
+<li>
+<p>檢查 <code>owner</code> 存在不為空值，它是 Element 的 Lifecycle Manager<br />
+<img src="images/20120687F3mFtGXBcv.png" alt="" /></p>
+</li>
+<li>
+<p>如果正在 building 的情況不允許再呼叫 <code>setState()</code> 和 <code>markNeedsBuild()</code> 刷新，因為刷新工作已經在執行了。這也是為什麼不要 State 的 <code>build()</code> 方法裡使用 <code>setState()</code>，可是會出錯的哦<br />
+<img src="images/201206873fiLtaqZ5C.png" alt="" /></p>
+</li>
+<li>
+<p>檢查 <code>dirty</code> 屬性，一樣如果標記過後就忽略，因為已經在處理了。最後透過 <code>owner</code> 安排任務去處理<br />
+<img src="images/20120687CTupv8Skb3.png" alt="" /></p>
+</li>
+</ol>
+<h3 id="buildowner-的-schedulebuildfor"><a class="header" href="#buildowner-的-schedulebuildfor">BuildOwner 的 scheduleBuildFor()</a></h3>
+<p>負責將要更新的 Element 儲存到髒的 Element 清單，等待之後執行 <code>WidgetsBinding.drawFrame</code> 的時候可以被處理。</p>
+<ol>
+<li>首先確認是否已經在髒清單裡面，檢查 <code>_inDirtyList</code> 布林值，是的話就 return 不繼續下去</li>
+<li>接著呼叫 <code>onBuildScheduled()</code> 安排任務，並將此 Element 新增到髒清單，然後將 <code>_inDirtyList</code> 設為 true<br />
+<img src="images/2012068729YiIdlayL.png" alt="" /></li>
+</ol>
+<h3 id="後面流程"><a class="header" href="#後面流程">後面流程</a></h3>
+<ol>
+<li>
+<p>觸發 WidgetBinging 的 <code>_handleBuildScheduled()</code></p>
+</li>
+<li>
+<p>觸發 SchedulerBinding 的 <code>ensureVisualUpdate()</code> → <code>scheduleFrame()</code></p>
+</li>
+<li>
+<p>…</p>
+</li>
+<li>
+<p>觸發 WidgetBinding 的 <code>drawFrame()</code>，設置 <code>debugBuildingDirtyElements</code> 為 true，開始處理髒 Element 清單。裡面最重要的是呼叫 <code>buildScope()</code> ，真正進行 Element 處理的地方<br />
+<img src="images/20120687Y7PrIGnIiM.png" alt="" /><br />
+<img src="images/20120687xex1UYdsYo.png" alt="" /></p>
+</li>
+<li>
+<p>首先對髒清單進行樹的深度排序，while 迴圈執行，淺的 Element 優先處理</p>
+</li>
+<li>
+<p>接著到中間會看到呼叫 Element 的 <code>rebuild()</code>，然後執行 <code>performRebuild()</code></p>
+</li>
+<li>
+<p>這時候對應的 Element 就是 <code>RenderObjectToWidgetElement</code>(每個元件後面對應的都是 RenderObject，負責幫我們處理佈局、繪製，這邊就不深談這個部分)<br />
+<img src="images/20120687qtxQFcQWyE.png" alt="" /><br />
+<img src="images/20120687COPa4zneIy.png" alt="" /></p>
+</li>
+</ol>
+<h3 id="renderobjectwidget-的-updaterenderobject"><a class="header" href="#renderobjectwidget-的-updaterenderobject">RenderObjectWidget 的 updateRenderObject()</a></h3>
+<p>到了這裡已經快完成更新的工作了！如果以範例來說，畫面上的 Text 元件因為倒數文字改變，等同是它的配置有異動，這時候就會呼叫 <code>updateRenderObject()</code> 來處理。這時候要看源碼的話需要到 RichText，也就是 Text 的基座，它本身是 <code>MultiChildRenderObjectWidget</code>，尋找它的 <code>updateRenderObject()</code> 方法。<br />
+<img src="images/20120687ymvcnFj5XH.png" alt="" /></p>
+<p>更新 RenderParagraph 物件，因為是改變文字，這時 text 屬性就會就會被更新，並觸發寫好的 <code>setter</code>，因為是文字內容的改變會進行重繪，執行 <code>markNeedsPaint()</code>，後面的事情就交給渲染引擎去處理了。<br />
+<img src="images/20120687e4rV37joQp.png" alt="" /><br />
+<img src="images/20120687ChfZeIzvvg.png" alt="" /></p>
+<hr />
+<p>其實後續還有能繼續挖掘的源碼，但到這裡大家應該可以了解一個畫面、元件刷新的部分流程。細節很多，一步一步去探索，會發現很有趣，你會更熟悉實際上做哪些事情。當然其中牽扯了許多 Flutter 核心觀念，例如：Widget、Element、RenderObject 的三者關係、生命週期等等，大家不需要一次就懂，可以從中去學習，慢慢會影響我們開發時的想法，你也會更有 Sense，知道該做什麼樣的操作對 APP 有幫助。</p>
+<hr />
+<h2 id="延伸閱讀"><a class="header" href="#延伸閱讀">延伸閱讀</a></h2>
+<p><a href="https://ithelp.ithome.com.tw/articles/10321406">Day 5: Flutter 的 StatefulWidget 和 State 生命週期，先熟悉它們再開發吧！</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day08.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day10.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day08.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day10.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

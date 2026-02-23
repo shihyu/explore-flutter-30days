@@ -1,0 +1,552 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 51：來聊聊測試這件事（中）｜Mock Package  的深入探索 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-51來聊聊測試這件事中mock-package--的深入探索"><a class="header" href="#day-51來聊聊測試這件事中mock-package--的深入探索">Day 51：來聊聊測試這件事（中）｜Mock Package  的深入探索</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10335645">Day 21：來聊聊測試這件事（中）｜Mock Package  的深入探索</a></p>
+</blockquote>
+<p>昨天，我們聊了一下測試驅動開發（TDD）的概念，了解到它不僅僅是關於「怎麼測試」，更多的是「怎麼思考」。它告訴我們，開發的過程可以更有組織，更有方向。</p>
+<p>但寫測試這件事情，並竟還是有枯燥的成分在裡面。於是今天就直接整理一篇工具補帖，來看看有哪些方便有趣的工具可以幫助我們更快速完成測試的工作。希望對大家有點幫助！</p>
+<h2 id="1-fake-test-data"><a class="header" href="#1-fake-test-data">1. Fake Test Data</a></h2>
+<h3 id="faker"><a class="header" href="#faker">Faker</a></h3>
+<p>在軟體開發中，我們經常需要擁有大量資料來確保功能的正確性和效能。但在初期，有時我們可能不希望或不能使用真實的數據（有可能只是懶惰），這時候 <strong>Faker</strong> 就發揮了它的作用。</p>
+<p>Faker 用起來也相當簡單，可以快速幫妳生成各種測試資料，非常方便：</p>
+<pre><code class="language-dart">import 'package:faker/faker.dart';
+
+main() {
+var faker = new Faker();
+
+faker.internet.email();
+// francisco_lebsack@buckridge.com
+
+faker.internet.ipv6Address();
+// 2450:a5bf:7855:8ce9:3693:58db:50bf:a105
+
+faker.person.prefix();
+// Mrs.
+
+faker.lorem.sentence();
+// Nec nam aliquam sem et
+}
+
+</code></pre>
+<p>由於文件上沒有寫他到底支援哪些假資料生成，這裡抓出他的程式碼給大家參考一下。</p>
+<pre><code class="language-dart">├── address.dart
+├── colors.dart
+├── company.dart
+├── conference.dart
+├── currency.dart
+├── date.dart
+├── food.dart
+├── geo.dart
+├── guid.dart
+├── image.dart
+├── internet.dart
+├── job.dart
+├── jwt.dart
+├── lorem.dart
+├── person.dart
+├── phone_number.dart
+├── random_generator.dart
+├── seed.dart
+├── sport.dart
+└── vehicle.dart
+
+</code></pre>
+<p>目前用下來唯一的小小缺點就是不支援多國語系，只能產出英語的資料，也許日後可以提 PR 幫忙補上。</p>
+<h2 id="2-test-auto-generator"><a class="header" href="#2-test-auto-generator">2. Test Auto Generator</a></h2>
+<h3 id="walltested"><a class="header" href="#walltested">Walltested</a></h3>
+<p>最近突然發現的酷工具，可以透過 AI 直接幫你生成需要測試的程式碼，現在我還沒有把他投入生產力工具，不過他的概念蠻有趣的用起來也還不錯，在這裡一併推薦給大家玩玩看。</p>
+<p>因為他們官網的文件和 pub.dev 還有 github 的 <code>README.md</code> 居然有三種不同的 setup，所以這粒還是提供我自己總結下來可以的方法 🌝</p>
+<p>第一步要到官網申請 API Key，目前開起來是對開發者免費，所以可以先不用錢玩看看。API Key 會透過 email 寄給你，就先收好待會用到。</p>
+<p>首先安裝 walltestd：</p>
+<pre><code class="language-dart">dart pub global activate welltested
+
+</code></pre>
+<p>接著進入到你的 Flutter 專案，並下指令。這個步驟會直接幫我們在 pubspec.yaml 裝上需要的依賴：</p>
+<pre><code class="language-dart">welltested init
+
+</code></pre>
+<p>在指令過程中會要求你提供剛剛拿到的 API Key</p>
+<p>接下來到需要寫測試的 Class，幫他打上 <code>@Welltested()</code> 的 Annotation，就會幫你把用到的方法都自動化生成測試。</p>
+<p>如果有想特別指定測試案例，可以加上 <code>@Testcases</code> ，告訴 AI 要如何生成你的測試案例。</p>
+<p>甚至是想跳過哪些方法不寫測試，也可以使用 <code>@Welltested(excludedMethods: ['logOutUser'])</code>，來跳過這些方法</p>
+<pre><code class="language-dart">import 'package:welltested_annotation/welltested_annotation.dart';
+
+@Welltested()
+class Auth {
+String? randomStringVariable;
+int? randomIntVariable;
+double? randomDoubleVariable;
+
+@Testcases(["if email is not email "])
+Future loginWithEmailAndPassword(
+{required String email, required String password}) async {
+User user = User(uid: "123");
+final currentUserId = user.uid;
+if (currentUserId == "123") {
+return User(uid: "123");
+}
+if (email.isEmpty || password.isEmpty) {
+throw Exception("Email or Password can't be empty");
+}
+if (email == "test@test.com" &amp;&amp; password == "password") {
+user = User(uid: "123456");
+}
+return user;
+}
+
+Future logoutUser() async {
+//Add Logout Functionality
+}
+}
+
+class User {
+final String uid;
+User({required this.uid});
+}
+
+</code></pre>
+<p>通通都設定完成之後，就可以開始生成 Unit test</p>
+<pre><code class="language-dart">welltested generate unit
+
+</code></pre>
+<p>經過一小段時間的等候，就可以看到 test 資料夾底下，已經自動幫我們生成所需要的程式碼摟，他會幫你以 class 當作資料夾的名稱，裡面的檔案則是每個需要測試的方法。這裡附上最後的生成結果讓大家看一下</p>
+<pre><code class="language-dart">import 'package:flutter_day_21_tester/auth.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+
+import 'loginWithEmailAndPassword.welltested_test.mocks.dart';
+
+@GenerateMocks([User])
+void main() {
+late Auth auth;
+late MockUser mockUser;
+
+setUp(() {
+auth = Auth();
+mockUser = MockUser();
+});
+
+test('login with valid credentials', () async {
+when(mockUser.uid).thenReturn('123456');
+final result = await auth.loginWithEmailAndPassword(
+email: 'test@test.com', password: 'password');
+expect(result.uid, '123456');
+});
+
+test('login with empty email', () async {
+expect(() async {
+await auth.loginWithEmailAndPassword(email: '', password: 'password');
+}, throwsException);
+});
+
+test('login with empty password', () async {
+expect(() async {
+await auth.loginWithEmailAndPassword(
+email: 'test@test.com', password: '');
+}, throwsException);
+});
+
+test('login with already logged in user', () async {
+when(mockUser.uid).thenReturn('123');
+final result = await auth.loginWithEmailAndPassword(
+email: 'test@test.com', password: 'password');
+expect(result.uid, '123');
+});
+
+test('login with invalid credentials', () async {
+final result = await auth.loginWithEmailAndPassword(
+email: 'invalid@test.com', password: 'invalidpassword');
+expect(result.uid, '123');
+});
+
+test('login with non-email string', () async {
+expect(() async {
+await auth.loginWithEmailAndPassword(
+email: 'notanemail', password: 'password');
+}, throwsException);
+});
+}
+
+</code></pre>
+<p>WellTested 算是很酷的工具，生成的測試看起來也有模有樣的，不過因為我沒有深入使用，所以不確定更複雜的狀況會不會有什麼問題。</p>
+<p>目前小詬病的地方就是文件更新看起來不太及時，而且 AI 生成測試的時間雖然不長但是也不算太短。體感大概 1~2 分鐘，如果你有一些還沒有寫測試的地方，不妨來試用看看。</p>
+<h2 id="3-mocking"><a class="header" href="#3-mocking">3. Mocking</a></h2>
+<h3 id="mocktail-vs-mockito"><a class="header" href="#mocktail-vs-mockito">Mocktail vs Mockito</a></h3>
+<p>如果經常寫 Flutter 測試，這兩個工具應該就是必備其一了。這兩個工具都是 Flutter 測試中模擬對象的首選。Mockito 是比較早出來的工具，所以使用的人數較多，也更多專案有依賴他。Mockito 依賴於 Annotation 他需要先幫要 Mock 的 class 加上 <code>@GenerateNiceMocks</code> ****，然後透過 build_runner 去產生對應的 Mock class。</p>
+<p>但如果是專案比較大的人，就會開始對 build_runner 產生害怕，因為動輒都要自動生成幾千個檔案，實在是花太多時間。 Mocktail 就是看準這點，他可以不透過 build_runner 去生成對應的類別，而是直接透過 extends 搭配 when 來覆蓋原本的方法，讓使用上更快速簡便。</p>
+<p>接下來快速看看兩邊的程式碼對比：</p>
+<h3 id="建立-mock-class"><a class="header" href="#建立-mock-class">建立 Mock Class:</a></h3>
+<p>差別只在一個用 Annotation 另一個直接 extends <code>Mock</code>，不過 Mockito 還會生成另外一個 <code>.mock.dart</code> 的檔案，所以會更不靈活一點。</p>
+<p><strong>Mockito</strong></p>
+<pre><code class="language-dart">import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+
+// Annotation which generates the cat.mocks.dart library and the MockCat class.
+@GenerateNiceMocks([MockSpec()])
+import 'cat.mocks.dart';
+
+// Real class
+class Cat {
+String sound() =&gt; "Meow";
+bool eatFood(String food, {bool? hungry}) =&gt; true;
+int lives = 9;
+}
+
+void main() {
+// Create mock object.
+var cat = MockCat();
+}
+
+</code></pre>
+<p><strong>Mocktail</strong></p>
+<pre><code class="language-dart">import 'package:mocktail/mocktail.dart';
+
+// A Real Cat class
+class Cat {
+String sound() =&gt; 'meow!';
+bool likes(String food, {bool isHungry = false}) =&gt; false;
+final int lives = 9;
+}
+
+// A Mock Cat class
+class MockCat extends Mock implements Cat {}
+
+void main() {
+// Create a Mock Cat instance
+final cat = MockCat();
+}
+
+</code></pre>
+<h3 id="verify-和-expect"><a class="header" href="#verify-和-expect">Verify 和 Expect</a></h3>
+<p>在Flutter的單元測試中，<code>verify</code> 和 <code>expect</code> 是兩個常用來確認模擬物件行為和結果的方法。這些方法通常與Mockito或Mocktail這樣的模擬函式庫一起使用。</p>
+<p><strong>expect</strong></p>
+<p><code>expect</code> 是Flutter測試框架中的一個函數，用於驗證某個結果是否符合預期。它接受兩個參數：actual(實際的結果) 和 matcher(預期的結果或條件)。</p>
+<p>例子中使用 <code>expect(cat.sound(), 'Purr');</code> 是為了確認 <code>cat.sound()</code> 的返回值是否為 <code>'Purr'</code>。</p>
+<p><strong>verify</strong></p>
+<p>在Mockito或Mocktail中，<code>verify</code> 是一個函數，用於確認某個模擬方法是否被調用，以及被調用的次數。</p>
+<p>在上面的例子中，<code>verify(cat.sound()).called(2);</code> 和 <code>verify(() =&gt; cat.sound()).called(2);</code> 分別用於確認 <code>cat.sound()</code> 方法被調用了兩次。</p>
+<p><strong>Mockito</strong></p>
+<pre><code class="language-dart">// Stub a mock method before interacting.
+when(cat.sound()).thenReturn('Purr');
+expect(cat.sound(), 'Purr');
+
+verify(cat.sound()).called(2);
+
+</code></pre>
+<p><strong>Mocktail</strong></p>
+<pre><code class="language-dart">// Stub a method before interacting with the mock.
+when(() =&gt; cat.sound()).thenReturn('Purr');
+expect(cat.sound(), 'Purr');
+
+verify(() =&gt; cat.sound()).called(2);
+
+</code></pre>
+<p>Mockito 和 Mocktail 可以從上面中的對比知道其實兩者的差異並沒有那麼大，更多的差別在於他們內部如何實現這些方法。那講到這裡相信大家可能多少有點好奇 Mocktail 是如何在不用生成新的 class 的情況下可以做到覆蓋原本的方法。這就必須要提到 dart 中一個你常見過卻不知道他竟然有這個用途的方法：<code>noSuchMethod</code></p>
+<h3 id="mocktail-核心講解"><a class="header" href="#mocktail-核心講解">Mocktail 核心講解</a></h3>
+<h3 id="nosuchmethod"><a class="header" href="#nosuchmethod">noSuchMethod</a></h3>
+<p>在 Dart 中，你可以通過覆蓋 <code>noSuchMethod()</code> 來自訂對象如何回應在其 class chain 中沒有明確定義的方法。白話文就是：只要 override <code>noSuchMethod</code> 就等於你可以操作任何沒有明確定義的方法做任合事情，Mocktail 就是巧妙的利用這一點來覆蓋原有的方法。</p>
+<p>我們一起來欣賞一下這段最核心的原始碼</p>
+<pre><code class="language-dart">@override
+dynamic noSuchMethod(Invocation invocation) {
+invocation = _useMatchedInvocationIfSet(invocation);
+if (_whenInProgress) {
+_whenCall = _WhenCall(this, invocation);
+return null;
+} else if (_verificationInProgress) {
+_verifyCalls.add(_VerifyCall(this, invocation));
+return null;
+} else if (_untilCalledInProgress) {
+_untilCall = _UntilCall(this, invocation);
+return null;
+} else {
+_realCalls.add(RealCall(this, invocation));
+_invocationStreamController.add(invocation);
+final cannedResponse = _responses.lastWhere(
+(response) {
+return response.call.matches(invocation, {});
+},
+orElse: __defaultResponse,
+);
+return cannedResponse.response(invocation);
+}
+}
+
+</code></pre>
+<pre><code class="language-dart">dynamic noSuchMethod(Invocation invocation) {
+
+</code></pre>
+<p>這是一個覆寫的 <code>noSuchMethod</code> 方法。每當在 Mock 對象上調用不存在的方法時，此方法都會被觸發。</p>
+<pre><code class="language-dart">invocation = _useMatchedInvocationIfSet(invocation);
+
+</code></pre>
+<p>嘗試獲取與當前調用匹配的已設置的模擬行為（如果有的話）。</p>
+<pre><code class="language-dart">if (_whenInProgress) {
+_whenCall = _WhenCall(this, invocation);
+return null;
+}
+
+</code></pre>
+<p>如果 <code>_whenInProgress</code> 為 <code>true</code>（表示當前正在進行一個 <code>when</code> 調用），則它將創建一個新的 <code>_WhenCall</code> 對象以捕獲這次調用，並將其儲存起來。</p>
+<pre><code class="language-dart">else if (_verificationInProgress) {
+_verifyCalls.add(_VerifyCall(this, invocation));
+return null;
+}
+
+</code></pre>
+<p>如果 <code>_verificationInProgress</code> 為 <code>true</code>，則代表正在進行一個驗證操作（例如 <code>verify</code>）。它會創建一個新的 <code>_VerifyCall</code> 對象來捕獲這次調用並將其加入 <code>_verifyCalls</code> 列表中。</p>
+<pre><code class="language-dart">else if (_untilCalledInProgress) {
+_untilCall = _UntilCall(this, invocation);
+return null;
+}
+
+</code></pre>
+<p>如果 <code>_untilCalledInProgress</code> 為 <code>true</code>，這表示正在進行一個 <code>untilCalled</code> 操作。它將創建一個 <code>_UntilCall</code> 對象來捕獲這次調用。</p>
+<pre><code class="language-dart">else {
+_realCalls.add(RealCall(this, invocation));
+_invocationStreamController.add(invocation);
+
+</code></pre>
+<p>在其他所有情況下（也就是在一般的方法調用中），它將這次調用視為一個真實的調用 (<code>RealCall</code>) 並將其儲存。它還將這次調用發送到 <code>_invocationStreamController</code>，這可能用於後續的事件處理或其他操作。</p>
+<pre><code class="language-dart">final cannedResponse = _responses.lastWhere(
+(response) {
+return response.call.matches(invocation, {});
+},
+orElse: __defaultResponse,
+);
+return cannedResponse.response(invocation);
+
+</code></pre>
+<p>接著，它將尋找一個已設置的模擬回應 (<code>cannedResponse</code>)，這個回應應該匹配當前的調用。如果找到了，它會返回該模擬回應；如果沒有找到，則返回一個預設的回應。</p>
+<p>總之，這個 <code>noSuchMethod</code> 方法的目的是捕獲對模擬對象的所有方法調用，並根據當前的狀態（例如，是否正在執行 <code>when</code> 或 <code>verify</code> 操作）決定如何回應。這就是 <code>Mocktail</code> 如何模擬方法調用並允許你設定期望和驗證調用的方式。希望大家有學到新東西（雖然明明是要講測試的ＸＤ）</p>
+<h2 id="總結"><a class="header" href="#總結">總結</a></h2>
+<p>總結來說，無論是從偽造測試資料的 Faker 到自動生成測試的 Walltested，再到模擬對象的 Mocktail 和 Mockito，每一個工具都為我們的測試提供了不少助力。而 Dart 中的 <code>noSuchMethod</code> 真的是一個眼睛一亮的特性，充分展示了 Dart 語言的魅力。雖然說在開發的過程中，有些人可能對測試感到害怕，但有了這些工具，至少我們可以說，「測試，也沒那麼可怕！」。希望這篇文章能為大家的 Flutter 的測試之旅帶來一點啟示和便利！明天見～</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day50.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day52.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day50.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day52.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

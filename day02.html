@@ -1,0 +1,493 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 2: 使用 Dart 3 改善我們的開發習慣，更多範例與技巧分享！ - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-2-使用-dart-3-改善我們的開發習慣更多範例與技巧分享"><a class="header" href="#day-2-使用-dart-3-改善我們的開發習慣更多範例與技巧分享">Day 2: 使用 Dart 3 改善我們的開發習慣，更多範例與技巧分享！</a></h1>
+<ul>
+<li>發布時間：2023-09-17 19:49:43</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10320379">https://ithelp.ithome.com.tw/articles/10320379</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 2 篇</li>
+</ul>
+<p><img src="images/20120687mm11qSGYxL.png" alt="" /></p>
+<p>當 Dart 3 添加 Record 和 Pattern 等等強大的功能後，讓它成為了很有吸引力的語言，非常值得我們花時間與它相處，輕鬆、快速地在專案寫出好的代碼。</p>
+<p>以下分享了 9 個範例，希望幫助你對 Dart 有更深一層的了解，建議邊看邊使用 IDE 練習，將結果印出來，相信你會更有感覺更有記憶，每一刻都很重要，我們不要浪費了，跟著我往下閱讀吧：</p>
+<hr />
+<h3 id="example-1"><a class="header" href="#example-1">Example 1</a></h3>
+<p>有了 Dart 3 之後，在使用 <strong>Pattern Matching</strong> 時同時很容易使用到 <strong>Destructure 解構</strong>，透過 spread operator <code>...</code> 輕鬆幫我們處理 List 操作，寫起來快速又簡單。以下方的案例來看，存取第一個和最後一個元素，中間我們直接忽略。</p>
+<p>以這個情境來看，需要確保元素有兩個以上才不會出錯，因為 <code>first</code> 與 <code>last</code> 變數不是空值，如果只有一個元素的話會直接報錯。</p>
+<pre><code class="language-dart">final [first, ..., last] = [2, 4, 6, 8, 10];
+debugPrint('$first, $last'); // 2, 10
+
+final [first, ..., last] = [2, 4];
+debugPrint('$first, $last'); // 2, 4
+
+final [first, ..., last] = [2];
+debugPrint('$first, $last'); // throw exception
+</code></pre>
+<h3 id="example-2"><a class="header" href="#example-2">Example 2</a></h3>
+<p>此範例展示 <strong>Pattern Matching</strong> 的一個技巧 <strong>if-case matching</strong>，讓我們在針對 nullable 變數檢查的時候能更簡潔快速，也稱為 <strong>Null Gauard</strong>，編譯器能確保變數不在 null 這個範圍。不僅在撰寫商業邏輯上還有 UI code 的層面都很好使用。以下列出原有寫法以及新的方式：</p>
+<ol>
+<li>舊有寫法，當變數不在同一個 block，而我們要確保它不是空值，就會需要使用 <code>if</code> 來檢查，它的缺點就是即便已經確認不為 null，但裡面在存取變數的時候還是要給預設值</li>
+<li>新的寫法，使用 <strong>if-case matching</strong>，後方可以決定變數是否為空，而且還可以自定義變數名稱，一行即可完成驗證，使用起來簡單俐落</li>
+<li>第三個部分，可以允許變數為 null 的範例，根據實際需求去撰寫</li>
+</ol>
+<pre><code class="language-dart">int? age;
+
+void main() {
+    // Old
+    if (age != null) {
+        printAge(age ?? 0);
+    }
+
+    // New, check value is not nullable.
+    if (age case final int age) {
+        printAge(age);
+    }
+    
+    // New, allow nullable value
+    if (age case final int? age) {
+        printAge(age ?? 0);
+    }
+}
+
+void printAge(int age) {
+    debugPrint('Age is $age.');
+}
+</code></pre>
+<h3 id="example-3"><a class="header" href="#example-3">Example 3</a></h3>
+<p>此範例使用了 <strong>Record</strong>、<strong>Patter Matching</strong>、<strong>Switch Expression</strong>，搭配 enum 進行條件檢查，當我們有多個變數需要進行判斷的時候，就不需要再使用多層的 if-else 來處理，程式碼會很腫脹、冗長，使用 Record 包裝多個變數，裡面只需列出你會遇到的幾種條件，最後其他情境在使用 <code>_</code> 去表示就好，寫起來簡潔、可讀性高。</p>
+<pre><code class="language-dart">enum AccountType {
+    vip,
+    member,
+    guest,
+}
+
+void main() {
+    bool isAuthenticated = true;
+    bool isPaid = true;
+
+    final type = switch ((isAuthenticated, isPaid)) {
+        (true, true) =&gt; AccountType.vip,
+        (true, false) =&gt; AccountType.member,
+        (_, _) =&gt; AccountType.guest,
+    };
+
+    debugPrint("This account is ${type.name}");
+}
+</code></pre>
+<h3 id="example-4"><a class="header" href="#example-4">Example 4</a></h3>
+<p>此範例使用 <code>typedef</code> 來建立方便的 Record 快捷類別，有時候我們只需要簡單的類別來保存一些屬性，並且可以根據屬性來進行物件比對，具有 equatable 功能。使用 <code>typedef</code> 搭配 Record 實現一種仿類別的快捷方法。</p>
+<blockquote>
+<p>額外要提醒大家，Record 本身不是類別，只要是欄位與表示方式相同，就會被當成同一個 type</p>
+</blockquote>
+<pre><code class="language-dart">typedef Student = ({String name, int number});
+
+extension StudentExtension on Student {
+    void sayHi() {
+        debugPrint('Hi, I am ${this.name}. No.$number');
+    }
+}
+
+void main() {
+    const Student student = (name: 'Yii', number: 1);
+    student.sayHi();
+}
+</code></pre>
+<h3 id="example-5"><a class="header" href="#example-5">Example 5</a></h3>
+<p>Class Equality with Record，實現跟 <code>equatable</code> 套件一樣的功能，用來比對類別物件是否相同。這件無聊的事情透過 Dart 3 來改善</p>
+<h4 id="old"><a class="header" href="#old">Old</a></h4>
+<p>在 operator 方法內有幾個屬性就要對幾個屬性進行比對，會寫的很冗長，當然 hashCode 也是一樣</p>
+<pre><code class="language-dart">@override
+bool operator ==(covariant Location other) {
+    if (identical(this, other)) return true;
+    return other.country == country &amp;&amp; other.id == id;
+}
+
+@override
+int get hashCode =&gt; Object.hashAll([country, id]);
+</code></pre>
+<h4 id="new"><a class="header" href="#new">New</a></h4>
+<p>使用 <strong>Record</strong> 整個開發氛圍就不一樣了XD，透過一個 <code>_equality()</code> 方法幫我們處理比較的部分，這也是 <strong>Record</strong> 的特性，而我們在 operator 以及 hashCode 的撰寫就能以很輕鬆的方式來完成，有效提升簡潔性</p>
+<pre><code class="language-dart">class Student {
+    Student({
+        required this.name,
+        required this.number,
+    });
+
+    final String name;
+    final int number;
+
+    (String, int) _equality() =&gt; (name, number);
+
+    @override
+    bool operator ==(covariant Student other) {
+        if (identical(this, other)) return true;
+    
+        return other._equality() == _equality();
+    }
+
+    @override
+    int get hashCode =&gt; _equality().hashCode;
+}
+</code></pre>
+<h4 id="example-6"><a class="header" href="#example-6">Example 6</a></h4>
+<p>在某些時候需要讀取一個 Map，從中解析並存取一些資料。以舊的寫法來看，需要進行多層的型別以及空值檢查，再將指定欄位的內容拿出來。這寫法應該沒有人會喜歡吧，看得頭都暈了</p>
+<h4 id="old-1"><a class="header" href="#old-1">Old</a></h4>
+<pre><code class="language-dart">final dynamic json = {
+    'data': [
+        {'name': 'Andyy'},
+        {'name': 'Anby'},
+        {'name': 'Ancy'},
+        {'name': 'Andy'},
+    ]
+};
+
+bool hasAndy = false;
+
+if (json.containsKey('data')) {
+    final data = json['data'];
+    if (data is List) {
+        for (final item in data) {
+            if (item is Map) {
+                if (item.containsKey('name') &amp;&amp; item['name'] == 'Andy') {
+                    hasAndy = true;
+                }
+            }
+        }
+    }
+}
+
+print(hasAndy); // true
+</code></pre>
+<h4 id="new-1"><a class="header" href="#new-1">New</a></h4>
+<p>使用 Dart 3 改善，其中使用了 <strong>Switch Expression</strong>、<strong>Pattern Matching</strong>、<strong>Destructure</strong>，以輕鬆的方式取解析 Map，整體都變得更有可讀性。</p>
+<pre><code class="language-dart">final hasAndy = switch (json) {
+    {'data': List items} =&gt; items.any((element) =&gt; switch (element) {
+            {'name': 'Andy'} =&gt; true,
+            _ =&gt; false,
+        }),
+    _ =&gt; false,
+};
+
+print(hasAndy); // true
+</code></pre>
+<h3 id="example-7"><a class="header" href="#example-7">Example 7</a></h3>
+<p>此範例要解析 array 取得顏色的 RGB 數值。首先我們需要先檢查長度，在檢查內容物是否為字串不為 null，最後存取他們</p>
+<h4 id="old-2"><a class="header" href="#old-2">Old</a></h4>
+<pre><code class="language-dart">final rgb = [255, 255, 255];
+
+if (rgb.length == 3) {
+    final red = rgb[0];
+    final green = rgb[1];
+    final blue = rgb[2];
+
+    if (red is int &amp;&amp; green is int &amp;&amp; blue is int) {
+        debugPrint('$red, $green, $blue');
+    }
+}
+</code></pre>
+<h4 id="new-2"><a class="header" href="#new-2">New</a></h4>
+<p>簡潔寫法只需要用到 <strong>if-case matching</strong>，接著進行解構，符合條件就能安心存取資料了。真是寫起來很舒服</p>
+<pre><code class="language-dart">final rgb = [255, 255, 255];
+
+if (rgb case [int red, int green, int blue]) {
+    debugPrint('$red, $green, $blue');
+}
+</code></pre>
+<h3 id="example-8"><a class="header" href="#example-8">Example 8</a></h3>
+<p>此範例為運動功能的情境，有個 Exercise 物件，需要從它的屬性來判斷是單組還是超級組，取出對應的屬性來使用，最後返回元件。這裡使用了 <strong>Switch Expression</strong>、<strong>Pattern Matching</strong> 和 <strong>Destructure</strong> 來實作</p>
+<p>第一個方式，前連兩個條件因為有使用到 <code>when</code> 執行第二層檢查，代表 exercise 物件不為 null，接著透過第二層確認 singleSetAction 和 superSet 是否為 null，正確的話就返回指定元件。在這個情境下其中一個會有值，一個會是空值。</p>
+<pre><code class="language-dart">return switch (exercise) {
+    _ when exercise.singleSetAction != null =&gt; _SingleSetItem(data:      exercise.singleSetAction!),
+    _ when exercise.superSet != null =&gt; _SuperSetItem(data: exercise.superSet!),
+    _ =&gt; const SizedBox.shrink(),
+};
+</code></pre>
+<p>第二個更簡潔的方式，省略 <code>when</code> 用法，直接進行 Exercise 解構，其中針對欄位給予不為 null 的變數，符合的話就會返回元件。一樣先檢查 singleSetAction 再檢查 superSet，有解構後，代碼撰寫上更快速了，不覺得 Dart 很聰明嗎？</p>
+<pre><code class="language-dart">return switch (exercise) {
+    Exercise(singleSetAction: final ExerciseAction singleSetAction) =&gt; _SingleSetItem(data: singleSetAction),
+    Exercise(superSet: final SuperSet superSet) =&gt; _SuperSetItem(data: superSet),
+    _ =&gt; const SizedBox.shrink(),
+};
+</code></pre>
+<h3 id="example-9"><a class="header" href="#example-9">Example 9</a></h3>
+<p>此範例的寫法在 Dart 3 之前就有了，只不過很少人知道。範例告訴大家其實不為空的變數也可以不用在宣告時給予 <code>late</code> 或是預設值，Dart 會自動檢查過程中是否每個情境都有處理，而不會讓變數違反原本的行為。以下面的程式碼來說，在變數下方使用了 <code>try-catch</code>，進入 try 的時候我們進行賦值，而有錯誤的時候我們再丟出新的例外，所以後面在使用 <strong>price</strong> 變數的時候不會出錯，因為 Dart 知道情境上符合預期， Compiler 已經給予保證。</p>
+<p>兩種情況可以這樣使用：</p>
+<ol>
+<li>try 和 catch 都進行賦值</li>
+<li>try 賦值 catch 丟出例外，不讓程式繼續往下進行</li>
+</ol>
+<pre><code class="language-dart">int price;
+
+try {
+    price = 20;
+} catch (error) {
+    // 1.
+    price = -1;
+    // 2.
+    throw Exception(error);
+}
+
+debugPrint(price.toString());
+</code></pre>
+<p>針對 <code>if-else</code> 情境也可以這樣使用，假設 true 跟 false 的情境都有賦值或是有丟出例外一樣能編譯正常，Dart 已經知道不會有問題，所以變數可以不需要 <code>late</code> 和預設值</p>
+<pre><code class="language-dart">int getPrice(bool canKnowPrice) {
+    int price;
+
+    if (canKnowPrice) {
+        price = 20;
+    } else {
+        // 1.
+        price = -1;
+        // 2.
+        throw Exception('Something wrong.');
+    }
+
+    return price;
+}
+</code></pre>
+<blockquote>
+<p>以上的用法跟 <code>late</code> 用法差異就是，假設我們使用 <code>late</code> 來宣告 price，它代表我們自己保證變數一定會初始化和賦值，所以編譯器不會幫忙檢查，所以這時候如果沒有寫測試來確保沒問題，你的程式就有可能報錯，APP 可能會崩潰。</p>
+</blockquote>
+<hr />
+<p>以上例子都是從日常開發中會遇到的情境，實際上 Dart 3 淺力無窮，只怕你駕馭不了它。我們唯有透過日常的練習去熟悉它，強化自己的觀念意識，慢慢就能寫出高品質的程式碼。也建議大家多多閱讀 Dart 官方網站以及 Github repo，了解新用法來改善自己和公司的專案！</p>
+<hr />
+<h2 id="延伸閱讀"><a class="header" href="#延伸閱讀">延伸閱讀</a></h2>
+<ul>
+<li><a href="https://ithelp.ithome.com.tw/articles/10319282">Day 1: 跟著我熟悉 Dart 3，這些高效語法你需要知道！</a></li>
+</ul>
+<h2 id="相關資源"><a class="header" href="#相關資源">相關資源</a></h2>
+<ul>
+<li><a href="https://dart.dev/language/patterns">https://dart.dev/language/patterns</a></li>
+<li><a href="https://dart.dev/language/records">https://dart.dev/language/records</a></li>
+<li><a href="https://dart.dev/language/branches">https://dart.dev/language/branches</a></li>
+<li><a href="https://twitter.com/_eseidel/status/1692031211177476435">https://twitter.com/_eseidel/status/1692031211177476435</a></li>
+<li><a href="https://www.youtube.com/watch?v=j3fzeDpd2ts&amp;t=45s&amp;ab_channel=RobertBrunhage">https://www.youtube.com/watch?v=j3fzeDpd2ts&amp;t=45s&amp;ab_channel=RobertBrunhage</a></li>
+<li><a href="https://www.aloisdeniel.com/blog/dart-pattern-matching">https://www.aloisdeniel.com/blog/dart-pattern-matching</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day01.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day03.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day01.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day03.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 42：噫！從外到內看 Flutter 渲染引擎 2｜GLSL 與 Shader - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-42噫從外到內看-flutter-渲染引擎-2glsl-與-shader"><a class="header" href="#day-42噫從外到內看-flutter-渲染引擎-2glsl-與-shader">Day 42：噫！從外到內看 Flutter 渲染引擎 2｜GLSL 與 Shader</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10328282">Day 12：噫！從外到內看 Flutter 渲染引擎 2｜GLSL 與 Shader</a></p>
+</blockquote>
+<p>在上一篇講到 Impeller 與 Skia 不同，Impeller 在構建過程中而不是在運行時編譯 Shader。在構建過程中，Impeller Shader 編譯器（impellerc）將 GLSL（<strong>OpenGL Shading Language</strong>）編譯成 SPIRV。而我們今天要一起來實作的，就是如何自己完成 Shader 的編寫，</p>
+<p>GLSL 是一種用於在 OpenGL 和 OpenGL ES 中編程著色器的高級著色語言。另一方面，SPIRV 是一個不僅限於 OpenGL 和 OpenGL ES，還可以與其他圖形技術一起使用的著色器代碼的高效表示形式。impellerc 將 GLSL 代碼轉換成 SPIRV 以實現跨平台兼容性和著色器的高效執行。編譯的輸出是 SPIRV 模塊形式的二進制 blob，可以由圖形驅動程序或運行時加載和執行。因此，這些 SPIRV 模塊（二進制 blobs）可以在各種平台上執行。</p>
+<p>在 Flutter 的工作中，通常會把要繪製到畫面上的方法分成兩種：Widget 與 Canvas ，這兩者都能協助我們在螢幕上呈現畫面的效果，Widget 是透過 RenderObject 來描述要如何繪製到畫面上，而 Canvas 則是透過操作 Painter 直接告知畫面要如何繪製，顯而易見的 Widget 是透過 RenderObject 轉譯過後的內容，效能上肯定不比直接繪製的好，所以一般來說如果要繪製更複雜的動畫效果，我們同常會使用 Canvas 來操作，如果大家對 Canvas 有興趣，之後也能做一期專門的解說。</p>
+<p><img src="images/20117363aDPGNsacu0.png" alt="" /></p>
+<p>而 Shader 就是在操作 Canvas 的過程中，幫助我們達到更客製化的渲染效果。如最簡單、常見的 <code>LinearGradient</code>，其中 createShader 其實就是幫助我們透過 API 的方法去建立 shader 。</p>
+<pre><code class="language-dart">final Shader linearGradient = LinearGradient(
+colors: [Colors.blue, Colors.red],
+).createShader(Rect.fromLTWH(0.0, 0.0, size.width, size.height));
+
+final paint = Paint()..shader = linearGradient;
+
+canvas.drawRect(
+Rect.fromLTWH(50.0, 50.0, 200.0, 70.0),
+paint,
+);
+
+</code></pre>
+<h3 id="shader-是什麼"><a class="header" href="#shader-是什麼">Shader 是什麼？</a></h3>
+<p>講了這麼多， Shader 倒底是什麼， Shader 是運行在 GPU 上的一段小程式，主要負責渲染圖形或特效。他們主要分為兩類：Vertex Shaders 和 Fragment Shaders (又稱 Pixel Shaders)。這次我們主要關注的會是 <strong>Fragment Shaders。</strong></p>
+<ul>
+<li>
+<p><strong>Vertex Shaders</strong>：負責處理頂點資料，可用於轉換 3D 物體的頂點座標，應用變形等。</p>
+</li>
+<li>
+<p><strong>Fragment Shaders</strong>：運行於每個像素上，確定最終顯示到螢幕上的顏色。</p>
+</li>
+</ul>
+<p>簡單來說 <strong>Vertex Shaders</strong> 負責骨架，而 <strong>Fragment Shaders</strong> 就是濾鏡啦！</p>
+<h3 id="glsl-與-frag"><a class="header" href="#glsl-與-frag">GLSL 與 .frag</a></h3>
+<p>GLSL（<strong>OpenGL Shading Language</strong>） 是一種用於描述 shaders 的語言，其語法與 C 語言相似。而 .frag 是 fragment shader 的標準擴展名，通常包含了描述如何計算像素顏色的 GLSL 程式碼。</p>
+<h3 id="如何在-flutter-中使用-fragment-shader"><a class="header" href="#如何在-flutter-中使用-fragment-shader">如何在 Flutter 中使用 Fragment Shader？</a></h3>
+<p>那看完上面的介紹，大家應該已經躍躍欲試了，這次的實作就讓我們先來完成自己用 Shader 製作的 LinearGradient 吧！</p>
+<p><strong>建立你的 Shader</strong>：首先需要建立 <code>.frag</code> 檔案，我們可以在 Flutter 專案底下的 assets 新增資料夾 shaders 來放置要新增的檔案，我們先把檔案命名為 <code>my_shader.frag</code>。這裡我們先不深入講解先接著把設定做完。</p>
+<pre><code class="language-glsl">// my_shader.frag
+#version 460 core
+out vec4 FragColor;
+
+void main(){
+}
+
+</code></pre>
+<p><code>version</code>：表示你要使用的 GLSL 版本。</p>
+<p><code>FragColor</code>：表示最後渲染的結果。</p>
+<p><strong>引用 .frag 檔</strong>：到 pubspec.yaml 添加上我們先前增加的 shader</p>
+<pre><code class="language-dart">flutter:
+...
+shaders:
+- assets/shaders/my_shader.frag
+
+</code></pre>
+<p><strong>在 flutter 中讀取 .frag 檔案</strong>：到 main.dart，新增一個變數為 myShader，shader 必須要被提前讀取，所以我先寫在 main.dart 裡面</p>
+<pre><code class="language-dart">late FragmentProgram myShader;
+
+Future main() async {
+myShader = await FragmentProgram.fromAsset("assets/shaders/my_shader.frag");
+runApp(const MyApp());
+}
+
+</code></pre>
+<p><strong>繪製到 Canvas</strong>：在這裡我們要配合 Painter 去做到繪製 shader ，所以我們也新建一個 <code>CustomPaint</code> 和 <code>ShaderPainter</code>，在 <code>ShaderPainter</code> 中我們先讓他傳入一個顏色。並且也把 myShader 給傳進去，利用  <code>Paint()..shader = shader</code> 來做使用</p>
+<pre><code class="language-dart">return MaterialApp(
+home: CustomPaint(
+painter: ShaderPainter(
+color: Colors.blueAccent,
+shader: myShader.fragmentShader(),
+),
+)
+);
+
+class ShaderPainter extends CustomPainter {
+final Color color;
+final FragmentShader shader;
+
+ShaderPainter({
+super.repaint,
+required this.color,
+required this.shader,
+});
+@override
+void paint(Canvas canvas, Size size) {
+canvas.drawRect(
+Rect.fromLTWH(0, 0, size.width, size.height),
+Paint()..shader = shader,
+);
+}
+
+@override
+bool shouldRepaint(covariant ShaderPainter oldDelegate) {
+return true;
+}
+}
+
+</code></pre>
+<p>到這裡就都設定完成了，接下來我們一起完成 shader 吧。首先回到 my_shader.frag，為了要渲染顏色，新增一個變數 uColor 接受外面傳進來的變數。</p>
+<pre><code class="language-dart">#version 460 core
+
+uniform vec4 uColor;
+
+out vec4 FragColor;
+
+void main(){
+FragColor = uColor;
+}
+
+</code></pre>
+<p><code>vec4</code>：表示是四個符點數的向量，分別對應顏色的 rgba。</p>
+<p>glsl 還有一些常見的數據類型：
+<strong>數據類型</strong>:</p>
+<ul>
+<li>
+<p><strong><code>int</code></strong>: 整數</p>
+</li>
+<li>
+<p><strong><code>float</code></strong>: 單精度浮點數</p>
+</li>
+<li>
+<p><strong><code>vec2</code></strong>, <strong><code>vec3</code></strong>, <strong><code>vec4</code></strong>: 2, 3, 4成分的浮點數向量</p>
+</li>
+<li>
+<p><strong><code>mat2</code></strong>, <strong><code>mat3</code></strong>, <strong><code>mat4</code></strong>: 2x2, 3x3, 4x4的矩陣</p>
+</li>
+</ul>
+<p>再回到 main.dart 我們要把顏色傳遞給 shader，由於 rgba 的值在 shader 中是 0~1，但在 Flutter 中是 0~255，所以我們必須幫他轉一下格式 <code>color.red.toDouble() / 255</code> 。</p>
+<p><strong>傳入變數</strong>：設定變數的方法也有些奇葩，我們在 my_shader.frag 檔案裡面宣告了 <code>uniform vec4 uColor</code>，這個變數，vec4 代表他是四個浮點數的向量，flutter 不支援直接傳入一個向量所以必須在 <code>ShaderPainter</code> 中依序設定 <code>shader.setFloat(0..3)</code>，就會自動對應上 vec4 每個向量，非常奇葩，但目前只能先這樣做。</p>
+<pre><code class="language-dart">class ShaderPainter extends CustomPainter {
+final Color color;
+final FragmentShader shader;
+
+ShaderPainter({
+super.repaint,
+required this.color,
+required this.shader,
+});
+@override
+void paint(Canvas canvas, Size size) {
+shader.setFloat(0, color.red.toDouble() / 255);
+shader.setFloat(1, color.green.toDouble() / 255);
+shader.setFloat(2, color.blue.toDouble() / 255);
+shader.setFloat(3, color.alpha.toDouble() / 255);
+
+canvas.drawRect(
+Rect.fromLTWH(0, 0, size.width, size.height),
+Paint()..shader = shader,
+);
+}
+
+@override
+bool shouldRepaint(covariant ShaderPainter oldDelegate) {
+return true;
+}
+}
+
+</code></pre>
+<p>在我們設定好之後，就可以把專案跑起來看看啦！是一個完美的藍色呢！</p>
+<p><img src="images/20117363H0bVY8I8Df.png" alt="" /></p>
+<p><strong>正規化螢幕解析度</strong>：打鐵趁熱，由於我們的設備可能是各種大小的窗口，但是在 shader 的世界中我們希望把他對應成 0~1 會更有利於我們後續的所有操作。為了把各式各樣的視窗大小對應成 0~1 ，我們需要把窗口的 uSize 也傳進去給 shader，並透過 Flutter 提供的 runtime_effect。透過</p>
+<p><code>vec2 uv = FlutterFragCoord() / uSize</code>，uv 就是經過正規化後的 xy 距離啦。</p>
+<pre><code class="language-dart">#version 460 core
+#include
+
+uniform vec2 uSize;
+uniform vec4 uColor;
+
+out vec4 FragColor;
+
+void main(){
+vec2 uv = FlutterFragCoord() / uSize;
+FragColor = uColor;
+}
+
+</code></pre>
+<p>由於要多填入 uSize，我們需要在 ShaderPainter 也作出相應的調整，size 可以直接從 canvas 取用。</p>
+<pre><code class="language-dart">class ShaderPainter extends CustomPainter {
+final Color color;
+final FragmentShader shader;
+
+ShaderPainter({
+super.repaint,
+required this.color,
+required this.shader,
+});
+@override
+void paint(Canvas canvas, Size size) {
+shader.setFloat(0, size.width);
+shader.setFloat(1, size.height);
+shader.setFloat(2, color.red.toDouble() / 255);
+shader.setFloat(3, color.green.toDouble() / 255);
+shader.setFloat(4, color.blue.toDouble() / 255);
+shader.setFloat(5, color.alpha.toDouble() / 255);
+
+canvas.drawRect(
+Rect.fromLTWH(0, 0, size.width, size.height),
+Paint()..shader = shader,
+);
+}
+
+@override
+bool shouldRepaint(covariant ShaderPainter oldDelegate) {
+return true;
+}
+}
+
+</code></pre>
+<p><strong>加上漸變色</strong>：玩成螢幕正規化的調整後，為了要完成顏色漸變，我們還要再新增一個顏色，並且傳入給 shader，這裡就是上面操作的重複直接上程式碼。</p>
+<pre><code class="language-dart">class ShaderPainter extends CustomPainter {
+final Color color1;
+final Color color2;
+final FragmentShader shader;
+final int shift;
+
+ShaderPainter({
+super.repaint,
+required this.color1,
+required this.color2,
+required this.shader,
+required this.shift,
+});
+@override
+void paint(Canvas canvas, Size size) {
+shader.setFloat(0, size.width);
+shader.setFloat(1, size.height);
+shader.setFloat(2, color1.red.toDouble() / 255);
+shader.setFloat(3, color1.green.toDouble() / 255);
+shader.setFloat(4, color1.blue.toDouble() / 255);
+shader.setFloat(5, color1.alpha.toDouble() / 255);
+shader.setFloat(6, color2.red.toDouble() / 255);
+shader.setFloat(7, color2.green.toDouble() / 255);
+shader.setFloat(8, color2.blue.toDouble() / 255);
+shader.setFloat(9, color2.alpha.toDouble() / 255);
+
+canvas.drawRect(
+Rect.fromLTWH(0, 0, size.width, size.height),
+Paint()..shader = shader,
+);
+}
+
+@override
+bool shouldRepaint(covariant ShaderPainter oldDelegate) {
+return true;
+}
+}
+
+</code></pre>
+<p>在傳入 <code>uColor1</code> 和 <code>uColor2</code> 後，我們就可以使用 <code>mix</code> 的方法，來改變顏色的渲染啦！<code>mix</code> 會幫我們混合兩種顏色，可以指定顏色的方向，可以是 <code>uv.x</code> 或是 <code>uv.y</code></p>
+<pre><code class="language-dart">#version 460 core
+#include
+
+uniform vec2 uSize;
+uniform vec4 uColor1;
+uniform vec4 uColor2;
+
+out vec4 FragColor;
+
+void main(){
+vec2 uv = FlutterFragCoord() / uSize;
+FragColor = mix(uColor1, uColor2, uv.x);
+}
+
+</code></pre>
+<p>hot reload 就能看到我們的最終成果啦～ 恭喜你已經自己完成用 shader 製作 LinearGradient 的整個流程！是不是很有成就感呀！</p>
+<p><img src="images/20117363IZD0D3nKXc.png" alt="" /></p>
+<h3 id="總結"><a class="header" href="#總結">總結</a></h3>
+<p>使用 shaders 在 Flutter 中可以開啟全新的視覺效果之門。通過學習和實驗 GLSL 語言，你可以為你的 Flutter 應用程序打造獨特和令人印象深刻的動畫和特效。希望本篇文章可以為你提供一個良好的起點，開始你的 shader 旅程！（或是當作有趣的知識看看也很不錯呀 ），其實 shader 還能做到更不可思議的渲染，但是礙於長度與難度問題，我就只在這裡分享幾個案例（發現 gif 傳不上來，不然這些都是會動的哦！），詳細的解說未來有機會再詳細分享摟！</p>
+<p><img src="images/20117363DXyOq0zK8T.png" alt="" /><img src="images/20117363mVSK0pRMLy.png" alt="" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day41.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day43.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day41.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day43.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

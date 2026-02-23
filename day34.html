@@ -1,0 +1,372 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 34：驚！每次 PR 都要測試呀：Flutter CI/CD｜自動化測試｜GitHub Action 2 🎬 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-34驚每次-pr-都要測試呀flutter-cicd自動化測試github-action-2-"><a class="header" href="#day-34驚每次-pr-都要測試呀flutter-cicd自動化測試github-action-2-">Day 34：驚！每次 PR 都要測試呀：Flutter CI/CD｜自動化測試｜GitHub Action 2 🎬</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10322739">Day 4：驚！每次 PR 都要測試呀：Flutter CI/CD｜自動化測試｜GitHub Action 2 🎬</a></p>
+</blockquote>
+<p>在上一篇，介紹了 Github Action 的基礎知識，接下來就要透過 Github Action 把自動化測試串上 Flutter 啦。測試的重要性應該不用多說，有被測試拯救過的人都懂，我們必須承認再怎麼厲害的人也是人，難免會犯錯，測試就是替失誤買下保險。</p>
+<pre><code class="language-jsx">🎬 文章內容包含：
+✔ GitHub Action 自動化測試
+✔ Semantic-pull-request 幫你檢查 PR title 是否合格
+
+</code></pre>
+<h2 id="自動化測試"><a class="header" href="#自動化測試">自動化測試</a></h2>
+<p>今天的第一個目標是：在每次有人提出 PR 的時候，就自動開始跑自動化測試，確保進來的 code 不會影響到其他正常的程式碼。</p>
+<h3 id="flutter-程式碼"><a class="header" href="#flutter-程式碼">Flutter 程式碼</a></h3>
+<p>因為要測試的目的是提出 PR，所以先切換到另一個 branch，以利接下來的步驟進行。</p>
+<pre><code class="language-bash">$ gco -b pr-test
+or
+$ git branch pr-test
+$ git checkout pr-test
+
+</code></pre>
+<p>然後新增測試的程式碼，到你的 Flutter 專案底下的 <code>test</code> 資料夾，新增 <code>my_test.dart</code>，裡面的內容如下：</p>
+<pre><code class="language-dart">// my_test.dart
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+test('Success Test', () {
+expect(1, 1);
+});
+
+test('Failed Test', () {
+expect(1, 2);
+});
+}
+
+</code></pre>
+<p>在上面的程式碼中新增了兩個測試，分別是會導致成功與失敗的測試。如果不熟悉測試的小夥伴，可以敲碗有機會在後面聊到。</p>
+<p>💡小知識：只要是在 <code>test</code> 資料夾底下任何 <code>*_test.dart</code> 都會自動在 <code>flutter test</code> 中被呼叫到唷。</p>
+<h3 id="github-action-程式碼"><a class="header" href="#github-action-程式碼">Github Action 程式碼</a></h3>
+<p>接下來一樣到 <code>.github/workflows</code> ，增加新的 workflow，先取名為 <code>pr.yaml</code> ，一樣先上程式碼再解析。</p>
+<pre><code class="language-yaml"># pr.yaml
+
+name: 'PR CI'
+
+on:
+pull_request:
+types:
+- opened
+- edited
+- synchronize
+
+jobs:
+flutter_test:
+name: Flutter Test
+runs-on: ubuntu-latest
+steps:
+- name: Checkout
+uses: actions/checkout@v2
+- name: Setup Flutter
+uses: subosito/flutter-action@v2
+with:
+flutter-version: '3.10.5'
+- name: Flutter Test
+run: |
+flutter pub get
+flutter test
+
+</code></pre>
+<p><strong><code>pull_request</code></strong></p>
+<ul>
+<li>裡面的 Types 表示執行的時機是在有 PR 被打開、編輯、sync 的時候。</li>
+</ul>
+<p><strong><code>Checkout</code></strong></p>
+<ul>
+<li><code>uses: actions/checkout@v2</code>：使用 GitHub 提供的 <strong><code>checkout</code></strong> Action，以便將代碼 clone 到 VM。</li>
+</ul>
+<p><strong><code>Setup Flutter</code></strong></p>
+<ul>
+<li>
+<p><code>uses: subosito/flutter-action@v2</code>：使用由社群提供的 Flutter GitHub Action 來設定 Flutter。</p>
+</li>
+<li>
+<p><code>with</code>：指定參數。</p>
+</li>
+</ul>
+<p><code>flutter-version: '3.10.5'</code>：設定要使用的 Flutter 版本為 3.10.5。</p>
+<p><strong><code>Flutter Test</code></strong></p>
+<ul>
+<li><code>run</code>：执行 shell 命令。</li>
+</ul>
+<p><code>flutter pub get</code>：獲取 Flutter 依賴。</p>
+<ul>
+<li><code>flutter test</code>：運行 Flutter 的單元測試。</li>
+</ul>
+<p>💡小知識：除了 <code>pull_request</code>，其實還有另外一個很相近的 event 叫做 <code>pull_request_target</code>，使用 <code>pull_request_target</code> 必須注意他有 base repository 的寫入權限，即有可能被壞壞份子透過 fork 後提有惡意程式的 PR 攻擊你的 repository，要小心確認自己的用途。</p>
+<h3 id="執行-workflow"><a class="header" href="#執行-workflow">執行 Workflow</a></h3>
+<p>把這些改動 commit 之後，推到 <code>pr-test</code> 的 branch 上就完成程式碼的部分摟，是不是很開心 🌝。接下來只要到你的 GitHub 專案底下，選擇提出 PR。</p>
+<p><img src="images/20117363E6Yq7Ht4um.png" alt="" /></p>
+<p>不久後你就能在你的 PR 底下看到設定好的 workflow 已經自動開始執行摟 🎉</p>
+<p><img src="images/20117363KazCcT983l.png" alt="" /></p>
+<p>因為我們在前面已經設定測試是會失敗的，所以接下來你會看到這個畫面，表示測試沒有全部通過，必須要修改 PR 讓它通過。</p>
+<p><img src="images/20117363tV33s6AZw5.png" alt="" /></p>
+<p>只要回到 <code>my_test.dart</code>，把兩個測試都改成可以通過的，並 push commit。</p>
+<pre><code class="language-bash">// my_test.dart
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+test('Success Test', () {
+expect(1, 1);
+});
+
+test('Success Test', () {
+expect(2, 2);
+});
+}
+
+</code></pre>
+<p>在推上遠端後，GitHub 的 workflow 又會被自動觸發，重新跑一次測試。這次的測試就能得到我們預期中的結果，令人身心愉悅的 ✅。如此一來就可以確保所有測試都通過，減少弄壞整份程式碼的機會。</p>
+<p><img src="images/20117363G9Jjh14PTo.png" alt="" /></p>
+<h2 id="semantic-pull-request"><a class="header" href="#semantic-pull-request">Semantic-pull-request</a></h2>
+<p>在審閱 PR 的時候，常常會希望能一眼看出這個 PR 在做什麼，所以會訂定出統一的標準來描述 PR 的 title。可以選擇現在常見的標準 <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a>，加入到 PR workflow 的檢查之中，在 github market 中找到 <a href="https://github.com/marketplace/actions/semantic-pull-request">semantic-pull-request</a>，跟著他的步驟把檢查加入到我們的 <code>pr.yaml</code>。</p>
+<pre><code class="language-bash">jobs:
+validate_pr_title:
+name: Validate PR title
+runs-on: ubuntu-latest
+steps:
+- uses: amannn/action-semantic-pull-request@v5
+env:
+GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+flutter_test:
+needs: validate_pr_title
+name: Flutter Test
+
+</code></pre>
+<p>可以看到在 <code>flutter_test</code>，下面還加入了 <code>needs: validate_pr_title</code>，表示在執行 <code>flutter_test</code> 之前，必須先通過 validate_pr_title 才會接續下面的測試，通過 needs 可以節省下不必要的時間成本，讓你的 job 之間產生依賴關係。完成後，可以到 GitHub 的 actions 頁面查看效果。</p>
+<p><img src="images/20117363h3Lf1AiRuT.png" alt="" /></p>
+<p>現在就可以確認我們每個 PR 提交後會先檢查 title，並在通過以後 title 檢查後，在執行 Flutter Test，確保一切順利進行。</p>
+<h2 id="結語"><a class="header" href="#結語">結語</a></h2>
+<p>好啦，我們今天聊了一大堆關於如何用 Github Action 來做自動測試，並讓你的程式碼變得更為優雅。實際上，一旦你設置好 Github Action 的工作流程，每次有人丟個 PR 過來時，它就會自動跑測試。這不只是讓程式更穩定，也解放了團隊，讓大家不用手動一個一個去測。</p>
+<p>而且呢，還探討了怎麼用 semantic-pull-request 來檢查 PR 標題，讓每個 PR 都容易讀懂，也讓團隊更容易理解它到底在做什麼。這樣一來，大家審查 PR 的時候也能更順暢，工作效率自然就提升了。</p>
+<p>我希望這篇文章對你在 Flutter CI/CD 或是自動測試這塊有所幫助。其實，只要用對工具和方法，建立一個穩健的開發環境其實並不是什麼難事，而且還能讓整個團隊的生活變得更輕鬆。</p>
+<p>明天將繼續 GitHub Action 的第三部分，也是最重要的如何讓 GitHub 幫你 Build 一個 Flutter App，敬請期待！</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day33.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day35.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day33.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day35.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

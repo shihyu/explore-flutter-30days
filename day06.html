@@ -1,0 +1,500 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 6: 完全掌握 Flutter APP 生命週期，跟著我從源碼認識它！ - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-6-完全掌握-flutter-app-生命週期跟著我從源碼認識它"><a class="header" href="#day-6-完全掌握-flutter-app-生命週期跟著我從源碼認識它">Day 6: 完全掌握 Flutter APP 生命週期，跟著我從源碼認識它！</a></h1>
+<ul>
+<li>發布時間：2023-09-21 20:38:32</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10324112">https://ithelp.ithome.com.tw/articles/10324112</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 6 篇</li>
+</ul>
+<p><img src="images/20120687KP99lP7QnV.png" alt="" /></p>
+<p>到了生命週期第二篇，開發者不僅要了解 StatefulWidget 的生命週期，很常也會需要現在 APP 的週期狀態，而在 8/17 剛發布的 Flutter 3.13 改版，新增了 <strong>AppLifecycleListener</strong> api，讓我們更完整的掌控生命週期，而且多了幾種狀態，讓開發者能夠更精準的處理每個情境。常見的情境，包含我們在做一些 Socket 通訊的應用，即時在用戶到背景的時候失去連線，或是遊戲玩到一半返回桌面需要先暫停。在每個狀態下即時進行一些相對應的措施，讓使用者有一個良好的體驗。本文中會跟大家說明監聽生命週期的所有方式(新舊方法)，特別是 <strong>AppLifecycleListener</strong> 類別。</p>
+<hr />
+<h2 id="applifecyclelistener"><a class="header" href="#applifecyclelistener">AppLifecycleListener</a></h2>
+<p>從字面上來看 AppLifecycleListener 就是負責監聽 APP 生命週期，而它跟我們常用的 <code>didChangeAppLifecycleState()</code> 不同地方就是能掌握的情境更多，先說明一下 APP 所有狀態</p>
+<ol>
+<li><code>resumed</code> → 在裝置前景</li>
+<li><code>inactive</code> → 剛退出螢幕前景</li>
+<li><code>hidden</code> → 隱藏內容</li>
+<li><code>paused</code> → 退到裝置背景</li>
+<li><code>detached</code> → APP 被銷毀、釋放</li>
+</ol>
+<h4 id="resumed"><a class="header" href="#resumed">resumed</a></h4>
+<ul>
+<li>在前景運行，通常手機正在顯示 APP 畫面</li>
+<li>可以跟使用者互動</li>
+</ul>
+<h4 id="inactive"><a class="header" href="#inactive">inactive</a></h4>
+<ul>
+<li>非活動狀態</li>
+<li>在前景時插入其他應用，切到手機的APP選擇頁、子母畫面、電話、下滑的控制中心、系統視窗訊息等等，接著就是進入 <code>hidden</code> 狀態</li>
+<li>此狀態等於 Android.onPause()</li>
+</ul>
+<h4 id="hidden"><a class="header" href="#hidden">hidden</a></h4>
+<ul>
+<li>即將進入背景時的過渡階段</li>
+</ul>
+<h4 id="paused"><a class="header" href="#paused">paused</a></h4>
+<ul>
+<li>在背景運行</li>
+<li>無法跟使用者互動，也是非活動狀態</li>
+<li>此狀態等於 Android.onStop()</li>
+</ul>
+<h4 id="detached"><a class="header" href="#detached">detached</a></h4>
+<ul>
+<li>一開始與結束的停止狀態</li>
+<li>一旦從 Platform 收到第一個生命週期更新，就會更新到當前狀態</li>
+<li>實際情況：APP被關閉清除</li>
+</ul>
+<hr />
+<p>知道 APP 五大狀態後，接下來要了解狀態轉變過程中會觸發哪些情境也就是程式裡的 callback，總共有八種，我們需要了解從 APP 啟動到被銷毀的過程以及從背景回到前景過程。<br />
+<img src="images/20120687R6oLRWnCD8.png" alt="" /></p>
+<h3 id="app開啟到停止運作"><a class="header" href="#app開啟到停止運作">APP開啟到停止運作</a></h3>
+<ol>
+<li>state: detached</li>
+<li><code>onStart()</code></li>
+<li>state: resumed</li>
+<li><code>onInactive()</code></li>
+<li>state: inactive</li>
+<li><code>onHide()</code></li>
+<li>state: hidden</li>
+<li><code>onPause()</code></li>
+<li>state: paused</li>
+<li><code>onDetach()</code></li>
+<li>state: detached</li>
+</ol>
+<h3 id="app背景回到前景"><a class="header" href="#app背景回到前景">APP背景回到前景</a></h3>
+<ol>
+<li>state: paused</li>
+<li><code>onRestart()</code></li>
+<li>state: hidden</li>
+<li><code>onShow()</code></li>
+<li>state: inactive</li>
+<li><code>onResume()</code></li>
+<li>state: resumed</li>
+</ol>
+<p>提醒：onPause()、onDetach()、onRestart() 這三種狀況只會出現在 <strong>iOS</strong> 和 <strong>Android</strong> 裝置</p>
+<p>有人看到這裡可能會問說，有沒有任何狀態改變都能捕捉的 callback？當然有呀！這時候我們可以使用 <code>onStateChange()</code>，除了個別狀態的 callback 會被觸發以外這個方法每次都會被觸發，讓我們在開發時可以進行不同處理。文章後面會有實際開發方式</p>
+<hr />
+<p>取得當前 APP 狀態可以使用幾個方式 ，可以通過創建新的 <code>AppLifecycleListener</code> 或通過覆寫 <code>WidgetsBindingObserver.didChangeAppLifecycleState</code> 也能經由<code>SchedulerBinding.instance.lifecycleState</code> 來查看當前的APP狀態，有幾種方式能存取我們要的資料。</p>
+<h3 id="取得當前狀態"><a class="header" href="#取得當前狀態">取得當前狀態</a></h3>
+<p>可以使用 <code>SchedulerBinding.instance.lifecycleState</code>，本身是 nullable，所以存取前記得檢查是否為空值。</p>
+<pre><code class="language-dart">@override
+void initState() {
+    super.initState();
+
+    _state = SchedulerBinding.instance.lifecycleState;
+    if (_state != null) {
+        debugPrint(_state!.name);
+    }
+}
+</code></pre>
+<h3 id="監聽全部狀態"><a class="header" href="#監聽全部狀態">監聽全部狀態</a></h3>
+<p>這件事很簡單，只需幾個步驟即可，首先我們要在 StatefulWidget 的 State 上去 with <code>WidgetsBindingObserver</code> 這個 mixin class，透過它我們才能進行 APP 狀態監聽。</p>
+<pre><code class="language-dart">class _MyHomePageState extends State&lt;MyHomePage&gt; with WidgetsBindingObserver {
+    ...
+}
+</code></pre>
+<p>那我們如何透過 WidgetsBindingObserver 去監聽呢，首先我們需要透過 <code>addObserver()</code> 去註冊這個 State 為監聽者，當有週期變化的時候才會通知我們。</p>
+<p>WidgetsBinding 本身是一個 Flutter Framework 和 Flutter Engine 層溝通的橋樑，其中針對 SchedulerBinding(安排任務)、GestureBinding(手勢操作)、RendererBinding(渲染操作)等等都是它服務的對象。而在這過程中如何做到通知呢？核心都會使用到 InheritedWidget 去執行狀態更新。</p>
+<ol>
+<li>在 State 裡的 <code>initState()</code>，也就是一開始的時候進行觀察者註冊</li>
+</ol>
+<pre><code class="language-dart">@override
+void initState() {
+    super.initState();
+    
+    WidgetsBinding.instance.addObserver(this);
+}
+</code></pre>
+<ol start="2">
+<li>在 State 裡的 <code>dispose()</code>，在銷毀的時候進行觀察者釋放，讓記憶體有效使用</li>
+</ol>
+<pre><code class="language-dart">@override
+void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+
+    super.dispose();
+}
+</code></pre>
+<p><img src="images/20120687S5R0bTcRPk.png" alt="" /></p>
+<ol start="3">
+<li>覆寫 <code>didChangeAppLifecycleState()</code>，監聽 APP 的五種狀態，在 Flutter 3.13 更新後多了 <code>hidden</code> 狀態</li>
+</ol>
+<pre><code class="language-dart">@override
+void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+
+    } else if (state == AppLifecycleState.inactive) {
+
+    } else if (state == AppLifecycleState.hidden) {
+  
+    } else if (state == AppLifecycleState.paused) {
+
+    } else if (state == AppLifecycleState.detached) {
+
+    }
+}
+</code></pre>
+<p>你以為這樣就結束了嗎？當然還沒，我們來了解一下底層做了哪些事。</p>
+<p>在 APP 一開始 Flutter Engine 會透過 <code>_updateInitialLifecycleState()</code> 進行初始狀態的通知，接著 ServiceBinding 裡的 <code>readInitialLifecycleStateFromNativeWindow()</code> 會使用 <code>_handleLifecycleMessage()</code> 處理來自平台的初始狀態。<br />
+<img src="images/201206875qB75N1y5C.png" alt="" /><br />
+<img src="images/20120687WP3vKuNXCf.png" alt="" /></p>
+<p>一開始會解析狀態字串，將從 Flutter Engine 拿到的字串轉成我們熟悉的 <strong>AppLifecycleState</strong> enum (看到這裡就想到可以使用 Dart3 的 switch expression 來優化一下XD)。<br />
+<img src="images/20120687ynb601XUdD.png" alt="" /><br />
+<img src="images/20120687iMNMj9jqBg.png" alt="" /></p>
+<p>接著使用 <code>_generateStateTransitions()</code> 計算上一個狀態跟當前狀態的差異，返回一個 AppLifecycleState List，實際上有可能是 resume 到 paused，過程就會包含 inactive 跟 hidden。圖中紅線為重點部分，如果是 paused 到 detached 就不需要計算，直接回傳有 detached 狀態的 List。<br />
+<img src="images/20120687tTQROALZEo.png" alt="" /></p>
+<p>取得改變的狀態清單後，呼叫 SchedulerBinding 裡的 <code>handleAppLifecycleStateChanged()</code>，在背景針對狀態做一些處理，同時通知有訂閱的 Observer，也就是 State 裡我們使用的 <code>didChangeAppLifecycleState()</code>。<br />
+<img src="images/20120687f3RKTWnqjy.png" alt="" /><br />
+<img src="images/20120687x6al5i2Yc4.png" alt="" /></p>
+<p>同時可以看到針對 <code>inactive</code> 狀態，在 APP 不活躍不可互動的時候，會呼叫 <code>setFramesEnabledState()</code> 更新 framesEnabled 為 false，也就代表現在不用再執行渲染了，暫停工作，節省手機電量。反之當 App 為 <code>resume</code> 狀態的時候，回來前景了，這時候繼續執行 <code>scheduleFrame()</code> 開始後續的渲染工作。<br />
+<img src="images/20120687HF7bHhdiSp.png" alt="" /></p>
+<p>後續每當 APP 生命週期有變動的時候，在 ServicesBinding 裡都會透過 <code>_handleLifecycleMessage()</code> handler 進行接收，一樣會先將狀態字串轉換成 AppLifecycleState，最後傳遞給每個觀察者 observer，我們的 <code>didChangeAppLifecycleState()</code> 就會一直被通知，我們就能做一些對應的動作囉。<br />
+<img src="images/201206874Pb3qOoAsO.png" alt="" /><br />
+<img src="images/20120687SfBqZw4a2I.png" alt="" /><br />
+<img src="images/20120687krMQBhqDn3.png" alt="" /></p>
+<p>以下方的例子，就是當 APP 到背景的時候印出訊息，而當回到前景的時候顯示 Snack message。很多的情境都會使用到，可以發通知提醒使用者，或是有使用藍牙服務的話，可以即時暫停掃描。</p>
+<pre><code class="language-dart">@override
+void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    
+    if (state == AppLifecycleState.resumed) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('App resumed.')));
+    } else if (state == AppLifecycleState.inactive) {
+    } else if (state == AppLifecycleState.hidden) {
+    } else if (state == AppLifecycleState.paused) {
+        debugPrint('App paused.');
+    } else if (state == AppLifecycleState.detached) {}
+}
+</code></pre>
+<h3 id="applifecyclelistener-監聽狀態更新過程的所有情境-新方式"><a class="header" href="#applifecyclelistener-監聽狀態更新過程的所有情境-新方式">AppLifecycleListener 監聽狀態更新過程的所有情境 (新方式)</a></h3>
+<p>創建 AppLifecycleListener 實例，不需要跟以前一樣在 State 裡 mixin WidgetsBindingObserver 在元件創建的 <code>initState()</code> 進行監聽，最後再銷毀 <code>dispose()</code> 的時候釋放資源。這個動作很重要，記得不要忘記，否則會造成記憶體洩漏哦。</p>
+<pre><code class="language-dart">@override
+void initState() {
+    super.initState();
+
+    _listener = AppLifecycleListener(
+        onShow: () =&gt; _handleTransition('show'),
+        onResume: () =&gt; _handleTransition('resume'),
+        onHide: () =&gt; _handleTransition('hide'),
+        onInactive: () =&gt; _handleTransition('inactive'),
+        onPause: () =&gt; _handleTransition('pause'),
+        onDetach: () =&gt; _handleTransition('detach'),
+        onRestart: () =&gt; _handleTransition('restart'),
+        onStateChange: _handleStateChange,
+    );
+}
+
+void _handleTransition(String name) {
+    debugPrint(name)
+}
+
+void _handleStateChange(AppLifecycleState state) {
+    // do something
+}
+
+@override
+void dispose() {
+    _listener.dispose();
+
+    super.dispose();
+}
+</code></pre>
+<p>一樣源碼環節，直接深入 <strong>AppLifecycleListener</strong> 這個類別，可以看到跟 State 一樣 with <strong>WidgetsBindingObserver</strong>，進行 observer 監聽，它包了一層，並暴露一些實用的 API。<br />
+<img src="images/20120687IVzZFWZMkZ.png" alt="" /></p>
+<p>主要在 <code>didChangeAppLifecycleState()</code> 監聽到狀態的時候，做了很多檢查還有觸發 callback，判斷上一個狀態跟當前狀態的差異，得知現在的場景，而不管怎麼樣都會觸發 <code>onStateChange.call()</code>。<br />
+<img src="images/20120687QUaBrHQXep.png" alt="" /></p>
+<h3 id="監聽-app-退出時的請求"><a class="header" href="#監聽-app-退出時的請求">監聽 APP 退出時的請求</a></h3>
+<p>使用 <code>onExitRequested()</code> 可監聽 APP 退出時的請求，決定是否要讓 APP 關閉退出。</p>
+<p>我們使用以下的官方範例來理解，可以創建一個 callback 接收事件，再被觸發的時候回傳 AppExitResponse，當有退出請求的時候我們可以告訴它是否允許退出，或是取消這請求。</p>
+<pre><code class="language-dart">@override
+void initState() {
+    super.initState();
+
+    _listener = AppLifecycleListener(
+        onExitRequested: _handleExitRequest,
+    );
+}
+
+Future&lt;AppExitResponse&gt; _handleExitRequest() async {
+    final AppExitResponse response =
+        _shouldExit ? AppExitResponse.exit : AppExitResponse.cancel;
+     
+    debugPrint(response.name);
+
+    return response;
+}
+
+Future&lt;void&gt; _quit() async {
+    final AppExitType exitType =
+        _shouldExit ? AppExitType.required : AppExitType.cancelable;
+
+    await ServicesBinding.instance.exitApplication(exitType);
+}
+</code></pre>
+<p><strong>AppExitResponse</strong> 擁有兩個類型</p>
+<ol>
+<li><code>exit</code> → 允許 APP 退出</li>
+<li><code>cancel</code> → 禁止退出 APP<br />
+<img src="images/20120687o6T5jDD4S0.png" alt="" /></li>
+</ol>
+<p>quit() 用來關閉運行中的 APP，執行 <code>ServicesBinding.instance.exitApplication(exitType)</code> 方法，其中參數是 AppExitType，一樣擁有兩個 type</p>
+<ol>
+<li><code>required</code> → 允許 APP 退出</li>
+<li><code>cancelable</code> → 禁止退出 APP<br />
+<img src="images/20120687tSbJ8QD5UJ.png" alt="" /></li>
+</ol>
+<p>當我們使用 ServicesBinding 的 <code>exitApplication()</code> 時會檢查是否有覆寫 <code>onExitRequested()</code>，沒有的話會直接回傳 <code>AppExitResponse.exit</code>，有的話會確認自定義的回應，接下來會檢查 AppExitResponse type 和 AppExitType type，總共有三種情況：</p>
+<ol>
+<li>如果在預設沒有覆寫的情況下，就會自然關閉 APP</li>
+<li>如果 AppExitResponse ****和 ****AppExitType ****其中有一個是允許退出的話，APP 就會執行關閉</li>
+<li>只有在兩個都是 cancel 語義的情況下 APP 才不會退出</li>
+</ol>
+<p>透過 ServicesBinding 的 <code>exitApplication()</code> 使用 <code>SystemChannels</code> 將 Flutter Engine 關閉並呼叫 Platform 的 exit API。</p>
+<blockquote>
+<p><code>exitApplication()</code> 與 <code>exit()</code> 方法不同的是，它讓 Engine 有機會清理資源，以便在退出時不會崩潰，建議使用此方式退出 APP。</p>
+</blockquote>
+<p><img src="images/20120687L202UrPb8L.png" alt="" /></p>
+<p>這時侯會從原生 Platform 取得 <code>System.requestAppExit</code> 事件，同時使用 <code>handleRequestAppExit()</code> 取得 AppExitResponse，它本身預設為 exit type，但我們有覆寫 <code>didRequestAppExit()</code> 也就是在 Widget-State 裡的 onExitRequested callback，看我們給予什麼 AppExitResponse<br />
+<img src="images/20120687yCO1URJdJl.png" alt="" /></p>
+<p><code>handleRequestAppExit()</code> 裡面的邏輯是只要有一個 observer 是設置 <strong>AppExitResponse.cancel</strong>，也就是取消關閉，APP 就不會被關閉。<br />
+<img src="images/20120687cF5h2XSq5q.png" alt="" /><br />
+<img src="images/20120687NYirKAPJXr.png" alt="" /></p>
+<p>最後檢查 result Map 裡的 <code>response</code> 欄位，如果是 cancel 就繼續運行，exit 或沒有東西就會將 APP 關閉。<br />
+<img src="images/201206877H8M7GeAUC.png" alt="" /></p>
+<p>官方提醒：不要在 <code>onExitRequested()</code> 儲存重要數據，可能會錯誤和失敗。APP 本身可以通過很多種方式退出，而且不會提前告知，例如：拔掉電源、取出電池、任務管理器或使用 command line 終止。</p>
+<hr />
+<p>本文篇幅稍微有點長，主要想告知大家生命週期的重要性，熟悉它是每個開發者都需要做的事，能有效理解 APP 如何運作，在對的時間做對的處理。而新推出的 <code>AppLifecycleListener</code>，讓我們可以監聽到狀態的轉換過程，相信對實際開發上一定會有所幫助。花一些時間了解它是很值得的哦！</p>
+<hr />
+<h2 id="延伸閱讀"><a class="header" href="#延伸閱讀">延伸閱讀</a></h2>
+<p><a href="https://ithelp.ithome.com.tw/articles/10321406">Day 5: Flutter 的 StatefulWidget 和 State 生命週期，先熟悉它們再開發吧！</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day05.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day07.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day05.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day07.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

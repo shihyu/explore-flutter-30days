@@ -1,0 +1,441 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 25: 不要浪費時間在無聊代碼了，實作自己的模板生成工具，Mason Brick！ - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-25-不要浪費時間在無聊代碼了實作自己的模板生成工具mason-brick"><a class="header" href="#day-25-不要浪費時間在無聊代碼了實作自己的模板生成工具mason-brick">Day 25: 不要浪費時間在無聊代碼了，實作自己的模板生成工具，Mason Brick！</a></h1>
+<ul>
+<li>發布時間：2023-10-10 12:23:40</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10337515">https://ithelp.ithome.com.tw/articles/10337515</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 25 篇</li>
+</ul>
+<p><img src="images/201206871V0WIh1EvR.png" alt="" /></p>
+<p><strong>Mason</strong> 是什麼？它可以有效的幫我們提升開發效率，避免花費不必要的時間在創建檔案或是無聊的代碼上，根據自己和公司的開發習慣去自定義模板和生成結果，很值得投資的一個工具，很棒的是不局限於 Dart 或是 Flutter，透過 <strong>Mustache</strong> 語法撰寫符合自己需求的模板，真的是非常便利。</p>
+<p>在開始之前，先讓大家瀏覽實際的使用過程：<br />
+<img src="images/ec0UMQ0.gif" alt="Mason" /></p>
+<p>接著跟著我往下了解它吧～</p>
+<hr />
+<p>Mason 是一個很便利的模板生成工具，由 Bloc、Mocktail 和 equatable 作者 <strong>Felix Angelov</strong> 開發，一位 Flutter 領域裡很有影響力的開發者，目前在 Shorebird 繼續貢獻著。<br />
+<img src="images/20120687FLHQH4BPpP.png" alt="" /></p>
+<p>Mason 工具也是一個平台，讓大家能夠撰寫自己的 <strong>brick</strong> 磚塊，磚塊就代表模板代碼，製作完成後將它上傳到 <strong>BrickHub</strong>，也就像 PubDev 一樣，開源公開，讓大家互相地分享與使用磚塊。重點核心就是節省時間，提升開發效率。<br />
+<img src="images/20120687bO8X1bnppF.png" alt="" /></p>
+<ul>
+<li><strong><code>Brick</code></strong> → 為積木、磚塊，包含已經準備好的檔案跟程式碼，預期的結構與格式，透過執行命令讓它幫我們生成代碼</li>
+<li><strong><code>BrickHub</code></strong> → 一個雲端共享平台，可以在上面進行分享，或是尋找其他開發者提供的 Brick 專案，將它們安裝和使用在自己的專案裡</li>
+</ul>
+<blockquote>
+<p>文件：https://docs.brickhub.dev/</p>
+</blockquote>
+<h2 id="安裝-cli"><a class="header" href="#安裝-cli">安裝 CLI</a></h2>
+<p>所有的操作都需要 Mason CLI，透過 dart 安裝到電腦，並確保版本正常，可運行</p>
+<pre><code class="language-bash">dart pub global activate mason_cli
+</code></pre>
+<p><img src="images/20120687xdFVucaluy.png" alt="" /><br />
+<img src="images/20120687FLE9xlEfqh.png" alt="" /></p>
+<h2 id="初始化-mason"><a class="header" href="#初始化-mason">初始化 Mason</a></h2>
+<p>在專案裡載入 Mason 設定，包含 <code>mason.yaml</code> 和 <code>mason-lock.json</code>。本身跟 <code>pubspec.yaml</code> 很像，它們紀錄了專案與 Brick 之間的設定，預設擁有 hello 磚塊，執行後會生成一個 <code>HELLO.md</code> 檔案，不需要的話可以將它拿掉。</p>
+<pre><code class="language-bash">mason init
+</code></pre>
+<p><img src="images/201206874JRDmrNDVa.png" alt="" /><br />
+<img src="images/20120687lFsaPHbC2h.png" alt="" /></p>
+<h2 id="設置-brick"><a class="header" href="#設置-brick">設置 Brick</a></h2>
+<h3 id="1-本地磚塊"><a class="header" href="#1-本地磚塊">1. 本地磚塊</a></h3>
+<p>本地磚塊通常是自己或團隊使用，可能開發、測試後再將它上傳到 private repo，在 <code>mason.yaml</code> 設置相對路徑即可。</p>
+<pre><code class="language-yaml">good:
+    path: ./mason/good
+</code></pre>
+<p><img src="images/20120687OBViFPp98L.png" alt="" /></p>
+<h3 id="2-git"><a class="header" href="#2-git"><strong><strong>2. Git</strong></strong></a></h3>
+<p>載入 <strong>BrickHub</strong> 上公開的磚塊，如果一開始只在自己的 <strong>Gitlab</strong> 或 <strong>Github</strong> 上就跟載入套件的方式相同。以下範例為我製作的 Brick，在平台上都搜尋的到，待會跟大家分享如何實作</p>
+<pre><code class="language-yaml">clean_architecture_feature_riverpod:
+    git:
+      url: https://github.com/chyiiiiiiiiiiii/clean_architecture_feature_riverpod
+</code></pre>
+<p><img src="images/20120687o0CI74u5gx.png" alt="" /></p>
+<h2 id="下載-brick"><a class="header" href="#下載-brick">下載 Brick</a></h2>
+<p>下載目前 <code>mason.yaml</code> 裡設置的所有積木，執行 <code>mason get</code>，跟 pub get 一樣，設置好需要的磚塊後，將它們載入專案</p>
+<pre><code class="language-hljs">mason get
+</code></pre>
+<p><img src="images/20120687zFTwnSMySu.png" alt="" /></p>
+<h2 id="執行使用-brick"><a class="header" href="#執行使用-brick">執行/使用 Brick</a></h2>
+<p>跟安裝套件一樣，我們找到了這個積木，是因為它裡面生成的檔案跟程式碼我們需要，可以利用它節省時間。執行 <code>mason make</code>  命令來生成檔案</p>
+<ul>
+<li><code>o</code> → 指定檔案的生成目的地</li>
+</ul>
+<h3 id="1-一般"><a class="header" href="#1-一般">1. 一般</a></h3>
+<pre><code class="language-bash">mason make &lt;brick-name&gt;
+
+// hello
+mason make hello
+</code></pre>
+<p><img src="images/I5v5gLa.gif" alt="Use Brick" /></p>
+<h3 id="2-命令參數"><a class="header" href="#2-命令參數">2. 命令參數</a></h3>
+<p>如果已經知道 Brick 需要的參數，可以直接在命令上使用</p>
+<pre><code class="language-bash">mason make hello -name Yii
+</code></pre>
+<h3 id="3-載入配置檔案"><a class="header" href="#3-載入配置檔案">3. 載入配置檔案</a></h3>
+<p>如果 Brick 需要的參數太多，或是不方便手動輸入的話，可以提前準備好相關的 json 配置檔案。命令後方使用 <code>-c</code> 設置檔案</p>
+<pre><code class="language-json">{
+  "name": "Yii"
+}
+</code></pre>
+<pre><code class="language-bash">mason make hello -c config.json
+</code></pre>
+<p><img src="images/20120687BaN9RK4FvU.png" alt="" /><br />
+<img src="images/UtSyzWo.gif" alt="Config" /></p>
+<hr />
+<h2 id="創建-brick"><a class="header" href="#創建-brick">創建 Brick</a></h2>
+<p>根據自己或是公司的專案以及平常的開發習慣製作 Brick，生成日常使用的那些無聊代碼，讓我們效率提高。使用 <code>mason new</code> 命令</p>
+<ul>
+<li><code>o</code> → 指定檔案的生成目的地</li>
+<li><code>-desc</code> → 模板描述</li>
+</ul>
+<pre><code class="language-bash">mason new &lt;name&gt;
+</code></pre>
+<p><img src="images/1O1mLUG.gif" alt="Create Brick" /></p>
+<p>創建積木後會有5個檔案</p>
+<ul>
+<li><code>__brick__</code> → 裡面的資料夾和檔案都是會生成出來的東西</li>
+<li><code>brick.yaml</code> → 積木設定檔，跟 <code>pubspec.yaml</code> 一樣，擁有基本的名稱、描述、積木版本、Mason 版本，以及相關可互動參數，建議給個完整且好閱讀的內容</li>
+</ul>
+<p><img src="images/20120687tXRMkGSS0c.png" alt="" /><br />
+<img src="images/20120687b16Z4fcvFM.png" alt="" /></p>
+<h3 id="撰寫生成內容"><a class="header" href="#撰寫生成內容">撰寫生成內容</a></h3>
+<ul>
+<li>使用 <code>mustache</code> 語法撰寫，負責處理模板代碼</li>
+<li>注意：當有資料夾時裡面不能沒有檔案，否則生成時不會創建資料夾</li>
+</ul>
+<blockquote>
+<p>mustache： https://mustache.github.io/</p>
+</blockquote>
+<p>針對資料夾和檔案，最簡單的撰寫方式是 <code>{{arg}}</code>，而最好的是再指定命名類型，官方文件裡有列出所有樣式，以下列出 Flutter 開發時最常用的幾種</p>
+<ul>
+<li><code>camelCase()</code> → helloWorld</li>
+<li><code>pascalCase()</code> → HelloWorld</li>
+<li><code>snakeCase()</code> → hello_world</li>
+</ul>
+<blockquote>
+<p>Brick Syntax - <a href="https://docs.brickhub.dev/brick-syntax/#built-in-lambdas">https://docs.brickhub.dev/brick-syntax/#built-in-lambdas</a></p>
+</blockquote>
+<p><img src="images/20120687qI7D669Svp.png" alt="" /><br />
+<img src="images/20120687ozUdgW2l0B.png" alt="" /></p>
+<p>針對頁面，此範例自定義了元件內容，包含類別名稱，使用了 <code>pascalCase</code> 駝峰，而因為使用到 <strong>Riverpod</strong> 框架與 <strong>flutter_hook</strong> 進行開發，所以本身繼承 HookConsumerWidget，這個模板可以成為每個頁面的初始樣式</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+class {{feature_name.pascalCase()}}Page extends HookConsumerWidget {
+  const {{feature_name.pascalCase()}}Page({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const Placeholder();
+  }
+}
+</code></pre>
+<p>生成出來的檔案內容：<br />
+<img src="images/20120687eL48oCazPp.png" alt="" /></p>
+<p>也可以根據條件、布林值決定是否要生成對應內容</p>
+<pre><code class="language-yaml">{{#useGoogleFonts}}
+google_fonts: latest
+{{/useGoogleFonts}}
+</code></pre>
+<h3 id="設定參數"><a class="header" href="#設定參數">設定參數</a></h3>
+<p>最重要的是 <code>vars</code> 參數配置，這邊是生成資料夾和檔案時會用到的參數欄位，讓使用者可以輸入</p>
+<ul>
+<li>第一層為名稱</li>
+<li><code>type</code> → 型別，有字串、整數、布林值、陣列</li>
+<li><code>description</code> → 參數描述</li>
+<li><code>default</code> → 預設內容</li>
+<li><code>prompt</code> → 輸入時的提醒文字</li>
+</ul>
+<pre><code class="language-yaml">vars:
+  feature_name:
+    type: string
+    description: Name of the folder, files.
+    default: new_feature
+    prompt: What is the name of feature?
+</code></pre>
+<h2 id="readme-建議"><a class="header" href="#readme-建議">Readme 建議</a></h2>
+<p>記得將 Brick 說明補充完整，包含使用方式以及列出模板架構給大家方便參考，通常會有幾種資訊</p>
+<ul>
+<li><strong><strong>Installation</strong></strong> → 安裝命令</li>
+<li><strong><strong>Usage</strong></strong> → 生成命令</li>
+<li><strong><strong>Variables</strong></strong> → 參數說明</li>
+<li><strong><strong>Packages</strong></strong> → 結合的相關套件</li>
+<li><strong><strong>Output</strong></strong> → 目錄與檔案結構</li>
+</ul>
+<p><img src="images/20120687WCgomTIHrX.png" alt="" /><br />
+<img src="images/20120687X6poL31JzI.png" alt="" /></p>
+<h2 id="發布-brick"><a class="header" href="#發布-brick">發布 Brick</a></h2>
+<h3 id="1-登入-brickhub"><a class="header" href="#1-登入-brickhub">1. 登入 BrickHub</a></h3>
+<p>之前還在早期階段，所以需要向官方申請權限，只能用驗證過的 Email 去註冊會員。申請後大概要等 1 ~ 2 週才會收到通知，這時後就能正常部署 Brick 到雲端平台了。<br />
+<img src="images/20120687kKJzHYSG2E.png" alt="" /></p>
+<p>註冊完成後，在本地使用 CLI 登入帳戶</p>
+<pre><code class="language-bash">mason login
+</code></pre>
+<p><img src="images/201206871Oa5SUWABA.png" alt="" /></p>
+<h3 id="2-上傳-brickhub"><a class="header" href="#2-上傳-brickhub">2. 上傳 BrickHub</a></h3>
+<p>在 Brick 專案路徑(根目錄)執行命令，進行 Brick 發布。先確保是否公開，如果只是個人與公司使用的話，放在 Git repo 保管就好了。</p>
+<pre><code class="language-bash">mason publish
+</code></pre>
+<p><img src="images/zHHrqwt.gif" alt="BrickHub" /></p>
+<p>成功後 Brick 就會在 <strong>BrickHub</strong> 上公開讓大家使用。在這提醒一下，請確保自己的東西沒有人上傳過，而且是正確的，因為發布後就無法下架了，除了避免隨意上傳的問題，也要避免濫用服務。<br />
+<img src="images/20120687HQllt5QRTx.png" alt="" /></p>
+<hr />
+<h2 id="brick-分享"><a class="header" href="#brick-分享">Brick 分享</a></h2>
+<p>我自己撰寫的 <strong>clean_architecture_feature_riverpod</strong>，大家可以在 BrickHub 上查看，主要為了解決新增 feature 所需要的目錄與檔案問題，通常會有 data、domain、presentation 三個目錄再加上個別檔案，如果全部手動新增的話會非常的耗時與無聊。此磚塊也結合了 Riverpod 去做開發，有相關需求的朋友們歡迎使用，這個專案在架構上沒有 usecase 與 enitity，所以還是根據需求確定是否適合哦。</p>
+<blockquote>
+<p><a href="https://brickhub.dev./bricks/clean_architecture_feature_riverpod/">Brick - <strong>clean_architecture_feature_riverpod</strong></a></p>
+</blockquote>
+<p><img src="images/20120687FdtvWMamg0.png" alt="" /></p>
+<p>完整的目錄與檔案，這些都是 Brick 生成出來的東西， 使用 <code>mustache</code> 寫法完成<br />
+<img src="images/20120687HZfU7UVvSe.png" alt="" /><br />
+<img src="images/ybXAhG3.gif" alt="Share" /></p>
+<p>其他平台上的好磚塊：</p>
+<ul>
+<li><strong>very_good_core</strong> → 由 VGV 製作，的 Flutter 專案模板，高品質且完整</li>
+<li><strong>very_good_flame_game</strong> → 由 VGV 製作，遊戲開發的專用模板</li>
+<li><strong>model</strong> → Model 資料類模板，包含 <strong>copyWith</strong>、<strong>to/from json</strong>、<strong>equatable</strong> 等常用 API</li>
+<li>...</li>
+</ul>
+<hr />
+<h2 id="結論"><a class="header" href="#結論">結論</a></h2>
+<p>Mason 已經出來兩年了，目前一樣由多位主要開發者和社群去維護，持續在改版中。每個工具的出現都是為了解決一些問題，相信 Mason 能夠有效幫助到日常開發，看就大家如何去使用它，也很建議想幫助社群的朋友可以多看看開源專案，試著去幫忙盡一點心力。</p>
+<p>幫自己或者公司撰寫模板是很棒的一個出發點，能有效減少開發的時間成本，有新的專案也不需要再擔心了，不管是初始專案、UI 元件庫、環境設定、CICD，全部都能模板話，直接輸入幾行指令，馬上完成工作，除了幫助自己之外也能分享給社群。身為工程師，應該學會高效偷懶才對，如果有發現特別、好用的 Brick 記得跟大家分享，可別自己私吞呀！</p>
+<h2 id="延伸閱讀"><a class="header" href="#延伸閱讀">延伸閱讀</a></h2>
+<ul>
+<li><a href="https://ithelp.ithome.com.tw/articles/10336971">Day 24: 善用工具與快捷輔助，提升 Flutter 開發效率！</a></li>
+</ul>
+<h2 id="相關資源"><a class="header" href="#相關資源">相關資源</a></h2>
+<ul>
+<li><a href="https://docs.brickhub.dev/">https://docs.brickhub.dev/</a></li>
+<li><a href="https://brickhub.dev/">https://brickhub.dev/</a></li>
+<li><a href="https://github.com/felangel/mason/tree/master">https://github.com/felangel/mason/tree/master</a></li>
+<li><a href="https://www.youtube.com/watch?v=o8B1EfcUisw&amp;ab_channel=Flutter">https://www.youtube.com/watch?v=o8B1EfcUisw&amp;ab_channel=Flutter</a></li>
+<li><a href="https://www.youtube.com/watch?v=qjA0JFiPMnQ&amp;ab_channel=Flutter">https://www.youtube.com/watch?v=qjA0JFiPMnQ&amp;ab_channel=Flutter</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day24.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day26.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day24.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day26.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

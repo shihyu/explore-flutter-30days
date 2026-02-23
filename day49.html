@@ -1,0 +1,679 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 49：Flutter Design Patterns（三）｜Behavioural Patterns 下集 - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-49flutter-design-patterns三behavioural-patterns-下集"><a class="header" href="#day-49flutter-design-patterns三behavioural-patterns-下集">Day 49：Flutter Design Patterns（三）｜Behavioural Patterns 下集</a></h1>
+<blockquote>
+<p>原文來源：<a href="https://ithelp.ithome.com.tw/articles/10334216">Day 19：Flutter Design Patterns（三）｜Behavioural Patterns 下集</a></p>
+</blockquote>
+<p>今天是 Design Pattern 的最後一集，但是 Design Patter 真的太多種了，沒辦法真的全部都介紹完，希望大家看完之後能對這些 Pattern 有一些感覺，能幫助你未來在看或是寫 code 的時候，更快抓到程式碼的要領。話不多說趕快開始吧</p>
+<p>目錄：</p>
+<ul>
+<li>
+<p>Observer Pattern</p>
+</li>
+<li>
+<p>Strategy Pattern</p>
+</li>
+<li>
+<p>Template Pattern</p>
+</li>
+<li>
+<p>Visitor Pattern</p>
+</li>
+<li>
+<p>Interpreter Pattern</p>
+</li>
+</ul>
+<h2 id="flutter-design-patterns--observer-pattern"><a class="header" href="#flutter-design-patterns--observer-pattern">Flutter Design Patterns: — Observer Pattern</a></h2>
+<p>Observer Pattern 是一種行為設計模式，讓對象能夠觀察和監聽另一個對象的狀態變化，並在其狀態改變時作出反應。在 Flutter 中，這種模式可以用於許多場景，例如狀態管理、事件通知或數據綁定。</p>
+<h3 id="1-什麼是-observer-pattern"><a class="header" href="#1-什麼是-observer-pattern">1. 什麼是 Observer Pattern？</a></h3>
+<p>Observer Pattern 的核心是允許多個觀察者物件監聽某一主題（或被觀察物件）的狀態變化。當主題的某些狀態發生變化時，它會通知所有已註冊的觀察者。</p>
+<h3 id="2-如何在-flutter-中使用-observer-pattern"><a class="header" href="#2-如何在-flutter-中使用-observer-pattern">2. 如何在 Flutter 中使用 Observer Pattern？</a></h3>
+<p>在 Flutter 中，<code>Stream</code> 和 <code>StreamBuilder</code> 是 Observer Pattern 的經典實現，允許 Widget 監聽數據流的變化，並根據這些變化重新構建。</p>
+<h3 id="3--中-dart-的-observer-pattern-實現"><a class="header" href="#3--中-dart-的-observer-pattern-實現">3.  中 Dart 的 Observer Pattern 實現：</a></h3>
+<p><strong>1. 創建一個 Stream 來代表被觀察的數據：</strong></p>
+<pre><code class="language-dart">class DataService {
+final _dataController = StreamController.broadcast();
+
+Stream get dataStream =&gt; _dataController.stream;
+
+void updateData(String newData) {
+_dataController.add(newData);
+}
+
+void dispose() {
+_dataController.close();
+}
+}
+
+
+</code></pre>
+<p><strong>2. 使用 StreamBuilder 監聽數據流的變化：</strong></p>
+<pre><code class="language-dart">class DataObserverWidget extends StatelessWidget {
+final DataService _dataService;
+
+DataObserverWidget(this._dataService);
+
+@override
+Widget build(BuildContext context) {
+return StreamBuilder(
+stream: _dataService.dataStream,
+builder: (BuildContext context, AsyncSnapshot snapshot) {
+if (snapshot.hasError) {
+return Text('Error: ${snapshot.error}');
+} else if (!snapshot.hasData) {
+return Text('Waiting for data...');
+}
+return Text('Data: ${snapshot.data}');
+},
+);
+}
+}
+
+
+</code></pre>
+<p><strong>3. 在 Flutter 應用中使用它：</strong></p>
+<pre><code class="language-dart">void main() {
+runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+final _dataService = DataService();
+
+@override
+Widget build(BuildContext context) {
+return MaterialApp(
+title: 'Observer Pattern Demo',
+theme: ThemeData(
+primarySwatch: Colors.blue,
+),
+home: Scaffold(
+appBar: AppBar(title: Text('Observer Pattern in Flutter')),
+body: DataObserverWidget(_dataService),
+floatingActionButton: FloatingActionButton(
+onPressed: () =&gt; _dataService.updateData(DateTime.now().toString()),
+child: Icon(Icons.refresh),
+),
+),
+);
+}
+}
+
+
+</code></pre>
+<p>在上述例子中，每次按下 FloatingActionButton，<code>DataService</code> 就會發送新的數據到其數據流中。<code>DataObserverWidget</code> 使用 <code>StreamBuilder</code> 監聽這些變化，並相應地更新 UI。</p>
+<h3 id="總結"><a class="header" href="#總結">總結</a></h3>
+<p>Observer Pattern 在 Flutter 中提供了一種強大且靈活的方式來對狀態變化做出反應。透過使用 Flutter 提供的工具和構件，我們可以輕鬆地實現這一模式，使我們的 UI 保持同步並響應數據的變化。</p>
+<h2 id="flutter-design-patterns--strategy-pattern"><a class="header" href="#flutter-design-patterns--strategy-pattern">Flutter Design Patterns: — Strategy Pattern</a></h2>
+<p>Strategy Pattern 是一種行為型設計模式，它允許你在運行時根據不同的情境切換算法或策略。這種模式將算法的定義從使用它的對象中分離出來，使得算法可以獨立於使用它的客戶端進行變化。</p>
+<h3 id="1-什麼是-strategy-pattern"><a class="header" href="#1-什麼是-strategy-pattern">1. 什麼是 Strategy Pattern？</a></h3>
+<p>Strategy Pattern 的主要思想是定義一組可插拔的策略或算法，並將每一種策略封裝在單獨的類中。這使得主要的功能可以根據不同的策略或算法進行變化，而不需要修改主要的功能。</p>
+<h3 id="2-如何在-flutter-中使用-strategy-pattern"><a class="header" href="#2-如何在-flutter-中使用-strategy-pattern">2. 如何在 Flutter 中使用 Strategy Pattern？</a></h3>
+<p>在 Flutter 中，這種模式可以用於各種情境，例如根據不同的平台或設定選擇不同的渲染策略，或者根據使用者的選擇進行不同的動畫效果。</p>
+<h3 id="3-flutter-的具體實現"><a class="header" href="#3-flutter-的具體實現">3. Flutter 的具體實現：</a></h3>
+<p>當你使用Flutter的動畫庫時，你可能會選擇不同的動畫策略，例如**<code>CurvedAnimation</code><strong>、</strong><code>Tween</code>**等。這些都可以看作是策略模式的實現，允許你使用不同的動畫策略而不更改實際的動畫代碼。</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+@override
+Widget build(BuildContext context) {
+return MaterialApp(
+home: MyHomePage(),
+);
+}
+}
+
+class MyHomePage extends StatefulWidget {
+MyHomePage({Key? key}) : super(key: key);
+
+@override
+_MyHomePageState createState() =&gt; _MyHomePageState();
+}
+
+class _MyHomePageState extends State with SingleTickerProviderStateMixin {
+late AnimationController _controller;
+late Animation _animation;
+
+@override
+void initState() {
+super.initState();
+
+_controller = AnimationController(
+duration: const Duration(seconds: 2),
+vsync: this,
+);
+
+// 選擇一個策略:
+_setAnimationStrategy('tween');
+
+_controller.forward();
+}
+
+void _setAnimationStrategy(String strategy) {
+switch (strategy) {
+case 'tween':
+_animation = Tween(begin: 0.0, end: 100.0).animate(_controller);
+break;
+case 'curved':
+_animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+break;
+// ... 更多策略可以在這裡添加
+default:
+throw ArgumentError('Unknown strategy: $strategy');
+}
+}
+
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+appBar: AppBar(title: Text('Strategy Pattern in Animation')),
+body: Center(
+child: FadeTransition(
+opacity: _animation,
+child: FlutterLogo(size: 100),
+),
+),
+);
+}
+
+@override
+void dispose() {
+_controller.dispose();
+super.dispose();
+}
+}
+
+</code></pre>
+<h3 id="4-dart-中的-strategy-pattern-實現"><a class="header" href="#4-dart-中的-strategy-pattern-實現">4. Dart 中的 Strategy Pattern 實現：</a></h3>
+<p><strong>1. 定義策略接口：</strong></p>
+<pre><code class="language-dart">abstract class DrawingStrategy {
+void drawContent();
+}
+
+
+</code></pre>
+<p><strong>2. 實現具體的策略：</strong></p>
+<pre><code class="language-dart">class CircleDrawingStrategy implements DrawingStrategy {
+@override
+void drawContent() {
+print('Drawing a circle...');
+}
+}
+
+class SquareDrawingStrategy implements DrawingStrategy {
+@override
+void drawContent() {
+print('Drawing a square...');
+}
+}
+
+
+</code></pre>
+<p><strong>3. 定義使用策略的上下文：</strong></p>
+<pre><code class="language-dart">class DrawingContext {
+DrawingStrategy _strategy;
+
+DrawingContext(this._strategy);
+
+void setStrategy(DrawingStrategy strategy) {
+_strategy = strategy;
+}
+
+void executeDraw() {
+_strategy.drawContent();
+}
+}
+
+
+</code></pre>
+<p><strong>4. 在 Flutter 中使用策略模式：</strong></p>
+<pre><code class="language-dart">void main() {
+// Using circle drawing strategy
+DrawingContext drawingContext = DrawingContext(CircleDrawingStrategy());
+drawingContext.executeDraw();
+
+// Switch to square drawing strategy
+drawingContext.setStrategy(SquareDrawingStrategy());
+drawingContext.executeDraw();
+}
+
+
+</code></pre>
+<p>在上述例子中，<code>DrawingContext</code> 提供了一個方法來設定和執行不同的繪圖策略。使用者可以在運行時切換策略，而不需要修改 <code>DrawingContext</code> 的代碼。</p>
+<h3 id="總結-1"><a class="header" href="#總結-1">總結</a></h3>
+<p>Strategy Pattern 提供了一種靈活的方式來組織和管理具有不同行為的物件，並允許使用者在運行時更換行為。在 Flutter 中，這可以使你的代碼更加模組化，易於維護和擴展，同時也能提供一個更好的使用者體驗。</p>
+<h2 id="flutter-design-patterns--template-pattern"><a class="header" href="#flutter-design-patterns--template-pattern">Flutter Design Patterns: — Template Pattern</a></h2>
+<p>Template Pattern 是一種行為型設計模式，它在一個抽象類中定義了操作的算法框架，並將一些步驟的實現延遲到子類中。這允許子類在不改變算法結構的情況下，重新定義算法的某些步驟。</p>
+<h3 id="1-什麼是-template-pattern"><a class="header" href="#1-什麼是-template-pattern">1. 什麼是 Template Pattern？</a></h3>
+<p>Template Pattern 的主要目的是提供一個算法的模板，其中某些步驟可以被子類覆蓋或實現，以提供算法特定部分的自定義功能。</p>
+<h3 id="2-如何在-flutter-中使用-template-pattern"><a class="header" href="#2-如何在-flutter-中使用-template-pattern">2. 如何在 Flutter 中使用 Template Pattern？</a></h3>
+<p>Flutter widgets 就是一個很好的 Template 他們共同擁有生命周期的方法，如 <strong><code>initState</code></strong> , <strong><code>build</code></strong> , <strong><code>dispose</code></strong> 等。你通常會覆蓋這些方法來提供特定的行為，但背後的調用順序（即模板）由Flutter框架本身管理。再講道  Widget  本身如 <code>Scaffold</code> 就是用來呈現畫面的 Template 幫你定義好 <code>appbar</code>, <code>body</code> 等等</p>
+<h3 id="3-dart-中的-template-pattern-實現"><a class="header" href="#3-dart-中的-template-pattern-實現">3. Dart 中的 Template Pattern 實現：</a></h3>
+<p><strong>1. 定義一個模板基類：</strong></p>
+<pre><code class="language-dart">abstract class AppPageTemplate {
+void buildPage() {
+showHeader();
+showContent();
+showFooter();
+}
+
+// Template methods
+void showHeader() {
+print('Default Header');
+}
+
+void showContent();
+
+void showFooter() {
+print('Default Footer');
+}
+}
+
+
+</code></pre>
+<p><strong>2. 實現具體的 Template 子類：</strong></p>
+<pre><code class="language-dart">class HomePage extends AppPageTemplate {
+@override
+void showContent() {
+print('Home Page Content');
+}
+}
+
+class SettingsPage extends AppPageTemplate {
+@override
+void showHeader() {
+print('Settings Page Header');
+}
+
+@override
+void showContent() {
+print('Settings Page Content');
+}
+}
+
+
+</code></pre>
+<p><strong>3. 在 Flutter 中使用 Template 模式：</strong></p>
+<pre><code class="language-dart">void main() {
+final homePage = HomePage();
+homePage.buildPage();
+
+print('\\n');
+
+final settingsPage = SettingsPage();
+settingsPage.buildPage();
+}
+
+
+</code></pre>
+<p>在上述例子中，<code>AppPageTemplate</code> 定義了一個標準的頁面構建方法，其中 <code>showContent</code> 是抽象的，必須由子類實現。其他像 <code>showHeader</code> 和 <code>showFooter</code> 提供了預設的實現，但也可以被子類覆蓋。</p>
+<h3 id="總結-2"><a class="header" href="#總結-2">總結</a></h3>
+<p>Template Pattern 在 Flutter 中提供了一種有效的方式，將通用的操作流程封裝在基類中，同時允許子類自定義或覆蓋某些部分。這不僅確保了算法的一致性，還提供了很大的靈活性，使得擴展和定製變得非常簡單。</p>
+<h2 id="flutter-design-patterns--visitor-pattern"><a class="header" href="#flutter-design-patterns--visitor-pattern">Flutter Design Patterns: — Visitor Pattern</a></h2>
+<p>Visitor Pattern 是一種行為型設計模式，它允許你在不修改已存在的類的情況下，增加新的操作。這種模式涉及到兩組對象，一組是需要提供操作的元素，另一組則是訪問者，它執行操作。</p>
+<h3 id="1-什麼是-visitor-pattern"><a class="header" href="#1-什麼是-visitor-pattern">1. 什麼是 Visitor Pattern？</a></h3>
+<p>Visitor Pattern 的主要思想是將數據結構和對其操作的邏輯分開。這允許數據結構保持相對穩定，同時能夠在其上簡單地添加新的操作。</p>
+<h3 id="2-如何在-flutter-中使用-visitor-pattern"><a class="header" href="#2-如何在-flutter-中使用-visitor-pattern">2. 如何在 Flutter 中使用 Visitor Pattern？</a></h3>
+<p>在 Flutter 中，這種模式特別適用於當你需要在一組 Widget 上執行相似的操作時，如渲染、更新或檢查。</p>
+<h3 id="3-flutter-的具體實現-1"><a class="header" href="#3-flutter-的具體實現-1">3. Flutter 的具體實現：</a></h3>
+<p>在 Flutter RenderObject 裡面就有一個相當有趣的方法叫做 <code>visitChildren</code>。<code>visitChildren</code> 裡面的方法有一個 <code>vistor</code>。</p>
+<p>在某些情況下，框架或開發者可能需要遍歷渲染樹的某一部分。例如，當檢測哪一部分 UI 需要重繪時，或者當收集有關渲染樹的 debug 訊息。這時候就可以透過 visitor  把所有在這底下的渲染數都走過一遍。只需要特別注意，他不能在 build 的過程中使用，因為這段期間整棵樹可能還沒被建立好，或是會正在被更新。</p>
+<pre><code class="language-dart">abstract class RenderObject {
+...
+void visitChildren(RenderObjectVisitor visitor) { }
+...
+}
+
+
+</code></pre>
+<h3 id="4-flutter-中的-visitor-pattern-實現"><a class="header" href="#4-flutter-中的-visitor-pattern-實現">4. Flutter 中的 Visitor Pattern 實現：</a></h3>
+<p><strong>1. 定義元素和訪問者接口：</strong></p>
+<pre><code class="language-dart">abstract class Element {
+void accept(Visitor visitor);
+}
+
+abstract class Visitor {
+void visitConcreteElementA(ConcreteElementA element);
+void visitConcreteElementB(ConcreteElementB element);
+}
+
+
+</code></pre>
+<p><strong>2. 實現具體的元素：</strong></p>
+<pre><code class="language-dart">class ConcreteElementA implements Element {
+@override
+void accept(Visitor visitor) {
+visitor.visitConcreteElementA(this);
+}
+
+String specificOperationA() =&gt; 'ElementA operation';
+}
+
+class ConcreteElementB implements Element {
+@override
+void accept(Visitor visitor) {
+visitor.visitConcreteElementB(this);
+}
+
+String specificOperationB() =&gt; 'ElementB operation';
+}
+
+
+</code></pre>
+<p><strong>3. 實現具體的訪問者：</strong></p>
+<pre><code class="language-dart">class ConcreteVisitor implements Visitor {
+@override
+void visitConcreteElementA(ConcreteElementA element) {
+print('Visited by ConcreteVisitor: ${element.specificOperationA()}');
+}
+
+@override
+void visitConcreteElementB(ConcreteElementB element) {
+print('Visited by ConcreteVisitor: ${element.specificOperationB()}');
+}
+}
+
+
+</code></pre>
+<p><strong>4. 在 Flutter 中使用訪問者模式：</strong></p>
+<pre><code class="language-dart">void main() {
+List elements = [ConcreteElementA(), ConcreteElementB()];
+Visitor visitor = ConcreteVisitor();
+
+for (var element in elements) {
+element.accept(visitor);
+}
+}
+
+
+</code></pre>
+<p>在上述例子中，我們定義了兩個具體的元素 <code>ConcreteElementA</code> 和 <code>ConcreteElementB</code>，以及一個具體的訪問者 <code>ConcreteVisitor</code>。當訪問者訪問一個元素時，該元素的特定操作被調用。</p>
+<h3 id="總結-3"><a class="header" href="#總結-3">總結</a></h3>
+<p>Visitor Pattern 提供了一種在不修改元素類的前提下，擴展其操作的方法。在 Flutter 中，這允許你創建高度靈活和可擴展的 Widget，這些 Widget 可以輕鬆地接受新的操作或行為，而不需要修改原始代碼。</p>
+<h2 id="flutter-design-patterns--interpreter-pattern"><a class="header" href="#flutter-design-patterns--interpreter-pattern">Flutter Design Patterns: — Interpreter Pattern</a></h2>
+<p>Interpreter Pattern 是一種行為型設計模式，它提供了評估語言中的句子的方式，主要用於表示和解釋固定語法結構的語言。這種模式涉及到表示文法的定義，以及該文法語言中句子的解釋器。</p>
+<h3 id="1-什麼是-interpreter-pattern"><a class="header" href="#1-什麼是-interpreter-pattern">1. 什麼是 Interpreter Pattern？</a></h3>
+<p>Interpreter Pattern 主要用於定義文法表示和如何解釋其句子。它適用於那些語法結構固定的語言。</p>
+<h3 id="2-如何在-flutter-中使用-interpreter-pattern"><a class="header" href="#2-如何在-flutter-中使用-interpreter-pattern">2. 如何在 Flutter 中使用 Interpreter Pattern？</a></h3>
+<p>在 Flutter 應用中，這種模式可以用於解釋如樣式、主題或 Widget 結構等的簡單語言描述。例如，一個簡單的布局語言可以使用解釋器模式來渲染相對應的 Widget。</p>
+<h3 id="3-flutter-中的-interpreter-pattern-實現"><a class="header" href="#3-flutter-中的-interpreter-pattern-實現">3. Flutter 中的 Interpreter Pattern 實現：</a></h3>
+<p><strong>1. 定義抽象表達式和文法規則：</strong></p>
+<pre><code class="language-dart">abstract class Expression {
+bool interpret(String context);
+}
+
+class TerminalExpression implements Expression {
+final String data;
+
+TerminalExpression(this.data);
+
+@override
+bool interpret(String context) {
+return context.contains(data);
+}
+}
+
+class OrExpression implements Expression {
+final Expression expr1;
+final Expression expr2;
+
+OrExpression(this.expr1, this.expr2);
+
+@override
+bool interpret(String context) {
+return expr1.interpret(context) || expr2.interpret(context);
+}
+}
+
+
+</code></pre>
+<p><strong>2. 使用上述定義的文法規則：</strong></p>
+<pre><code class="language-dart">Expression getMaleExpression() {
+Expression robert = TerminalExpression("Robert");
+Expression john = TerminalExpression("John");
+return OrExpression(robert, john);
+}
+
+void main() {
+Expression isMale = getMaleExpression();
+print("John is male? ${isMale.interpret("John")}");
+print("Julie is male? ${isMale.interpret("Julie")}");
+}
+
+
+</code></pre>
+<p>在這個例子中，我們使用了 <code>OrExpression</code> 來組合 <code>TerminalExpression</code>，表示 "John" 或 "Robert"。<code>getMaleExpression</code> 創建了一個該文法的句子，表示男性的名字。然後，我們可以用 <code>interpret</code> 方法來檢查給定的名稱是否為男性。</p>
+<h3 id="總結-4"><a class="header" href="#總結-4">總結</a></h3>
+<p>Interpreter Pattern 適用於解釋簡單語言的情境，尤其是當我們需要頻繁地變更或擴展該語言時。在 Flutter 中，雖然我們可能不經常使用此模式，但對於自定義語言或格式的解析，它可能是一個很好的選擇。</p>
+<h2 id="大總結"><a class="header" href="#大總結">大總結</a></h2>
+<p>經過這兩篇深入的探索，我們對 Flutter 中的行為模式有了更全面的認識。從 Observer Pattern 的動態響應能力，到 Strategy Pattern 的策略封裝，再到 Template Pattern 的結構化框架，每個模式都對應了特定的問題並提供了獨特的解決方案。而 Visitor 和 Interpreter Pattern 則展現了在特定場景下的動態解析和運算的能力。這些模式不僅是理論知識，更是實際開發中的寶貴工具。</p>
+<p>希望透過這些分享，你能夠在你的 Flutter 旅程中更順利、更有效地構建和優化你的應用。期待在下一篇文章中與大家再度相遇，繼續探討更多關於 Flutter 的深入主題！</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day48.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day50.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day48.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day50.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

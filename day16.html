@@ -1,0 +1,591 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 16: 聊聊 Flutter 圖像使用的良好習慣，記憶體掌握與優化！ - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-16-聊聊-flutter-圖像使用的良好習慣記憶體掌握與優化"><a class="header" href="#day-16-聊聊-flutter-圖像使用的良好習慣記憶體掌握與優化">Day 16: 聊聊 Flutter 圖像使用的良好習慣，記憶體掌握與優化！</a></h1>
+<ul>
+<li>發布時間：2023-10-01 19:12:49</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10332083">https://ithelp.ithome.com.tw/articles/10332083</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 16 篇</li>
+</ul>
+<p><img src="images/20120687Kwlcbodsha.png" alt="" /></p>
+<p>相信大部分 APP 都會使用到圖片，可能場景有貼文牆、大頭照、上傳圖片等等，在實作時大家是否有關心過記憶體的使用情況呢？或許在開發時、在自己的裝置上都運行的順暢，沒有什麼問題，但有確定在使用者的裝置上表現會相同嗎？本文就這部分，有關圖片、圖像的使用，要跟大家分享一些開發觀念、使用技巧與工具，如何讓我們有效率的存取它們，並確保 APP 的記憶體有正常使用，避免不當消耗。</p>
+<p>深呼吸一口，我們開始吧！</p>
+<hr />
+<h2 id="圖檔格式的選用"><a class="header" href="#圖檔格式的選用">圖檔格式的選用</a></h2>
+<ul>
+<li><code>png</code>
+<ul>
+<li>圖像是光柵圖形，由像素網格組成</li>
+<li>檔案大小通常較大</li>
+<li>適用於高細節、高復雜性、高解析，或者需要透明度具有透明背景的圖像，例如：照片</li>
+</ul>
+</li>
+<li><code>jpg</code> → 適合一般圖片，大小適中</li>
+<li><code>webp</code> → 新型格式，可代替 <code>png</code>、<code>jpg</code>、<code>gif</code>，容量相對小很多，支援有損和無損壓縮、透明背景</li>
+<li><code>avif</code> → 新型格式，跟 <code>webp</code> 支援度差不多，但是多了 HDR 顏色</li>
+<li><code>svg</code>
+<ul>
+<li>圖像是矢量圖形，由數學演算定義的形狀、曲線和直線組成</li>
+<li>檔案非常小</li>
+<li>適用於簡單的線條、隨意調整大小的圖形，可以任意縮放並保持相同品質</li>
+<li>例如：圖標</li>
+</ul>
+</li>
+</ul>
+<p>補充：在 Flutter 中，使用過多的 SVG 圖像可能會對應用的渲染性能產生一定影響。 需要更多的處理和解析，因為它們包含了矢量數據和復雜的路徑資訊。因此，使用大量的 SVG 圖像可能會導致變慢，特別是在較舊的設備上。不過以後不需要太擔心，此現象在新的 Impeller 引擎上有很大的優化，能有效降低計算成本，複雜的場景也能保持順暢，但是也要等到 Android 釋出 Impeller 後才算完全支援，請大家再等待一下了。</p>
+<h2 id="存取本地圖檔"><a class="header" href="#存取本地圖檔">存取本地圖檔</a></h2>
+<p>大家在使用圖檔的時候請避免使用 <strong>hard-coding</strong> 的方式將字串寫死，雖然剛開始學習 Flutter 到一段時間後，還是覺得這樣當下很方便，已經產生習慣了，但還是請改掉這個行為。</p>
+<p>它的缺點有幾個：</p>
+<ol>
+<li>打錯字就出問題了</li>
+<li>10個地方使用同一張圖片，需要輸入完整的字串10次</li>
+<li>難以管理和維護</li>
+</ol>
+<p>請使用一個自定義的本地圖檔類別去紀錄所有的路徑，使用 static const 去宣告每個字串，除了好管理之外、效能也會更好。以後圖像改了、路徑變了，就到類別裡去做修正，即可完整需求。</p>
+<p>以下方範例來看，創建了 <strong>AppAssetsPath</strong> 類別，再裡面提供了 iconHome 這個 <code>static const</code> 字串，代表對應的圖檔路徑。讓整體的可維護性提高，以統一入口去存取圖檔，實際上在元件上的存取方式也很直覺、簡單，不用再浪費時間打字了。</p>
+<pre><code class="language-dart">@immutable
+final class AppAssetsPath {
+  const AppAssetsPath._();
+
+  static const String iconHome = 'assets/images/home.jpg';
+}
+
+// UI code
+Image.asset(AppAssetsPath.iconHome),
+</code></pre>
+<p>相信有些開發者還是覺得自己要寫類別，再新增每個圖檔常數很麻煩，所以還有一種大家常用的方式，代碼生成 Codegen。透過 <strong>flutter_gen</strong> 套件幫我們自動生成所有內容，我們只需要做一點設定，最後再 Terminal 執行 <code>dart run build_runner build -d</code> 指令，即可實現我們的使用需求。詳細請看 pub.dev。</p>
+<blockquote>
+<p><a href="https://pub.dev/packages/flutter_gen">Package: flutter_gen</a></p>
+</blockquote>
+<h2 id="圖檔壓縮"><a class="header" href="#圖檔壓縮">圖檔壓縮</a></h2>
+<h4 id="壓縮後再上傳到雲端"><a class="header" href="#壓縮後再上傳到雲端">壓縮後再上傳到雲端</a></h4>
+<p>適當地壓縮圖像對於上傳大量圖片，或是請求圖檔資料時都很有幫助，當然壓縮後的品質需要確認是否達到標準，才不會為了壓縮導致呈現出來很粗糙。</p>
+<ul>
+<li>減少遠端下載的頻寬</li>
+<li>減少使用時所需要的記憶體</li>
+<li>降低本地資源的大小</li>
+<li>加快載入速度</li>
+</ul>
+<p>🐦 使用 <strong>flutter_image_compress</strong> 套件壓縮圖檔</p>
+<pre><code class="language-dart">final file = await FlutterImageCompress.compressAndGetFile(
+  file.absolute.path, 
+    targetPath,
+  quality: 90,
+  rotate: 180,
+);
+</code></pre>
+<blockquote>
+<p><a href="https://pub.dev/packages/flutter_image_compress">Package: flutter_image_compress</a></p>
+</blockquote>
+<h4 id="壓縮後再放入本地目錄"><a class="header" href="#壓縮後再放入本地目錄">壓縮後再放入本地目錄</a></h4>
+<p>以下提供相關的網站和工具：</p>
+<ol>
+<li>
+<p><strong>Squoosh</strong> → GoogleChromeLab 推出的開源專案，處理速度快，在壓縮後可瀏覽前後的圖像對比照，輸出高品質的壓縮圖像。<a href="https://squoosh.app/">網站</a><br />
+<img src="images/20120687S7VJ4KQZci.png" alt="" /></p>
+</li>
+<li>
+<p><strong>tinypng</strong> → 知名熊貓，進行有損壓縮，減少圖像中的顏色數量，降低 WEBP、JPEG 和 PNG 的檔案大小。<a href="https://tinypng.com/">網站</a><br />
+<img src="images/20120687Bmqcv0ZzeE.png" alt="" /></p>
+</li>
+<li>
+<p><strong>ImageOptim</strong> → macOS App，可以直接到官網下載，使用起來直覺簡單，只需要將圖檔拉進去、匯入，圖片就會自動開始處理，壓縮後直接覆蓋原檔。<a href="https://imageoptim.com/mac">網站</a></p>
+</li>
+</ol>
+<blockquote>
+<p><a href="https://github.com/ImageOptim/ImageOptim">Github</a><br />
+<img src="images/20120687oSuF0aEvLD.png" alt="" /></p>
+</blockquote>
+<h2 id="限制寬高不儲存過大的圖像"><a class="header" href="#限制寬高不儲存過大的圖像">限制寬高，不儲存過大的圖像</a></h2>
+<p>當專案需要載入高解析度的圖像時，特別是無限滾動的貼文列表、動態牆等等，很可能會導致卡頓，因為將原始圖像壓縮到螢幕的顯示尺寸，這個任務很繁重且耗時。如果 APP 特別只在手機端上運行，需要考量到是否還需要將大圖像提供給 client 端，是否可以在後端進行壓縮和調整。</p>
+<h4 id="優點"><a class="header" href="#優點">優點</a></h4>
+<ol>
+<li>減少圖像的體積、大小</li>
+<li>減少記憶體的使用</li>
+<li>載入的時間更短、更快</li>
+<li>保持順暢，體驗避免卡頓</li>
+<li>提升渲染圖像的性能<br />
+<img src="images/20120687FNz0ivlh3P.png" alt="" /></li>
+</ol>
+<h4 id="設置緩存大小"><a class="header" href="#設置緩存大小">設置緩存大小</a></h4>
+<p>在小區域顯示一個大尺寸圖像，Image 本身可以設置指定的緩存長寬，使用 <code>cacheWidth</code> 和 <code>cacheHeight</code>，進行圖像解碼並以指定大小存儲在記憶體，這將避免在解碼過程中產生不必要的成本消耗和硬碟空間的使用，最後保存調整過後的小圖像。</p>
+<pre><code class="language-dart">Image.asset(
+    'assets/images/flutter.png',
+    cacheWidth: 100,
+    cacheHeight: 100,
+),
+
+Image.network(
+    'images/70760bf1e88b184bb1bc.png',
+    cacheWidth: 100,
+    cacheHeight: 100,
+),
+</code></pre>
+<p>假設有設置 <code>cacheWidth</code> 或是 <code>cacheHeight</code> 兩個參數，內部會使用 ResizeImage 進行處理，將圖像 decode 成指定尺寸的 ImageProvider。在處理過後可能會失去一些細節，不過使用上的記憶體可以有效減少。<br />
+<img src="images/20120687MVZa5XFWk8.png" alt="" /></p>
+<p>自行處理圖像的範例：<br />
+透過 MediaQueryData 取得螢幕尺寸和像素比，根據 <code>scale</code> 計算出新的尺寸，最後返回新的 ImageProvider 讓元件使用。</p>
+<pre><code class="language-dart">ImageProvider optimizeImageSizeWithScale(
+  BuildContext context, {
+  required ImageProvider imageProvider,
+  double scale = 1,
+}) {
+  final Size size = MediaQuery.sizeOf(context);
+  final double devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+  final Size newSize = size * devicePixelRatio * scale;
+
+  return ResizeImage(
+    imageProvider,
+    width: newSize.width.round(),
+  );
+}
+
+// Usage
+Image(
+  image: optimizeImageSizeWithScale(
+    context,
+    imageProvider: const NetworkImage('images/Dash%2C_the_mascot_of_the_Dart_programming_language.png'),
+    scale: 0.8,
+  ),
+),
+</code></pre>
+<p><img src="images/201206872DO3zmT8YR.png" alt="" /></p>
+<h4 id="從設備抓取圖像"><a class="header" href="#從設備抓取圖像">從設備抓取圖像</a></h4>
+<p>如果今天是要上傳照片、圖片到後端，以大家熟悉的 <strong>image_picker</strong> 套件來看，它有提供 <code>maxWidth</code>、<code>maxHeight</code>、<code>imaqeQuality</code> 三個參數可以設置，除了能有效避免圖像過大以外，還可以輕鬆地壓縮品質。這些都可以根據實際的使用場景去決定，也許 APP 不需要最好的品質和尺寸去顯示，即可有好的效果。</p>
+<pre><code class="language-dart">_picker.pickImage(
+    source: source,
+    maxWidth: maxWidth,
+    maxHeight: maxHeight,
+    imageQuality: imageQuality, // 0 ~ 100
+)
+</code></pre>
+<blockquote>
+<p><a href="https://pub.dev/packages/image_picker">Package: image_picker</a></p>
+</blockquote>
+<h2 id="預先載入圖像"><a class="header" href="#預先載入圖像">預先載入圖像</a></h2>
+<p>很常我們會在專案裡的 <code>assets</code> 目錄放置一些本地圖檔，屬於不會更改且頻繁出現的圖片，如果剛好在頁面創建的時候要顯示大量的圖片，例如：100、200張，這時候一定會看到圖片陸續被載入或是沒有顯示上非常的絲滑。</p>
+<p>你可能想說本地檔案不是應該會很順嗎，為什麼一樣會延遲？因為即便圖像是從本地載入不是雲端，它們都需要先被緩存到記憶體，接著在呈現到畫面上，而不是直接就能顯示。</p>
+<p>這時候就需要在 Splash Page 或是在頁面一開始的時候進行預先載入，讓大部分圖片都可以在 <code>build()</code> 方法觸發之前先準備好，能夠有效避免遲緩的情況。</p>
+<ul>
+<li>Flutter Framework</li>
+</ul>
+<pre><code class="language-dart">// Precache local
+precacheImage(AssetImage(imgPath), context);
+
+// Precache remote
+precacheImage(NetworkImage(imgUrl), context);
+</code></pre>
+<p><img src="images/20120687In64EnK2S4.png" alt="" /></p>
+<ul>
+<li>使用 <strong>cached_network_image</strong> 套件時，很常會搭配 <strong>flutter_cache_manager</strong> 套件，有自己的 CacheManager 去進行緩存管理，可以在 APP 一開始或是過渡時間進行遠端的圖片緩存</li>
+</ul>
+<pre><code class="language-dart">// Precache remote if not cache before
+await getSingleFile(imgUrl);
+</code></pre>
+<blockquote>
+<p><a href="https://pub.dev/packages/flutter_cache_manager">Package: flutter_cache_manager</a></p>
+</blockquote>
+<h2 id="svg-圖檔預編譯"><a class="header" href="#svg-圖檔預編譯">SVG 圖檔預編譯</a></h2>
+<p>通常使用到 svg 圖檔大家對 <strong>flutter_svg</strong> 應該都很熟悉，搭配 <strong>vector_graphics_compiler</strong> 套件，允許 svg 生成二進制格式，使用時的解析速度更快，並且可以減少 clipping、masking 和過度繪製的情況。生成以 <code>.vec</code> 後綴的 svg 圖檔</p>
+<p>在 Terminal 透過指令生成 <code>svg.vec</code> 檔案。</p>
+<pre><code class="language-bash">dart run vector_graphics_compiler -i assets/home.svg -o assets/home.svg.vec
+</code></pre>
+<p>在 UI code，使用 <code>AssetBytesLoader</code> 載入圖檔。</p>
+<pre><code class="language-dart">import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
+
+final Widget homeImage = SvgPicture(
+    const AssetBytesLoader('assets/images/icon/home.svg.vec')
+);
+</code></pre>
+<blockquote>
+<p><a href="https://pub.dev/packages/flutter_svg">Package: flutter_svg</a><br />
+<a href="https://pub.dev/packages/vector_graphics_compiler">Package: vector_graphics_compiler</a></p>
+</blockquote>
+<h2 id="資源圖檔支援解析度適配"><a class="header" href="#資源圖檔支援解析度適配">資源圖檔支援解析度適配</a></h2>
+<p>Flutter 支援解析度感知(resolution awareness)，根據設備像素比載入解析度合適的圖像，例如：在像素比 1.8 的設備會使用 <code>2.0x/</code> 目錄的圖像; 像素比 2.7 會用 <code>3.0/</code> 圖像。</p>
+<p>假設我們有一個 <code>cat.png</code> 圖檔，在 asset 目錄裡需要提供多倍率的對應檔案，為了適配設備的解析度，避免小尺寸手機載入大尺寸、容量的圖像，這是不必要的需求，而且還會讓載入速度也會變慢，嚴重的話可能很快就會有設備 OOM 情況，導致 APP 崩潰。</p>
+<p>如果大家有使用和熟悉 figma 這類的設計軟體，通常在圖檔匯出時都會有倍率可以選擇，操作上很方便。取得檔案後接著在分配到專案的指定路徑，而下方我有提供使用 Dart 撰寫的 script，簡單、快速地幫你自動分配好檔案，大家也不需要浪費時間了。</p>
+<pre><code class="language-dart">.../cat.png       (mdpi baseline)
+.../1.5x/cat.png  (hdpi)
+.../2.0x/cat.png  (xhdpi)
+.../3.0x/cat.png  (xxhdpi)
+.../4.0x/cat.png  (xxxhdpi)
+</code></pre>
+<p>撰寫自己的 dart script 幫忙分配圖檔，先將圖檔放到 assets 指定路徑，接著再根目錄使用指令。當然也可以使用 Makefile 執行</p>
+<pre><code class="language-bash">dart tools/allocate_images.dart ./assets/images
+</code></pre>
+<p><img src="images/20120687AJx9F0dIYa.png" alt="" /><br />
+<img src="images/20120687ZxihNOMFIi.png" alt="" /></p>
+<blockquote>
+<p><a href="https://github.com/chyiiiiiiiiiiii/flutter-tips-and-tricks/tree/main/tips/0001-use-dart-program-to-allocate-resolution-images">Github: flutter-tips-and-tricks</a></p>
+</blockquote>
+<h2 id="圖像搭配-aspectratio"><a class="header" href="#圖像搭配-aspectratio">圖像搭配 AspectRatio</a></h2>
+<p>AspectRatio 元件本身可以讓 child 根據寬長比例去顯示，必須設置 <code>aspectRatio</code> 參數，可以在使用時想說寬比長，然後以寬/長來填入。如果是正方形，就是設 1; 如果是寬長 16:9 就是設 1.77，使用上很簡單。它的用處是可以讓我們在開發時不需要設置固定的長寬數值(不同裝置較容易跑版)，可以根據裝置的大小長寬去自動適配，所以這也是在做 APP 多端開發的時候，很常用的一個技巧。有效確保在所有設備上保持圖像的一致性，即使設備的解析度、尺寸不同，它也會自動放大或縮小圖像以符合 UI。</p>
+<pre><code class="language-dart">// 16:9
+const AspectRatio(
+    aspectRatio: 1.77,
+    child: Image(
+        image: NetworkImage(
+      'images/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+    ),
+  ),
+),
+</code></pre>
+<h2 id="實作透明圖像"><a class="header" href="#實作透明圖像">實作透明圖像</a></h2>
+<p>盡量避免在 Image 外層包裹 <strong>Opacity</strong>，雖然能實現效果，但是在背後渲染時的工作成本比較昂貴，濫用會影響運行幀數。詳細可以閱讀另一篇文章，有更多對於 Opacity 的說明。</p>
+<p>針對圖像的操作可以使用 Image 本身的 <code>color</code> 以及 <code>colorBlendMode</code> 參數去做調整，顏色本身可以使用 <code>fromRGBO()</code> 建構方法，第四個參數設置指定的不透明度。最後設置 BlendMode 為 <code>BlendMode.modulate</code>，讓它可以透過顏色調整圖片，完成我們要的效果</p>
+<pre><code class="language-dart">// Add white with opacity 0.5
+Image(
+    image: NetworkImage(
+    'images/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+    ),
+    color: Color.fromRGBO(255, 255, 255, 0.5),
+    colorBlendMode: BlendMode.modulate,
+)
+
+// Add green color
+Image(
+    image: NetworkImage(
+    'images/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+    ),
+    color: Color.fromRGBO(160, 239, 180, 1),
+    colorBlendMode: BlendMode.modulate,
+)
+</code></pre>
+<p><img src="images/20120687nCZx8rfF4p.png" alt="" /></p>
+<h2 id="添加-blurhash-載入效果"><a class="header" href="#添加-blurhash-載入效果">添加 Blurhash 載入效果</a></h2>
+<p>為什麼需要載入效果，可以讓使用者的明確知道現在每張圖片都有在載入，載入完成的先顯示，還沒完成的繼續有效果去提醒，盡量不讓使用者看到空白處或是靜止圖片的呈現。根據過去的開發經驗與研究，當看到空白處三秒後使用者會開始不耐煩，對於 APP 的觀感會開始降低，10~15 秒後就會將 APP 關閉、停止。</p>
+<p>常見的載入效果，很常會看到旋轉的 indicator 指示器，很方便使用但相對比較普遍。有些 APP 提供品牌的載入動畫，這也是一個選擇，提醒之餘增加趣味性，當然風格也更為強烈。</p>
+<p>這裡要跟大家分享 Blurhash 效果，將圖片編碼成30個字元以下的 hash 字串，它代表一個模糊圖像，讓我們在載入圖片時，可以當作 placeholder 呈現，模糊的效果跟原始圖片色塊類似，讓每張圖片也能看出差異。很棒的事，當圖片載入完成時它會以漸變的方式做圖像轉換，從模糊無縫到實際圖片。</p>
+<p>實作方式，可以將生成與編碼 hash 的工作內容讓後端負責，可能在 client 上傳圖片後去處理，然後將圖檔 url 跟 hash 存儲起來。 當 client 請求資料時，可以同時收到這兩個東西。 然後接下來就簡單了，載入期間顯示 blurhash 模糊效果，最後將雲端的完整圖像顯示出來。</p>
+<p>可以到官網 BlutHash 了解，另外 Github Repo 也有提供每個語言的處理方式，主流語言一定都有支援，當然 Dart 也有，可以在自己的 APP 或是後端進行處理。</p>
+<blockquote>
+<p><a href="https://blurha.sh/">Wolt - BlurHash</a><br />
+<a href="https://github.com/woltapp/blurhash">Github</a></p>
+</blockquote>
+<h3 id="效果範例"><a class="header" href="#效果範例">效果範例</a></h3>
+<p><img src="images/20120687pu8gXURVxb.png" alt="" /><br />
+<img src="images/LRuwmMU.gif" alt="Blurhash" /></p>
+<h3 id="開發方式"><a class="header" href="#開發方式">開發方式</a></h3>
+<ul>
+<li>第一種：使用 <strong>blurhash_dart</strong> 套件</li>
+</ul>
+<pre><code class="language-dart">// blurhash 轉成 Widget
+Widget build(BuildContext context) {
+    final image = BlurHash.decode('LEHV6nWB2yk8pyo0adR*.7kCMdnj').toImage(35, 20);
+
+    return Image.memory(Uint8List.fromList(encodeJpg(image)));
+}
+
+// 圖片生成 blurhash
+final data = File('assets/image/test.png').readAsBytesSync();
+final image = img.decodeImage(data.toList());
+final blurHash = BlurHash.encode(image!, numCompX: 4, numCompY: 3);
+</code></pre>
+<blockquote>
+<p>提醒：如果要在 APP 端處理，因為 <code>encode</code>、<code>decode</code> 都是同步操作，不彷透過 Background Isolate 來處理，確保效能<br />
+<a href="https://pub.dev/packages/blurhash_dart">Package: blurhash_dart</a></p>
+</blockquote>
+<ul>
+<li>第二種：使用 <strong>flutter_blurhash</strong> 套件，提供許多 API 可以操作</li>
+</ul>
+<pre><code class="language-dart">BlurHash(
+    hash: r'LBS?GdOG-;$zxua}jtj?~VxCITSi',
+    image: 'images/70760bf1e88b184bb1bc.png',
+    duration: const Duration(seconds: 2),
+    onStarted: onStarted,
+    onDecoded: onDecoded,
+    onDisplayed: onDisplayed,
+),
+</code></pre>
+<blockquote>
+<p><a href="https://pub.dev/packages/flutter_blurhash">Package: flutter_blurhash</a></p>
+</blockquote>
+<ul>
+<li>第三種：使用 <strong>octo_image</strong> 套件，結合 <code>cached_network_image</code> 緩存以及 blurhash</li>
+</ul>
+<pre><code class="language-dart">OctoImage(
+    image: CachedNetworkImageProvider(imgUrl),
+    placeholderBuilder: OctoPlaceholder.blurHash(blurhash),
+    errorBuilder: (context, error, stackTrace) =&gt; const Icon(
+        Icons.warning_rounded,
+        color: Colors.black54,
+    ),
+    fit: BoxFit.cover,
+    width: 300,
+    height: 300,
+),
+</code></pre>
+<blockquote>
+<p><a href="https://pub.dev/packages/octo_image">Package: octo_image</a></p>
+</blockquote>
+<ul>
+<li>第四種：使用 <strong>blurhash_ffi</strong> 套件，編碼和解碼在背後一次處理完成，不需要取得 hash 才能使用，當然基本的個別操作也有提供</li>
+</ul>
+<pre><code class="language-dart">import 'package:blurhash_ffi/blurhash_ffi.dart';
+
+class MyImage extends StatelessWidget {
+    const MyImage({
+        required this.imageUrl,
+        super.key,
+    });
+
+    final String imageUrl;
+
+    @override
+    Widget build(BuildContext context) {
+        return Image(
+            image: BlurhashTheImage(
+                NetworkImage(imageUrl),
+                    decodingHeight: 1920,
+                    decodingWidth: 1080,
+            ),
+            alignment: Alignment.center,
+            fit: BoxFit.cover,
+        );
+    }
+}
+</code></pre>
+<blockquote>
+<p><a href="https://pub.dev/packages/blurhash_ffi">Package: blurhash_ffi</a></p>
+</blockquote>
+<h2 id="標示大型圖像"><a class="header" href="#標示大型圖像">標示大型圖像</a></h2>
+<p>使用 debugInvertOversizedImages 通過顏色反轉和顛倒來標示體積過大、使用大量記憶體的圖像。<br />
+<img src="images/20120687yQkH9rOkcg.png" alt="" /></p>
+<p>如果不想開啟 DevTools 也可以在主函式 <code>main()</code> 設置。</p>
+<pre><code class="language-dart">debugInvertOversizedImages = true
+</code></pre>
+<blockquote>
+<p>更多且更詳細 Debugging 內容，請看另一篇文章，等待發布。</p>
+</blockquote>
+<hr />
+<h2 id="總結"><a class="header" href="#總結">總結</a></h2>
+<p>本文分享了有關圖像的觀念與操作，希望大家可以審視專案是否有正常運用記憶體，尤其是大圖像緩存與載入小空間的部分，沒有注意的話，除了記憶體暴漲之外，也很容易就會造成卡頓。如果有其他圖像的優化方式與內容也非常歡迎提出，我們可以做個討論，一起互相學習。以使用者體驗為第一優先，沒錯吧！</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day15.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day17.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day15.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day17.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

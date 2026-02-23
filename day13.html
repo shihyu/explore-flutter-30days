@@ -1,0 +1,521 @@
+<!DOCTYPE HTML>
+<html lang="zh-TW" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Day 13: 在 Dart 與 Flutter 開發中常用的幾種 Pattern，為什麼需要它們？ - Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Flutter 鐵人賽 60 天合輯：由裡到外 × 進擊之路</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="day-13-在-dart-與-flutter-開發中常用的幾種-pattern為什麼需要它們"><a class="header" href="#day-13-在-dart-與-flutter-開發中常用的幾種-pattern為什麼需要它們">Day 13: 在 Dart 與 Flutter 開發中常用的幾種 Pattern，為什麼需要它們？</a></h1>
+<ul>
+<li>發布時間：2023-09-28 21:20:13</li>
+<li>原文連結：<a href="https://ithelp.ithome.com.tw/articles/10329956">https://ithelp.ithome.com.tw/articles/10329956</a></li>
+<li>系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 13 篇</li>
+</ul>
+<p><img src="images/20120687eKB4zBtrCH.png" alt="" /></p>
+<p>Pattern 在每個領域的軟體開發當中都會遇到，有時候大家很常使用但卻沒有實際了解為什麼要這樣設計，他們都是為了解決某件事，讓我們很方便的完成開發。而在開發 Flutter App 時，有幾種 Pattern 是很常遇到跟使用的，例如：<strong>Singleton</strong>、<strong>Factory</strong>、<strong>Builder</strong> 和 <strong>Repository</strong> 等等，這四種也是本文的重點，跟大家講解他們是什麼，以及如何在實際的場景使用，提高效率。</p>
+<hr />
+<h2 id="singleton-pattern"><a class="header" href="#singleton-pattern">Singleton Pattern</a></h2>
+<ul>
+<li>只允許 Class 實例化一次，之後的所有存取都針對同一個記憶體空間、同一個物件</li>
+<li>常見做法為三步驟
+<ol>
+<li>提供 <code>._internal()</code> 內部方法來創建，內部的命名可自定義</li>
+<li>使用 <strong>static final</strong> 宣告 <code>_instance</code> 實體，在第一次類別初始化後可以在所有實體上分享，不需要創建重複的記憶體也不能再更改</li>
+<li>使用 <code>factory</code> constructor 方法存取內部創建的物件實體</li>
+</ol>
+</li>
+</ul>
+<pre><code class="language-dart">class AppStorage {
+    static final AppStorage _instance = AppStorage._internal(); 
+
+    factory AppStorage() =&gt; _instance;
+
+    AppStorage._internal(); 
+
+    String message = 'Wish you a good day!';
+}
+
+/// Usage
+print(AppStorage().message); // Wish you a good day!
+</code></pre>
+<p>根據需求，在真正需要的時候才使用 <strong>Singleton</strong>，否則正常使用下應該創建後釋放資源，而不是永遠存在記憶體佔空間，濫用反而會造成效能差異。</p>
+<p>補充：以 Riverpod 狀態管理為例，使用方式有類似支援 Singleton，它能夠透過 Provider 提供單一實體讓大家去使用，並在沒有人需要的時候自動釋放、銷毀，能自然、方便的管理記憶體，也是它的一大好處。</p>
+<h2 id="factory-pattern"><a class="header" href="#factory-pattern">Factory Pattern</a></h2>
+<ul>
+<li>工廠模式，也被稱為 <code>Virtual Constructor Design</code>，專門處理建構子</li>
+<li>可協助定義多個 Class Constructor，不需要將類別內部屬性設為參數，可以自定義，並返回類別實體，在使用上可以更簡潔</li>
+</ul>
+<pre><code class="language-dart">class Car {
+    final Color color;
+
+    Car(this.color);
+
+    factory Car.green() {
+        return Car(Colors.green);
+    }
+
+    factory Car.red() {
+        return Car(Colors.red);
+    }
+}
+</code></pre>
+<ul>
+<li>特點本身可以是匿名的，可偽裝成預設 Constructor，提高整體可讀性，不需要被迫提供無意義的名稱。而當類別內部只有命名 Constructor 時，會保留預設的匿名 Constructor，不會發生錯誤</li>
+</ul>
+<pre><code class="language-dart">class Car {
+
+    factory Car() {
+        return Car();
+    }
+
+}
+</code></pre>
+<p>當你撰寫預設 Constructor 時，會跳出錯誤訊息，說明匿名 Constructor 已經被宣告了<br />
+<img src="images/20120687MyCSNR5AOF.png" alt="" /></p>
+<ul>
+<li>不需要給予回傳值或泛型參數，提高整體可讀性</li>
+<li>可以重新指向到另一個 Constructor，包含預設以及命名構造函數，靈活性高</li>
+</ul>
+<pre><code class="language-dart">class Car {
+    factory Car() {
+        return Tesla();
+    }
+
+    factory Car.blueTesla() {
+        return Tesla.blue();
+    }
+}
+
+class Tesla implements Car {
+    Tesla({this.color = 'black'});
+
+    final String color;
+
+    factory Tesla.blue() =&gt; Tesla(color: 'blue');
+}
+</code></pre>
+<ul>
+<li>可以宣告為 <code>const</code>，提高效能</li>
+</ul>
+<pre><code class="language-dart">void main(List&lt;String&gt; arguments) {
+    const car = Car();
+    print(car);
+    // Instance of 'Tesla'
+}
+
+class Car {
+    const factory Car() = Tesla;
+}
+
+class Tesla implements Car {
+    const Tesla({this.color = 'black'});
+
+    final String color;
+}
+</code></pre>
+<p>當只有重新指向的操作可以是 <strong>const</strong>，這點在使用時請注意。<br />
+<img src="images/20120687DBgOu2Ck87.png" alt="" /></p>
+<ul>
+<li>
+<p>當有多個參數要進行傳遞時，可以使用語法糖協助，只需要給予類別的名稱，確保建構參數都相同即可<br />
+<img src="images/20120687zLKdjJ3RRn.png" alt="" /></p>
+</li>
+<li>
+<p>開發時使用 <strong>factory</strong> 的常見場景</p>
+<ul>
+<li>Singleton Pattern 單例</li>
+<li>Json Deserialization 資料的反序列化解析</li>
+<li>Instantiate Subclasses 子類別創建</li>
+<li>Union Classes 聯盟類別</li>
+</ul>
+</li>
+</ul>
+<h3 id="example---json-deserialization"><a class="header" href="#example---json-deserialization">Example - Json deserialization</a></h3>
+<p>我們在請求完 API 後，通常會需要解析 Json 為指定的 Model 資料類別，中間會使用 <strong>factory</strong> 的 <code>fromJson()</code> 方法去取得物件，中間就是將 Map 參數處理完後返回物件。參數本身也跟類別屬性沒有關係。</p>
+<p>不管是使用 <strong>json_serializable</strong> 或是 <strong>freezed</strong> 套件都會使用到 factory constructor 去實作。</p>
+<pre><code class="language-dart">class User {
+
+    final String name;
+    final int age;
+
+    User({
+        required this.name,
+        required this.age,
+    });
+
+    factory User.fromJson(Map&lt;String, dynamic&gt; json) =&gt; User(
+        name: json['name'],
+        age: json['age'],
+    ); 
+}
+
+// freezed
+@freezed
+class User with _$User {
+    const factory User({
+        required String name,
+        required int age,
+    }) = _User;
+
+    factory User.fromJson(Map&lt;String, Object?&gt; json) =&gt; _$UserFromJson(json);
+}
+</code></pre>
+<blockquote>
+<p>補充：對於 freezed 套件有興趣的朋友可以看我之前完成的文章，延伸閱讀<br />
+<a href="https://yiichenhi.medium.com/freezed-makes-model-class-strong-and-easily-cf5388bb94b7">Medium: “freezed” makes model class strong and easily</a></p>
+</blockquote>
+<h3 id="example---instantiate-subclass"><a class="header" href="#example---instantiate-subclass">Example - <strong><strong>Instantiate subclass</strong></strong></a></h3>
+<p>根據需求以及不同的參數資料，我們可以在類別裡面定義多個 <strong>factory constructor</strong>，不同的情境下產出不同的子類別實體，使用上更為豐富。</p>
+<pre><code class="language-dart">class Human {
+
+    factory Human.age({required int age}) {
+        if (age &gt;= 18) {
+            return Man();
+        } else {
+            return Child();
+        }
+    }
+
+}
+</code></pre>
+<h3 id="example---union-classes"><a class="header" href="#example---union-classes">Example - <strong>Union Classes</strong></a></h3>
+<p>在 <strong>freezed</strong> 套件裡，針對多狀態的定義，在這裡會使用到很多 factory constructor，很適合用於狀態管理的狀態識別，例如：搭配 Bloc、Riverpod 等等。</p>
+<pre><code class="language-dart">@freezed
+class HomeState with _$HomeState {
+    factory HomeState.init() = HomeInitialization;
+    
+    factory HomeState.loading() = HomeLoading;
+
+    factory HomeState.dataLoaded(List&lt;Movie&gt; movies) = HomeLoaded;
+    
+    factory HomeState.error(String message) = HomeError;
+}
+</code></pre>
+<p><img src="images/20120687osk2au0RxE.png" alt="" /></p>
+<p>Factory Pattern 在很多地方都適合使用，我們在定義專案的 Design System 時也會用到，比如要撰寫自己的 AppText 元件，定義出與 UI 設計相同文字配置，透過 factory constructors 先將文字大小、顏色、長寬先定義好，之後在撰寫 UI 畫面時就會非常方便。</p>
+<h2 id="builder-pattern"><a class="header" href="#builder-pattern">Builder Pattern</a></h2>
+<p>首先以 Builder 元件來看，它最主要的功能是什麼？就是所戴的參數 BuildContext，也就是給子元件一個精準的上下文、在 Element Tree 上新增一個節點，讓元件在執行 context 操作時更安全，而不會導致跨層級存取的問題。詳細可閱讀我撰寫的 Element 文章，幫助你更好理解，以下是連結：</p>
+<blockquote>
+<p><a href="https://ithelp.ithome.com.tw/articles/10322382">Day 4: Flutter 高效核心，了解 Element 生命週期與使用</a></p>
+</blockquote>
+<p><strong>builder</strong> 的使用在 Flutter 開發過程中是很常見的一個使用方式，例如：<code>ListView.builder()</code>、<code>GridView.builder()</code>、<code>TableView.builder()</code>、<code>PageView.builder</code> 等等，大部分的共通點都是有提供 BuildContext，就是為了效能優化而提供的 API。</p>
+<ul>
+<li>可以根據需求來決定是否創建 <strong>builder</strong> 提供的元件，如果不需要則不理會</li>
+<li>可以只更新指定元件，而不會重建其他的兄弟姊妹，造成不必要的資源消耗</li>
+</ul>
+<h3 id="example---listviewbuilder"><a class="header" href="#example---listviewbuilder">Example - ListView.builder()</a></h3>
+<p><img src="images/20120687aRvccqTQRF.png" alt="" /></p>
+<p>直接快速從源碼來看，實際上 ListView.builder() 裡的 context 就是 <strong>SliverMultiBoxAdaptorElement</strong>，每個 Item 都有自己的 Element 處理更新。<br />
+<img src="images/20120687MXbGY0e2vr.png" alt="" /><br />
+<img src="images/20120687vSbKiwHFqJ.png" alt="" /></p>
+<h3 id="example---statefulbuilder"><a class="header" href="#example---statefulbuilder">Example - StatefulBuilder</a></h3>
+<p>以 StatefulBuilder 來看，為什麼它能做到局部刷新？實際上當它包裹的時候跟我們創建一個字定義元件一樣，包裹了新的 context 也就是 Element 來處理狀態，所以當我們觸發 <code>setState()</code> 的時候，只有包裹的 Widget Tree 會有反應，進而刷新。</p>
+<pre><code class="language-dart">await showDialog&lt;void&gt;(
+    context: context,
+    builder: (BuildContext context) {
+        int? selectedRadio = 0;
+
+        return AlertDialog(
+            content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                    return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List&lt;Widget&gt;.generate(4, (int index) {
+                            return Radio&lt;int&gt;(
+                                value: index,
+                                groupValue: selectedRadio,
+                                onChanged: (int? value) {
+                                    setState(() =&gt; selectedRadio = value);
+                                },
+                            );
+                        }),
+                    );
+                },
+            ),
+        );
+    },
+);
+</code></pre>
+<h2 id="repository-pattern"><a class="header" href="#repository-pattern">Repository Pattern</a></h2>
+<p>在 Mobile 開發裡使用 Repository Pattern 是很常見的，從 Android、iOS 到 Flutter，觀念都可以運用到各個平台去幫助開發，Repository 最主要的職責就將 UI layer 和 Data layer 進行有效分離。對於 UI 來說，不用管中間的資料拿到後如何處理，只需要專注在取得資料後如何呈現出來。</p>
+<p>Repository 就是保管資料的倉庫，以存取資料的情境，在這裡我們可以根據網路情況來決定要拿雲端資料是本地資料，所以通常會有 RemoteDataSource 與 LocalDataSource，接著透過原本定義的 API 取出指定資料。目的為了讓專案分層清楚，每個角色只需負責好自己的工作就好，Repository 就是那位資料管理者，能夠有效地協助我們。</p>
+<ul>
+<li>透過 <strong>SOLID</strong> 開發原則，定義抽象介面，使用依賴反轉來解耦服務纇、工具類與資料來源。進而提升可測試性，撰寫測試時也能輕鬆偽造注入物件的邏輯與數據</li>
+<li>擁有可替換性。當使用的第三方 API 發生異常想更換成其他服務時，只需更新 Repository 的注入實體，即可透過統一介面取的資料</li>
+<li>適合情境
+<ul>
+<li>請求遠端資料，例如：Rest API</li>
+<li>與本地溝通，例如：SharedPreference、Hive Storage、Isar Database</li>
+<li>與遠端服務溝通，例如：Firebase、Supabase、AWS Amplify</li>
+<li>存取設備 API，例如：Permission、Location、Camera</li>
+</ul>
+</li>
+<li>缺點
+<ul>
+<li>比較多樣板代碼，是 tradeoff，以個人經驗來看是個良好設計。但如果只是小 project 的話，就取決於個人需求</li>
+</ul>
+</li>
+</ul>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>假設我們需要實作註冊、登入有關用戶身份的相關操作，可能會有個 AuthRepository，它單純負責定義介面，跟直白的來說就是有幾種方式可以操作資料。以這個範例來看有註冊、登入以及 Goolge 登入。給予實作類別使用 AuthRepository 介面</p>
+<p>在 Dart 3 改版之後，我們可以更精準的定義 Class，建議使用 <code>abstract interface class</code>，符合舊有觀念的 interface。<br />
+<img src="images/201206873IeY8DpdXF.png" alt="" /></p>
+<p>假設情境是實作有關會員身份有關的功能，這時候可能會創建新的 <strong>AuthRepositoryImpl</strong> 類別 implements <strong>AuthRepository</strong>，需要覆寫設置好的方法。接著在 Logic layer 注入 Repository 實體，就能直接呼叫 <code>signUp()</code> 完成工作，邏輯層完全不需要知道 Repository 到底做了什麼事，完整地將職責切分開來。<br />
+<img src="images/20120687YMHkhzdBqi.png" alt="" /></p>
+<p>而當我們要測試的時候就可以創建偽造類別，自定義每個 API 的結果，根據場景需求去撰寫。<br />
+<img src="images/20120687JNqIsJ7Ozf.png" alt="" /></p>
+<p>假設今天的測試場景為登入 API，登入的用戶名稱正常情況下會包含 “Ba” 兩個字母，因此有了以下的簡易測試範例。首先使用了 MockAuthRepository 實體，透過偽造資料進行測試，驗證邏輯是否正常。這也是為什麼建議 Repository Pattern 和其他職責類別使用 abstract interface 的原因。</p>
+<pre><code class="language-dart">late MockAuthRepository temp;
+
+setUp(() {
+    temp = MockAuthRepository(firebaseAuth: FirebaseAuth.instance, authApi: AuthApi(Dio()));
+});
+
+tearDown(() {});
+
+test('SignIn test for only "Ba" user', () async {
+    final res = await temp.signIn(params: SignInRequestParams(email: 'test@gmail.com', password: 'test1234'));
+
+    expect(res.user.name.contains('Ba'), true);
+    expect(res.user.name.contains('unknown'), false);
+});
+</code></pre>
+<p>補充：</p>
+<ol>
+<li>Repository 是否需要抽象類來繼承取決於你和團隊的開發習慣，因為通常 Repository 只會有一種實現方式，不像是 Service 需要應付可替換性，一切都需要權衡，看是需要簡潔的介面宣告還是減少樣板代碼、節省時間</li>
+<li>撰寫測試時，推薦搭配 <strong>mocktail</strong> 套件，更方便偽造類別或是資料來源，不需要 Codegen 處理。當然 mocktail 適合大部分情境，不只侷限與 Repository Testing</li>
+</ol>
+<hr />
+<h2 id="總結"><a class="header" href="#總結">總結</a></h2>
+<p>閱讀完此篇，大家應該對於常見的 Pattern 設計更有感覺了，相信在未來的專案開發上會更知道如何適當地去使用，當發生問題時我們也能更快的做出反應。實際上，Pattern Design 有非常多種，個人不建議死背，可以透過日常開發和反覆練習去熟悉。另外，個人推薦作者 <strong>Mangirdas Kazlauskas</strong> 之前分享的 Design Pattern 大全，透過自己的 Flutter Web 去呈現，提供解說與範例，有興趣的朋友們不要錯過了，我將連結附在這裡。</p>
+<blockquote>
+<p><a href="https://flutterdesignpatterns.com/">Flutter Design Patterns (Flutter Web)</a></p>
+</blockquote>
+<p>那，我們下篇文章見囉！</p>
+<h2 id="參考"><a class="header" href="#參考">參考</a></h2>
+<ul>
+<li><a href="https://dash-overflow.net/articles/factory/">https://dash-overflow.net/articles/factory/</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="day12.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="day14.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="day12.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="day14.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
