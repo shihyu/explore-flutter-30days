@@ -103,7 +103,7 @@ flutter run -t lib/widgetbook.dart -d macos
 到這裡我們就可以看到成功運行的畫面摟，目前支援 macos, windows linux  web 版本，選擇適合你的方式即可。成功的畫面就像下面這樣：
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20117363n0lZauQJtX.png)
+![](images/20117363n0lZauQJtX.png)
 
 
 ### Component
@@ -151,7 +151,7 @@ flutter pub run build_runner build
 結果：
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20117363eMJfkMCUuj.png)
+![](images/20117363eMJfkMCUuj.png)
 
 
 ### Knobs
@@ -284,7 +284,7 @@ height: 20,
 記得完成以後要再跑一次 build runner 就可以摟
 
 
-![](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3dkbWkxejZ1ODlzOGRja3N5eHFxOTkxNTFlc3R6dGxubzJhdGh0aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/98nPQmPRKbHHQki2va/giphy.gif)
+![](images/giphy.gif)
 
 
 ### Addon
@@ -324,7 +324,7 @@ initialDevice: Devices.ios.iPhone13,
 如果想要隱藏也可以側邊欄的 Addon 去做調整
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20117363pls5tfY9a9.png)
+![](images/20117363pls5tfY9a9.png)
 
 
 ### 其他案例：數位藝術創作
@@ -486,7 +486,7 @@ divisions: 20,
 接下來就可以看到成果摟：
 
 
-![](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXZ1bGhleGdvcWVuYzQxOW05bTg1bzNucGFyc2Eyd24zdzZ1Y3FybiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pPlnfkaLMfvWuJOv99/giphy.gif)
+![](images/giphy.gif)
 
 
 有了 Storybook 的幫忙，我可以更專心在創作上面。

@@ -212,10 +212,10 @@ $ melos hello-exec
 
 
 如果你正在使用 Vscode 也可以考慮使用 melos 的 [plugin](https://marketplace.visualstudio.com/items?itemName=blaugold.melos-code)，他有更快的指令還有一個畫出依賴圖的功能，有興趣可以裝來玩玩看，可以更視覺化的找出是否有不當的依賴哦：
-![](https://ithelp.ithome.com.tw/upload/images/20231011/20117363uFMFb57qlS.png)
+![](images/20117363uFMFb57qlS.png)
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231011/2011736382tpjnMQ64.png)
+![](images/2011736382tpjnMQ64.png)
 
 
 ### Melos 的問題與挑戰

@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10336971>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 24 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687Q5lQvkmDYZ.png)
+![](images/20120687Q5lQvkmDYZ.png)
 
 身為工程師，每天長時間的開發、寫程式碼，提升開發效率是必須的，趕快完成任務才能偷懶沒錯吧？我們必須在節省時間的情況下還能達到目的，除了程式碼的撰寫之外，還有開發工具、設定、快捷鍵等等來協助我們，以 VSCode 來說，它給予開發者很大的幫助。
 
@@ -26,7 +26,7 @@ dart fix --dry-run
 dart fix --apply
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687IEAQL2Jxvy.png)
+![](images/20120687IEAQL2Jxvy.png)
 
 ### MakeFile for Commands
 
@@ -105,9 +105,9 @@ fluttergen:
 ```
 
 再專案跟目錄新增 Makefile 檔案，整理需要快捷操作的指令，接著只需在 Terminal 使用 `make <target-name>` 即可執行動作  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687MwvRDTLQql.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687YxTmtqJPdN.png)  
-![Makefile](https://i.imgur.com/cTSjUvQ.gif)
+![](images/20120687MwvRDTLQql.png)  
+![](images/20120687YxTmtqJPdN.png)  
+![Makefile](images/cTSjUvQ.gif)
 
 ### Github **Dependabot for Packages**
 
@@ -116,8 +116,8 @@ fluttergen:
 1.  在 `.github` 資料夾，新增 **dependabot.yml** 配置檔案
 2.  將 **package-ecosystem** 設為 `Pub`
 3.  可以額外設置 `interval`，多久檢查一次，例如：daily、weekly  
-    ![](https://ithelp.ithome.com.tw/upload/images/20231009/2012068794KrBEJrrF.png)  
-    ![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687qVkDoCdow2.png)
+    ![](images/2012068794KrBEJrrF.png)  
+    ![](images/20120687qVkDoCdow2.png)
 
 ``` yaml
 version: 2
@@ -129,7 +129,7 @@ updates:
 ```
 
 當偵測到安全性問題時，會即時發送相關資訊給開發者，可以即時去處理。  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687CZcy2bGgIf.png)
+![](images/20120687CZcy2bGgIf.png)
 
 ### Ignore Files of Uploading
 
@@ -239,8 +239,8 @@ targets:
 "editor.formatOnSave": true,
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687ixaPOVTJTf.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687lc97kN04Yx.png)
+![](images/20120687ixaPOVTJTf.png)  
+![](images/20120687lc97kN04Yx.png)
 
 Dart 官方有持續針對 VSCode 做一些優化，使用 `quickfix` 和 `refactor` 提升開發效率，詳細資訊可以點擊連結查看：[Refactorings and Code Fixes](https://dartcode.org/docs/refactorings-and-code-fixes/)
 
@@ -257,8 +257,8 @@ Dart 官方有持續針對 VSCode 做一些優化，使用 `quickfix` 和 `refac
 "explorer.fileNesting.expand": false,
 ```
 
-![Hide Files for Same Scope](https://i.imgur.com/KzlUiWz.gif)  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687ZXxfYvxMar.png)
+![Hide Files for Same Scope](images/KzlUiWz.gif)  
+![](images/20120687ZXxfYvxMar.png)
 
 ### Hidden Info Appear
 
@@ -267,7 +267,7 @@ Flutter 3.7，支援使用快捷鍵瀏覽型別和參數名稱
 1.  Windows → 鍵盤同時點擊 `Ctrl + Alt`
 2.  MacOS → 鍵盤同時點擊 `Ctrl + Option`
 
-![Hidden Info Appear](https://i.imgur.com/kG6qjez.gif)
+![Hidden Info Appear](images/kG6qjez.gif)
 
 ### Class to File
 
@@ -276,8 +276,8 @@ Flutter 3.7，支援使用快捷鍵瀏覽型別和參數名稱
 1.  在類別上方點擊驚嘆號，或是使用 `option + enter`，開啟選單
 2.  點擊 `Move ‘XXX’ to file`
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687k3cjjV8q7D.png)  
-![Class to File](https://i.imgur.com/MBmJV60.gif)
+![](images/20120687k3cjjV8q7D.png)  
+![Class to File](images/MBmJV60.gif)
 
 ### Covert parameters to named
 
@@ -287,29 +287,29 @@ Flutter 3.7，支援使用快捷鍵瀏覽型別和參數名稱
 2.  在建構子上方點擊驚嘆號，或是使用 `option + enter`，開啟選單
 3.  點擊 `Covert all formal parameters to named`
 
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687OzGAztTwrG.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/2012068771bzWBdHJs.png)  
-![Covert parameters to named](https://i.imgur.com/acEVc4v.gif)
+![](images/20120687OzGAztTwrG.png)  
+![](images/2012068771bzWBdHJs.png)  
+![Covert parameters to named](images/acEVc4v.gif)
 
 ### Snippet for Generating Template
 
 透過提示生成無聊的樣板代碼，只需要幾秒即可完成數十行，例如：每個頁面的初始樣子，都是會使用 Stateless 或 StatefulWidget，其中 `build()` 的初始元件就是 Material、Scaffold，這些我們都可以不用花時間去撰寫，使用快捷提示節省時間。
 
 使用第三方網頁工具，例如 **vscodesnippetgenerator**，將每次都會出現的程式碼貼到 Body 區塊，請它幫我們生成 VSCode Snippet，可以設置 Snippet 名稱與命令。  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687uohNAgeD1M.png)
+![](images/20120687uohNAgeD1M.png)
 
 使用另一個工具 **snippet generator** 協助我們。  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687SCxiNXIFtu.png)
+![](images/20120687SCxiNXIFtu.png)
 
 接著點擊 **Configure User Snippets** 選項，打開 `dart.json` 設定檔，將我們生成的 Snippet 貼上就完成了  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/201206876lvnVHOw7n.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/201206876BCplu4ryt.png)
+![](images/201206876lvnVHOw7n.png)  
+![](images/201206876BCplu4ryt.png)
 
 以下是範例，一個簡單的頁面初始程式碼  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/201206872D5Dpra41O.png)
+![](images/201206872D5Dpra41O.png)
 
 結合實際開發場景，只要輸入自定義的命令就能生成準備好的程式碼，有效提升開發效率。  
-![Snippet](https://i.imgur.com/KEDLfj0.gif)
+![Snippet](images/KEDLfj0.gif)
 
 > 另外，我們也有其他方式能一次生成目錄結構以及檔案，可以使用 **Mason** 來協助我們，詳細請到另一篇文章 (等待發布)
 
@@ -352,7 +352,7 @@ void printAge(int age) {
 ### Records and Future extension
 
 Dart 3 新增了幾個新的 async api，包含 **FutureRecord2** ~ **FutureRecord9**，針對參數多寡去使用。主要讓我們可以使用 Record 執行 `wait()` 擴充方法，等待所有非同步任務執行完成，回傳值就是 Record 結果。並且多了 **ParallelWaitError** 類別，可以使用 try catch 捕捉，其中 error 當中有兩個屬性，一個是 values (valueOrNull)，代表成功回傳值 Record 清單，一個是 errors (errorOrNull) 失敗錯誤 Record 清單。兩個清單都非同步結果可能有值也可能因為錯誤而是 null，就需要自行判斷檢查了。  
-![](https://ithelp.ithome.com.tw/upload/images/20231009/20120687aAJSSsHJfq.png)
+![](images/20120687aAJSSsHJfq.png)
 
 ``` dart
 // Old

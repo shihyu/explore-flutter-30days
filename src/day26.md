@@ -135,7 +135,7 @@ maestro test -c flows/LaunchApp.yaml
 maestro test maestro/flows/GoThirdAndScroll.yaml
 ```
 
-![Single Flow](https://i.imgur.com/MbxVoYb.gif)
+![Single Flow](images/MbxVoYb.gif)
 
 ### 執行完整多 Flow 測試
 
@@ -183,7 +183,7 @@ maestro test --format junit flows/
 
 ![](https://ithelp.ithome.com.tw/upload/images/20231011/20120687JuNF6DaTA7.png)  
 ![](https://ithelp.ithome.com.tw/upload/images/20231011/20120687UzVtGwqZi7.png)  
-![Maestro Studio](https://i.imgur.com/NQ4ZzZ2.gif)
+![Maestro Studio](images/NQ4ZzZ2.gif)
 
 ### 錄製影片
 
@@ -297,7 +297,7 @@ fi
 echo
 ```
 
-![run_test](https://i.imgur.com/hlFEoKv.gif)
+![run_test](images/hlFEoKv.gif)
 
 ### shutdown_simulator.sh
 
@@ -337,7 +337,7 @@ xcrun simctl list
 
 ## Demo
 
-![Demo](https://i.imgur.com/1P3oTQl.gif)  
+![Demo](images/1P3oTQl.gif)  
 ![](https://ithelp.ithome.com.tw/upload/images/20231011/20120687dCvThFrHXc.png)
 
 ------------------------------------------------------------------------

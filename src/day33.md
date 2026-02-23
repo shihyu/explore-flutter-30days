@@ -22,7 +22,7 @@
 再三強調快速迭代的重要性後，我們接下來的系列就是實作 CI/CD 的環節啦 🎉，這是幫助我們快速迭代的重要流程。首先給對 CI/CD 不熟悉的同學們來一段科普，CI/CD 是由 **CI(Continuous integration)「持續整合」** 和 **CD(Continuous Deployment)「持續佈署」** 兩個單字組成。下面我們就來詳細看一下持續整合和持續部署，應該包含哪些部分。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230918/2011736384JItjjc4F.png)
+![](images/2011736384JItjjc4F.png)
 
 
 ### 持續整合（CI）
@@ -120,7 +120,7 @@ CI/CD 可以被看成一個整體的流程，根據每個專案或團隊的不�
 系列開始的第一天就先來簡單介紹一下 **GitHub Action**，GitHub Action 是 GitHub 的本家出品的 workflow 工具，而且非常佛心的是：即使是免費版的每個月也有 2000 分鐘的使用權，對於一般的小專案來說絕對是綽綽有餘。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230918/20117363JKJ5amHZVm.png)
+![](images/20117363JKJ5amHZVm.png)
 
 
 那要怎麼使用 GitHub Action 呢，當然首先要把專案上傳到 GitHub 上，這部分就不做演示了，接下來到根目錄，新增 `.github` 的資料夾，再新增 `workflows` 的資料夾，裡面放上我們今天要測試的檔案 `github_action.yaml`。最會像這樣 `.github/workflows/github_action.yaml`
@@ -213,7 +213,7 @@ run: echo "Hello World GitHub Action"
 在我們設定好 push 到 main branch 就會觸發的條件之後，接下來我們嘗試 push 看看。到 GitHub 的 repository 底下，切換到 `Actions`，就可以發現 “`Hellow World GitHub Aaction"`已經成功被執行並且印出來了！
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230918/20117363IC8vA72Qlk.png)
+![](images/20117363IC8vA72Qlk.png)
 
 
 ## 結語

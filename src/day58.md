@@ -119,7 +119,7 @@ return oldDelegate.spacing != spacing;
 
 
 展示效果：
-![](https://ithelp.ithome.com.tw/upload/images/20231013/20117363PHlZ6WKxc4.png)
+![](images/20117363PHlZ6WKxc4.png)
 
 
 我們專注來看 `paintChildren`，是如何幫助我實現這個目標
@@ -282,7 +282,7 @@ return oldDelegate.spacing != spacing;
 效果展示：
 
 
-[gif](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWVpcWE2djEwcjhmdGF5bDduMjI2a3AxaGhkb2tmNzFpdzN4eTl6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IZLAUjl6eYerE9oSFO/giphy.gif)
+[gif](images/giphy.gif)
 
 
 ## 結論：

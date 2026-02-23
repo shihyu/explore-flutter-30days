@@ -23,7 +23,7 @@ Flutter 因為要同時兼顧 Android 和 iOS 兩個版本，所以這部分的�
 code magic 應該是最早開始就對 Flutter 的 CI/CD 提供支援，設置起來簡單順手，Flutter 的官方文件裡面也有推薦他，如果你還是入門新手**強烈推薦**。針對個人開發者而言，他也提供每個月 500 分鐘的免費額度。一個入門級的 App build 所需的時間大該落在 30 分鐘，也就是一個月可以免費使用 16~17 次左右，如果只是拿來做上版使用，也很夠用了。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230920/20117363DfbjMnUY3n.png)
+![](images/20117363DfbjMnUY3n.png)
 
 
 code magic 的教學可以到 官方文件查看 就有很詳細的說明，只熟悉中文的朋友也可以看看這篇，我的好朋友 Yii 的文章，也有很詳細的教學。
@@ -38,7 +38,7 @@ code magic 的教學可以到 官方文件查看 就有很詳細的說明，只�
 GitHub Action 上面跑的話雖然設定起來比較麻煩，但總歸是比較便宜，如果你的公司要同時掌管多個 App 的上架或是需要時常進行上版的工作，那就可以考慮使用 GitHub Action。但是要特別注意一點，在 GitHub Action 上，跑不同的 OS 他算的價格會不一樣。如果跑在 GitHub Action 的 macOS 上跑一分鐘等於消耗十分鐘，所以原先免費 2000 分鐘，如果都是跑在 macOS 上，那就會只剩下 **200** 分鐘，這點要十分注意。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230920/201173635kV6RSgBPC.png)
+![](images/201173635kV6RSgBPC.png)
 
 
 詳細可以參考 **GitHub**
@@ -147,7 +147,7 @@ status: inProgress
 [upload-google-play](https://github.com/r0adkll/upload-google-play) 的用途便是透過 `SERVICE_ACCOUNT_JSON` ，幫我們把 aab 上傳到 google play console ，除了上傳 aab 以外，還提供了 what’s new 的文字檔案上傳，和其他更細緻的調整都可以做設置。不過到這裡大家可能會有疑問 `SERVICE_ACCOUNT_JSON`是從哪裡來的，因為這不是本部分的重點，詳細步驟可以參考[這裡](https://docs.appcircle.io/account/adding-google-play-service-account/)。主要就是到 google play，找到  API 存取權，並依照他後續的設定取得 json 檔案。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230920/20117363dGIuYGNaBg.png)
+![](images/20117363dGIuYGNaBg.png)
 
 
 在取得 `SERVICE_ACCOUNT_JSON` 之後，需要讓他放在一個安全的地方，只在需要用到的時候去呼叫，直接放在 git 裡面並不是一個好的做法。好在 GitHub 有為我們提供了 GitHub Secrect，他讓我們把機密資料存放在 secrect 中，透過 GitHub 的權限管理，讓其他開發人員無法直接看到 `SERVICE_ACCOUNT_JSON` 是什麼。
@@ -159,7 +159,7 @@ status: inProgress
 首先打開 GitHub 頁面，選到 Secret and variables → Actions，在這個頁面下我們就可以點擊 New repository secret，然後把剛剛得到的 `SERVICE_ACCOUNT_JSON` 貼進去，這樣就完成設定的動作摟，接下來只要再跑一次 workflow 就可以使用最新的 secrets 啦 🎉 用法就如上面的程式碼 `${{secrets.SERVICE_ACCOUNT_JSON}}` 就可以瞜。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230920/20117363FVzc9EvjAb.png)
+![](images/20117363FVzc9EvjAb.png)
 
 
 ## Build and Upload iOS

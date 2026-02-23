@@ -4,22 +4,22 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10337515>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 25 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/201206871V0WIh1EvR.png)
+![](images/201206871V0WIh1EvR.png)
 
 **Mason** 是什麼？它可以有效的幫我們提升開發效率，避免花費不必要的時間在創建檔案或是無聊的代碼上，根據自己和公司的開發習慣去自定義模板和生成結果，很值得投資的一個工具，很棒的是不局限於 Dart 或是 Flutter，透過 **Mustache** 語法撰寫符合自己需求的模板，真的是非常便利。
 
 在開始之前，先讓大家瀏覽實際的使用過程：  
-![Mason](https://i.imgur.com/ec0UMQ0.gif)
+![Mason](images/ec0UMQ0.gif)
 
 接著跟著我往下了解它吧～
 
 ------------------------------------------------------------------------
 
 Mason 是一個很便利的模板生成工具，由 Bloc、Mocktail 和 equatable 作者 **Felix Angelov** 開發，一位 Flutter 領域裡很有影響力的開發者，目前在 Shorebird 繼續貢獻著。  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687FLHQH4BPpP.png)
+![](images/20120687FLHQH4BPpP.png)
 
 Mason 工具也是一個平台，讓大家能夠撰寫自己的 **brick** 磚塊，磚塊就代表模板代碼，製作完成後將它上傳到 **BrickHub**，也就像 PubDev 一樣，開源公開，讓大家互相地分享與使用磚塊。重點核心就是節省時間，提升開發效率。  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687bO8X1bnppF.png)
+![](images/20120687bO8X1bnppF.png)
 
 - **`Brick`** → 為積木、磚塊，包含已經準備好的檔案跟程式碼，預期的結構與格式，透過執行命令讓它幫我們生成代碼
 - **`BrickHub`** → 一個雲端共享平台，可以在上面進行分享，或是尋找其他開發者提供的 Brick 專案，將它們安裝和使用在自己的專案裡
@@ -34,8 +34,8 @@ Mason 工具也是一個平台，讓大家能夠撰寫自己的 **brick** 磚塊
 dart pub global activate mason_cli
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687xdFVucaluy.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687FLE9xlEfqh.png)
+![](images/20120687xdFVucaluy.png)  
+![](images/20120687FLE9xlEfqh.png)
 
 ## 初始化 Mason
 
@@ -45,8 +45,8 @@ dart pub global activate mason_cli
 mason init
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/201206874JRDmrNDVa.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687lFsaPHbC2h.png)
+![](images/201206874JRDmrNDVa.png)  
+![](images/20120687lFsaPHbC2h.png)
 
 ## 設置 Brick
 
@@ -59,7 +59,7 @@ good:
     path: ./mason/good
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687OBViFPp98L.png)
+![](images/20120687OBViFPp98L.png)
 
 ### ****2. Git****
 
@@ -71,7 +71,7 @@ clean_architecture_feature_riverpod:
       url: https://github.com/chyiiiiiiiiiiii/clean_architecture_feature_riverpod
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687o0CI74u5gx.png)
+![](images/20120687o0CI74u5gx.png)
 
 ## 下載 Brick
 
@@ -81,7 +81,7 @@ clean_architecture_feature_riverpod:
 mason get
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687zFTwnSMySu.png)
+![](images/20120687zFTwnSMySu.png)
 
 ## 執行/使用 Brick
 
@@ -98,7 +98,7 @@ mason make <brick-name>
 mason make hello
 ```
 
-![Use Brick](https://i.imgur.com/I5v5gLa.gif)
+![Use Brick](images/I5v5gLa.gif)
 
 ### 2. 命令參數
 
@@ -122,8 +122,8 @@ mason make hello -name Yii
 mason make hello -c config.json
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687BaN9RK4FvU.png)  
-![Config](https://i.imgur.com/UtSyzWo.gif)
+![](images/20120687BaN9RK4FvU.png)  
+![Config](images/UtSyzWo.gif)
 
 ------------------------------------------------------------------------
 
@@ -138,15 +138,15 @@ mason make hello -c config.json
 mason new <name>
 ```
 
-![Create Brick](https://i.imgur.com/1O1mLUG.gif)
+![Create Brick](images/1O1mLUG.gif)
 
 創建積木後會有5個檔案
 
 - `__brick__` → 裡面的資料夾和檔案都是會生成出來的東西
 - `brick.yaml` → 積木設定檔，跟 `pubspec.yaml` 一樣，擁有基本的名稱、描述、積木版本、Mason 版本，以及相關可互動參數，建議給個完整且好閱讀的內容
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687tXRMkGSS0c.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687b16Z4fcvFM.png)
+![](images/20120687tXRMkGSS0c.png)  
+![](images/20120687b16Z4fcvFM.png)
 
 ### 撰寫生成內容
 
@@ -163,8 +163,8 @@ mason new <name>
 
 > Brick Syntax - <https://docs.brickhub.dev/brick-syntax/#built-in-lambdas>
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687qI7D669Svp.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687ozUdgW2l0B.png)
+![](images/20120687qI7D669Svp.png)  
+![](images/20120687ozUdgW2l0B.png)
 
 針對頁面，此範例自定義了元件內容，包含類別名稱，使用了 `pascalCase` 駝峰，而因為使用到 **Riverpod** 框架與 **flutter_hook** 進行開發，所以本身繼承 HookConsumerWidget，這個模板可以成為每個頁面的初始樣式
 
@@ -183,7 +183,7 @@ class {{feature_name.pascalCase()}}Page extends HookConsumerWidget {
 ```
 
 生成出來的檔案內容：  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687eL48oCazPp.png)
+![](images/20120687eL48oCazPp.png)
 
 也可以根據條件、布林值決定是否要生成對應內容
 
@@ -222,15 +222,15 @@ vars:
 - ****Packages**** → 結合的相關套件
 - ****Output**** → 目錄與檔案結構
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687WCgomTIHrX.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687X6poL31JzI.png)
+![](images/20120687WCgomTIHrX.png)  
+![](images/20120687X6poL31JzI.png)
 
 ## 發布 Brick
 
 ### 1. 登入 BrickHub
 
 之前還在早期階段，所以需要向官方申請權限，只能用驗證過的 Email 去註冊會員。申請後大概要等 1 ~ 2 週才會收到通知，這時後就能正常部署 Brick 到雲端平台了。  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687kKJzHYSG2E.png)
+![](images/20120687kKJzHYSG2E.png)
 
 註冊完成後，在本地使用 CLI 登入帳戶
 
@@ -238,7 +238,7 @@ vars:
 mason login
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/201206871Oa5SUWABA.png)
+![](images/201206871Oa5SUWABA.png)
 
 ### 2. 上傳 BrickHub
 
@@ -248,10 +248,10 @@ mason login
 mason publish
 ```
 
-![BrickHub](https://i.imgur.com/zHHrqwt.gif)
+![BrickHub](images/zHHrqwt.gif)
 
 成功後 Brick 就會在 **BrickHub** 上公開讓大家使用。在這提醒一下，請確保自己的東西沒有人上傳過，而且是正確的，因為發布後就無法下架了，除了避免隨意上傳的問題，也要避免濫用服務。  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687HQllt5QRTx.png)
+![](images/20120687HQllt5QRTx.png)
 
 ------------------------------------------------------------------------
 
@@ -261,11 +261,11 @@ mason publish
 
 > [Brick - **clean_architecture_feature_riverpod**](https://brickhub.dev./bricks/clean_architecture_feature_riverpod/)
 
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687FdtvWMamg0.png)
+![](images/20120687FdtvWMamg0.png)
 
 完整的目錄與檔案，這些都是 Brick 生成出來的東西， 使用 `mustache` 寫法完成  
-![](https://ithelp.ithome.com.tw/upload/images/20231010/20120687HZfU7UVvSe.png)  
-![Share](https://i.imgur.com/ybXAhG3.gif)
+![](images/20120687HZfU7UVvSe.png)  
+![Share](images/ybXAhG3.gif)
 
 其他平台上的好磚塊：
 

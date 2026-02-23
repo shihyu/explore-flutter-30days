@@ -150,7 +150,7 @@ bool developerMode = await FlutterJailbreakDetection.developerMode; // android o
 在 GitHub 的檔案上面，你就會看到一個小小的藍色盾牌。表示這個檔案已經受到保護摟～
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20117363HSfvTi87wd.png)
+![](images/20117363HSfvTi87wd.png)
 
 
 ### 7. fork 重要 package 避免對方的 repo 已經被 hack

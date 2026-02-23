@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10332083>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 16 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687Kwlcbodsha.png)
+![](images/20120687Kwlcbodsha.png)
 
 相信大部分 APP 都會使用到圖片，可能場景有貼文牆、大頭照、上傳圖片等等，在實作時大家是否有關心過記憶體的使用情況呢？或許在開發時、在自己的裝置上都運行的順暢，沒有什麼問題，但有確定在使用者的裝置上表現會相同嗎？本文就這部分，有關圖片、圖像的使用，要跟大家分享一些開發觀念、使用技巧與工具，如何讓我們有效率的存取它們，並確保 APP 的記憶體有正常使用，避免不當消耗。
 
@@ -88,15 +88,15 @@ final file = await FlutterImageCompress.compressAndGetFile(
 以下提供相關的網站和工具：
 
 1.  **Squoosh** → GoogleChromeLab 推出的開源專案，處理速度快，在壓縮後可瀏覽前後的圖像對比照，輸出高品質的壓縮圖像。[網站](https://squoosh.app/)  
-    ![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687S7VJ4KQZci.png)
+    ![](images/20120687S7VJ4KQZci.png)
 
 2.  **tinypng** → 知名熊貓，進行有損壓縮，減少圖像中的顏色數量，降低 WEBP、JPEG 和 PNG 的檔案大小。[網站](https://tinypng.com/)  
-    ![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687Bmqcv0ZzeE.png)
+    ![](images/20120687Bmqcv0ZzeE.png)
 
 3.  **ImageOptim** → macOS App，可以直接到官網下載，使用起來直覺簡單，只需要將圖檔拉進去、匯入，圖片就會自動開始處理，壓縮後直接覆蓋原檔。[網站](https://imageoptim.com/mac)
 
 > [Github](https://github.com/ImageOptim/ImageOptim)  
-> ![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687oSuF0aEvLD.png)
+> ![](images/20120687oSuF0aEvLD.png)
 
 ## 限制寬高，不儲存過大的圖像
 
@@ -109,7 +109,7 @@ final file = await FlutterImageCompress.compressAndGetFile(
 3.  載入的時間更短、更快
 4.  保持順暢，體驗避免卡頓
 5.  提升渲染圖像的性能  
-    ![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687FNz0ivlh3P.png)
+    ![](images/20120687FNz0ivlh3P.png)
 
 #### 設置緩存大小
 
@@ -123,14 +123,14 @@ Image.asset(
 ),
 
 Image.network(
-    'https://storage.googleapis.com/cms-storage-bucket/70760bf1e88b184bb1bc.png',
+    'images/70760bf1e88b184bb1bc.png',
     cacheWidth: 100,
     cacheHeight: 100,
 ),
 ```
 
 假設有設置 `cacheWidth` 或是 `cacheHeight` 兩個參數，內部會使用 ResizeImage 進行處理，將圖像 decode 成指定尺寸的 ImageProvider。在處理過後可能會失去一些細節，不過使用上的記憶體可以有效減少。  
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687MVZa5XFWk8.png)
+![](images/20120687MVZa5XFWk8.png)
 
 自行處理圖像的範例：  
 透過 MediaQueryData 取得螢幕尺寸和像素比，根據 `scale` 計算出新的尺寸，最後返回新的 ImageProvider 讓元件使用。
@@ -155,13 +155,13 @@ ImageProvider optimizeImageSizeWithScale(
 Image(
   image: optimizeImageSizeWithScale(
     context,
-    imageProvider: const NetworkImage('https://upload.wikimedia.org/wikipedia/commons/4/4f/Dash%2C_the_mascot_of_the_Dart_programming_language.png'),
+    imageProvider: const NetworkImage('images/Dash%2C_the_mascot_of_the_Dart_programming_language.png'),
     scale: 0.8,
   ),
 ),
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231001/201206872DO3zmT8YR.png)
+![](images/201206872DO3zmT8YR.png)
 
 #### 從設備抓取圖像
 
@@ -196,7 +196,7 @@ precacheImage(AssetImage(imgPath), context);
 precacheImage(NetworkImage(imgUrl), context);
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687In64EnK2S4.png)
+![](images/20120687In64EnK2S4.png)
 
 - 使用 **cached_network_image** 套件時，很常會搭配 **flutter_cache_manager** 套件，有自己的 CacheManager 去進行緩存管理，可以在 APP 一開始或是過渡時間進行遠端的圖片緩存
 
@@ -253,8 +253,8 @@ Flutter 支援解析度感知(resolution awareness)，根據設備像素比載�
 dart tools/allocate_images.dart ./assets/images
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687AJx9F0dIYa.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687ZxihNOMFIi.png)
+![](images/20120687AJx9F0dIYa.png)  
+![](images/20120687ZxihNOMFIi.png)
 
 > [Github: flutter-tips-and-tricks](https://github.com/chyiiiiiiiiiiii/flutter-tips-and-tricks/tree/main/tips/0001-use-dart-program-to-allocate-resolution-images)
 
@@ -268,7 +268,7 @@ const AspectRatio(
     aspectRatio: 1.77,
     child: Image(
         image: NetworkImage(
-      'https://upload.wikimedia.org/wikipedia/commons/4/4f/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+      'images/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
     ),
   ),
 ),
@@ -284,7 +284,7 @@ const AspectRatio(
 // Add white with opacity 0.5
 Image(
     image: NetworkImage(
-    'https://upload.wikimedia.org/wikipedia/commons/4/4f/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+    'images/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
     ),
     color: Color.fromRGBO(255, 255, 255, 0.5),
     colorBlendMode: BlendMode.modulate,
@@ -293,14 +293,14 @@ Image(
 // Add green color
 Image(
     image: NetworkImage(
-    'https://upload.wikimedia.org/wikipedia/commons/4/4f/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
+    'images/Dash%2C_the_mascot_of_the_Dart_programming_language.png',
     ),
     color: Color.fromRGBO(160, 239, 180, 1),
     colorBlendMode: BlendMode.modulate,
 )
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687nCZx8rfF4p.png)
+![](images/20120687nCZx8rfF4p.png)
 
 ## 添加 Blurhash 載入效果
 
@@ -319,8 +319,8 @@ Image(
 
 ### 效果範例
 
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687pu8gXURVxb.png)  
-![Blurhash](https://i.imgur.com/LRuwmMU.gif)
+![](images/20120687pu8gXURVxb.png)  
+![Blurhash](images/LRuwmMU.gif)
 
 ### 開發方式
 
@@ -348,7 +348,7 @@ final blurHash = BlurHash.encode(image!, numCompX: 4, numCompY: 3);
 ``` dart
 BlurHash(
     hash: r'LBS?GdOG-;$zxua}jtj?~VxCITSi',
-    image: 'https://storage.googleapis.com/cms-storage-bucket/70760bf1e88b184bb1bc.png',
+    image: 'images/70760bf1e88b184bb1bc.png',
     duration: const Duration(seconds: 2),
     onStarted: onStarted,
     onDecoded: onDecoded,
@@ -409,7 +409,7 @@ class MyImage extends StatelessWidget {
 ## 標示大型圖像
 
 使用 debugInvertOversizedImages 通過顏色反轉和顛倒來標示體積過大、使用大量記憶體的圖像。  
-![](https://ithelp.ithome.com.tw/upload/images/20231001/20120687yQkH9rOkcg.png)
+![](images/20120687yQkH9rOkcg.png)
 
 如果不想開啟 DevTools 也可以在主函式 `main()` 設置。
 

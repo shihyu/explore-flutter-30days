@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10330647>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 14 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687vVwg8lTVBc.png)
+![](images/20120687vVwg8lTVBc.png)
 
 當我們開發 Flutter 一段時間後，想必都會有自己習慣的開發方式跟技巧，但有時候很方便、速度快的方式卻不代表是好的，有可能開發上很省時卻導致性能有缺陷，記憶體使用過多。有實際去了解並驗證過嗎？當我們熟悉開發技巧、熟悉產品後，就會想要往高品質前進，希望提供的給用戶的東西是很棒的，這點沒錯吧！而良好的開發習慣也能幫助到自己或是團隊，不管是效率、程式碼可讀性、專案可維護性等等，這些是本文想要跟大家分享的內容，希望一起養成好習慣，我們馬上往下開始吧！
 
@@ -79,31 +79,31 @@ x == y // true
 #### 不建議
 
 1.  使用 functional-widget 沒辦法賦予 `const`，每次 rebuild 都是一個消耗，記憶體使用上升  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687CdAjhXKd73.png)
+    ![](images/20120687CdAjhXKd73.png)
 
 2.  **Widget Inspector** 上查看到的會是第一個包裹元件，以例子來看就都是 Container，這裡不會顯示 function 名稱，在龐大的樹中你很難了解這是什麼元件、它在 APP 上的樣子  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687cMBiEEP99Y.png)
+    ![](images/20120687cMBiEEP99Y.png)
 
 3.  當錯發生時可以知道是哪個 function 出問題，不過資訊顯示上會比較多  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687CblxpeMsjX.png)
+    ![](images/20120687CblxpeMsjX.png)
 
 4.  假設有使用 ****Crashlytics**** 或是 **Sentry** 這類的錯誤捕捉服務，資訊會有所不同。以 Sentry 範例來看，標題為是顯示哪個 Route，也就是哪個頁面發生問題，沒有辦法精準定位。  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687yK3SBPnVaZ.png)
+    ![](images/20120687yK3SBPnVaZ.png)
 
 #### 正確方式
 
 1.  當我們使用自定義的元件，在沒有動態參數的情境下，可以給予 `const`，有效節省資源。並且可讀性、穩定性高  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687imSAsVs6xR.png)
+    ![](images/20120687imSAsVs6xR.png)
 
 2.  **Widget Inspector** 上的瀏覽很簡單、輕鬆，直接看出來是哪些元件，可讀性高，會更讓人願意使用工具幫忙解決問題  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687B9lHzSG90n.png)
+    ![](images/20120687B9lHzSG90n.png)
 
 3.  當發生錯誤時，在 **Stack Trace** 可以直接知道是哪個元件發生問題，資訊顯示上更精簡  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687ZVJE29zwQ9.png)  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687nhPk9ShIBy.png)
+    ![](images/20120687ZVJE29zwQ9.png)  
+    ![](images/20120687nhPk9ShIBy.png)
 
 4.  **Sentry** 能搜集到的資訊也更明確，標題直接顯示哪個檔案的哪個元件有問題，下方的 **Stack Trace** 流程一樣很好理解  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687fcl6rigdVo.png)
+    ![](images/20120687fcl6rigdVo.png)
 
 > 請養成創建元件的習慣，除了好處多以外，也幫專案品質跟團隊想想吧，讓自己和大家都能夠輕鬆開發。
 
@@ -113,14 +113,14 @@ x == y // true
 
 1.  預設在一開始創建的時候就會適應 Parent 給的約束，自動帶有長寬、限定大小，而且因為會根據 Parent 而動態更新，導致無法設置 `const` constructor
 2.  在這種情況之下，我們每使用一個 Container 就會創建一個新的實體，也代表記憶體使用會持續增加  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687r0SQTPjctc.png)
+    ![](images/20120687r0SQTPjctc.png)
 
 #### SizedBox
 
 1.  大部分的使用上都可以為 `const`，有設置 `const` 建構子，長寬不需設置也不會被約束影響，能以高效的方式實現空白 placeholder
 2.  以最常使用的 `SizedBox.shrink()` 來看，一開始就設置長寬為 0，不會佔 UI 任何空間
 3.  直接面對 **SingleChildRenderObjectWidget** 本身，裡面只有針對 **BoxConstraints** 去做設置，內容很單純  
-    ![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687IwinUeELlQ.png)
+    ![](images/20120687IwinUeELlQ.png)
 
 ## 使用 StatefulBuilder 進行局部更新
 
@@ -160,7 +160,7 @@ await showDialog<void>(
 - context 操作包含 `of(context)` 靜態函式的 InheritedWidget 存取
 
 預設的 `flutter_lints` 都會即時顯示提醒，說明不要在執行非同步任務後存取 **BuildContexts**。  
-![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687GQwnGG04h7.png)
+![](images/20120687GQwnGG04h7.png)
 
 需要在存取 BuildContexts 之前，先透過 `mounted` 確保 State 跟隨 Element 在樹，如果沒有則不進行後續處理。
 
@@ -211,7 +211,7 @@ void initState() {
 }
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687RHuIR4UOFt.png)
+![](images/20120687RHuIR4UOFt.png)
 
 #### 正確方式
 
@@ -227,8 +227,8 @@ void initState() {
 ```
 
 在使用 **AnimatedBuilder** 時，記得將不需要動畫、不會受動畫影響的子元件透過 `child` 參數設置，並在 `builder` 裡拿來使用。  
-![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687JjhLwabgHy.png)  
-![AnimatedBuilder](https://i.imgur.com/Js1IiPg.gif)
+![](images/20120687JjhLwabgHy.png)  
+![AnimatedBuilder](images/Js1IiPg.gif)
 
 ## 避免 Opacity 搭配 Animation
 
@@ -293,8 +293,8 @@ AnimatedOpacity(
 ),
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20230929/20120687lEvWne1k9s.png)  
-![AnimatedOpacity](https://i.imgur.com/CHTLOyG.gif)
+![](images/20120687lEvWne1k9s.png)  
+![AnimatedOpacity](images/CHTLOyG.gif)
 
 ## 滾動元件 Scrollable Widget
 

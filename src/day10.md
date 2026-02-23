@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10327324>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 10 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/201206879BSU83axid.png)
+![](images/201206879BSU83axid.png)
 
 為什麼在 Flutter 開發中很常會需要 **Async** 非同步操作？因為畫面的互動、繪製刷新都是在同步的狀況下運行，為了順暢運行，需要一秒快速進行多次的渲染處理，而當我們要執行無法預期時間的相關操作或是繁重任務時，就會需要非同步來幫忙。但非同步本身的工作如果消耗的時間更久更麻煩的話，這時候就會需要 **Isolate** 隔離的協助。這兩個角色對於開發來說很重要，我們需要了解他們是什麼，以及在某些情境下該用誰來處裡任務，才能讓 APP 保持高效運行，讓使用者操作的很舒適。
 
@@ -17,13 +17,13 @@
 - 1 Thread、1 Processor
 - Flutter 在主隔離(Main Isolate)上運行，而隔離在運行時會有自己的 **Event Loop** 和兩個 Queue，就像一個無限循環，裡面經由 **Event Queue** 和 **Microtask Queue** 處理著所有請求和任務
 - `Event Queue` → 處理大部分任務和來自用戶的操作，例如：手勢、點擊螢幕、I/O操作、佈局、繪製、繪圖、Timer、Steam等等，它們都會被加入 Queue 中，接著按照順序在 Event Loop 處理。舉例來說：為了順暢的用戶體驗，Flutter 每秒60次向 Event Queue 添加 repaint 事件  
-  ![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687u4q3RvlCQc.png)
+  ![](images/20120687u4q3RvlCQc.png)
 
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687ITAcR65Cla.png)
+![](images/20120687ITAcR65Cla.png)
 
 - `Microtask Queue` → 負責由內部系統操作生成的任務，比用戶啟動的任務有更高的優先級。意思是只要 Microtask Queue 有任務要處理，就會先暫停 Event Queue 的工作，以 Microtask 為優先，頻繁地在兩邊進行轉換
 
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687dLPOM5U8GJ.png)
+![](images/20120687dLPOM5U8GJ.png)
 
 ------------------------------------------------------------------------
 
@@ -41,20 +41,20 @@
 #### Flutter 是單線程卻能夠運作順暢
 
 整個 **Rendering Pipeline** 都是在同步中進行，所以當 `Event loop` 知道要進行佈局、繪製等操作的時候，就會讓非同步任務先暫停並等待 Pipeline 執行結束後再繼續，這樣就不會因為進行耗時操作卡住 UI。這也是為什麼使用 `setState()` 刷新只能是同步操作的原因。  
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687d0Q8Ufct3I.png)
+![](images/20120687d0Q8Ufct3I.png)
 
 不會單線程畢竟有它的侷限，當有一些比較重的同步任務，例如：解析大量 json、處理圖片、長時間IO，處理過程可能會超過一個 vsync 時間，這樣 Flutter 就不能即時將 layer 送到 GPU 線程，會導致 APP janking 卡頓，這時候我們就會需要 Isolate 來幫忙解決這個問題。
 
 > 說明：vsync 代表每一幀的渲染信號，通常在開發動畫、使用 AnimationController 時就會遇到，而如果以 60 幀順暢運行來說，一幀的時間就是 16 毫秒。
 
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687Ev33lJcXPE.png)
+![](images/20120687Ev33lJcXPE.png)
 
 舉例：
 
 1.  在跟人聊天的時候，快速檢查手機訊息，短短0.5秒停頓，對方感受不出來
 2.  在跟人聊天的時候，這時剛好有重要訊息需要確認，可能盯著訊息5秒以上，接著再回來這段對話，對方應該會覺得尷尬或不舒服，而這個情況就會需要 Isolate 幫忙處理
 
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687engI66V2ut.png)
+![](images/20120687engI66V2ut.png)
 
 ## Isolates 隔離
 
@@ -86,13 +86,13 @@ await compute(_printName, 'Yii');
 
 - 第一個參數 → 運行的 function 名稱，可提供一個參數
 - 第二個參數 → function 的參數，如果需要多個參數的話可以使用 Map、List 等等包裝  
-  ![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687ByHqNfGx4l.png)
+  ![](images/20120687ByHqNfGx4l.png)
 
 ### 使用方式 spawn()
 
 負責 **long-lived** background tasks 長時間的複雜運算與處理，我們可以自定義隔離，使用 `spawn()` 創建，並透過 Port API 讓 main isolate 與 worker isolate 溝通。  
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687kMdAw983r7.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687ulhHmojZcD.png)
+![](images/20120687kMdAw983r7.png)  
+![](images/20120687ulhHmojZcD.png)
 
 #### Isolate.spawn() - 建立隔離
 
@@ -138,7 +138,7 @@ await streamQueue.next;
 await streamQueue.cancel();
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687J3kkInxaCj.png)
+![](images/20120687J3kkInxaCj.png)
 
 1.  `next()` → 負責取得其他 Isolates 透過 `SendPort` 傳送的訊息
 2.  `cancel()` → 停止 Stream，也就是停止訊息資料的監聽
@@ -247,7 +247,7 @@ void main(List<String> arguments) async {
 }
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20230925/20120687POZj0RI4fv.png)
+![](images/20120687POZj0RI4fv.png)
 
 > Source: [dart_isolate](https://github.com/chyiiiiiiiiiiii/dart_isolate)
 

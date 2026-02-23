@@ -85,7 +85,7 @@ stackTrace: stackTrace,
 回到 Sentry 後台 可以看到我們的錯誤已經被收錄進去摟！
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230921/201173639FTXm8veWH.png)
+![](images/201173639FTXm8veWH.png)
 
 
 ### 步驟 3：監控自定義數據
@@ -103,13 +103,13 @@ Sentry.configureScope((scope) => scope.setUser(SentryUser(id: 'test_id')));
 到 Sentry 後台的詳細頁面就可以看到，user 已經被我們紀錄上去
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230921/201173637LYUMwoTgv.png)
+![](images/201173637LYUMwoTgv.png)
 
 
 接下來如果需要針對某位 user 的行為做追蹤也很方便，可以到搜尋欄位直接打上 `user.id:test_id`
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230921/20117363nE7UGwADUb.png)
+![](images/20117363nE7UGwADUb.png)
 
 
 ## Sentry Performance
@@ -147,7 +147,7 @@ await innerSpan.finish();
 回到 Sentry 後台
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230921/20117363EqaSFvrVHN.png)
+![](images/20117363EqaSFvrVHN.png)
 
 
 就能找到我們追蹤的 function ，看到他執行的時間有確實的被記錄下來。

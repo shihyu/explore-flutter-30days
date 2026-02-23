@@ -24,10 +24,10 @@
 下面兩張圖片來自於 [Flutter 的官方頻道](https://www.youtube.com/watch?v=vd5NqS01rlA&t=62s)，我們在畫面上創建了 FlutterLogo 這個 widget，而 Widget 也會產生對應的 RenderObject ，而這些 RenderObject 們擁有各自不同的實作，會形成一個 Render Tree。Render Tree 產生後再把這些轉譯成為繪製的語言，也就是 Display List 要做的事情，最後透過渲染引擎去做渲染，然後呈現在畫面（Surface Texture）上。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20117363d5m3WsuCIi.png)
+![](images/20117363d5m3WsuCIi.png)
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20117363Xx2YvKhxFQ.png)
+![](images/20117363Xx2YvKhxFQ.png)
 
 
 ### Skia → Impeller
@@ -45,7 +45,7 @@ compilation jank 是長久以來 Flutter 一直存在的問題，因為 Skia 在
 為了要深入理解 Impeller 是如何解決問題的，要介紹一下 Impeller 的渲染流程，如同我們上面所介紹的，FlutterLogo 這個 Widget 在產生 RenderObject 並且轉化成繪製路徑的時候，就是引擎介入的部分，對於 Impeller 來說，每個繪畫的步驟如：DrawPathOp 都會產生跟實體（Entity），而每個實體就包含他要繪畫的內容，這些要內容要通過哪些繪圖指令來實作，會寫在 Contents 裡面，所以對於不同類型會對應不同的 Contents 來完成繪畫的指令。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/201173639lnWvct1lJ.png)
+![](images/201173639lnWvct1lJ.png)
 
 
 來看一下 Impeller 整體的架構，Display List 首先透過 Aiks 來產生 Entities 並完成繪圖指令，再透過 Hardware Abstraction Layer 會根據不同的平台，去呼叫不同的繪圖 API，如 Metal 就是 iOS，Vulkan 是 Android 的繪圖 API，最後把效果顯示到畫面上。
@@ -54,7 +54,7 @@ compilation jank 是長久以來 Flutter 一直存在的問題，因為 Skia 在
 Aiks 其實就是 Skia 反過來，團隊也是蠻會玩梗的
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20117363nKABgq0pxX.png)
+![](images/20117363nKABgq0pxX.png)
 
 
 那麽 Impeller 透過這樣的架構帶來什麼樣的好處呢？首先最大的好處當然是 Contents 現在包含自己要繪畫的指令，就可以讓 GPU 去平行處理每個 Contents 達到效能的優化。另外一個最大也是最有感的好處，就是 Impeller 是可以提前去處理這些編譯過程，在 build 的期間就去完成編譯的動作，減少原先 shader compilation jank 的問題，相信用過的人都很有感，對於複雜畫面的繪製都是有感提升。
@@ -76,11 +76,11 @@ Aiks 其實就是 Skia 反過來，團隊也是蠻會玩梗的
 
 
 MSAA（多重取樣抗鋸齒）是一種抗鋸齒技術，目的是減少鋸齒狀效應。它的工作原理是在每個像素中多次取樣，通常是2、4或8次，並基於這些取樣結果計算出最終的像素顏色。這意味著，對於那些邊緣像素，將考慮更多的信息來確定它們的最終顏色，從而使邊緣看起來更平滑。
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20117363nrCHQIcO9L.jpg)
+![](images/20117363nrCHQIcO9L.jpg)
 
 
 基於這個特性的需要 Impeller 也發展了每個像素點可以儲存不只一種顏色，所以能對混合顏色表現得更好，例如，考慮一束光線從一個光滑的表面反射。該光線可能會被分散，並與其他光線混合，從而在像素中產生多種顏色。有了 MSAA，Impeller 可以確定這些像素中的最佳顏色，使反射看起來更加真實。
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20117363MEGpBDXuWQ.png)
+![](images/20117363MEGpBDXuWQ.png)
 
 
 ### Impeller 的未來展望

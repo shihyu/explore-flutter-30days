@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10336004>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 23 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687cipxd4GaqI.png)
+![](images/20120687cipxd4GaqI.png)
 
 本文為 Debugging with DevTools 系列的第三章，前面談論到了 Flutter Inspector、Performance、CPU Profiler、Memory、Logging，每個工具的細節以及使用方式，搭配實際操作讓大家快速理解，希望讓大家重視 DevTools 的重要性，有興趣的朋友請點擊連結閱讀：
 
@@ -25,10 +25,10 @@
 - 可以用來確定第三方套件是否有發出其他陌生請求，確保安全性
 - 盡可能減少網路請求，因為第一個它花時間，第二個是有盜竊風險
 
-![](https://ithelp.ithome.com.tw/upload/images/20231008/20120687V48EDWYpJj.png)
+![](images/20120687V48EDWYpJj.png)
 
 了解每個請求的消耗時長，不符合期待的話可能就需要進行優化  
-![](https://ithelp.ithome.com.tw/upload/images/20231008/20120687HTHgYWTVlX.png)
+![](images/20120687HTHgYWTVlX.png)
 
 額外補充：手動計算非同步任務的耗時，可運用在對後端與資料庫的操作上，方便測量與檢查
 
@@ -46,10 +46,10 @@ Future<T> measureTime<T>(Future<T> Function() task) async {
 ```
 
 可以針對 `method`、`status`、`type` 進行過濾，以逗點來設置多條件篩選  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206874L01KVX0gV.png)
+![](images/201206874L01KVX0gV.png)
 
 輕鬆瀏覽每個回應，以範例來看就是一個完整的 Json 格式，並且可以直接複製 Json String。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687vZtiKxsoxa.png)
+![](images/20120687vZtiKxsoxa.png)
 
 ## App Size Tool
 
@@ -57,7 +57,7 @@ Future<T> measureTime<T>(Future<T> Function() task) async {
 
 > 提醒：不需要運行 APP 就能使用工具，因為主要是讀取生成的報告 json 檔
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687lPuuRzHU79.png)
+![](images/20120687lPuuRzHU79.png)
 
 ### Command
 
@@ -82,22 +82,22 @@ flutter build appbundle --analyze-size --target-platform=android-arm64 --flavor 
 flutter build ipa --analyze-size --flavor prod --target ./lib/main_prod.dart
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687hgDVUvQPq9.png)
+![](images/20120687hgDVUvQPq9.png)
 
 #### Example - Android
 
 完成後會告知分析報告的路徑(例如：aab-code-size-analysis_01.json)，以及檔案的體積大小  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687NoPaa158Gx.png)
+![](images/20120687NoPaa158Gx.png)
 
 #### Example - iOS
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687AHQgg9cHeH.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687mB7INxv1GH.png)
+![](images/20120687AHQgg9cHeH.png)  
+![](images/20120687mB7INxv1GH.png)
 
 ### Tool - Analysis
 
 點擊 **Import File** 按鈕匯入原有的 APP 分析檔案(副檔名 .json)，接著使用 **Analyze Size** 分析 APP 並顯示可視化的階層架構圖。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687q1m8rLl4EL.png)
+![](images/20120687q1m8rLl4EL.png)
 
 從中可以得知資訊有很多，包括：
 
@@ -106,14 +106,14 @@ flutter build ipa --analyze-size --flavor prod --target ./lib/main_prod.dart
 - 每個元素的大小以及整體佔比，例如：**flutter-assets**、**android-res、flutter(libapp.so/Dart AOT)** 等等
 - 套件相關資訊
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206871ejbOz5uN9.png)
+![](images/201206871ejbOz5uN9.png)
 
 可以輕鬆瀏覽每個目錄、檔案，甚至是程式碼的大小。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687hAk5la2gxq.png)  
-![Tool - Analysis](https://i.imgur.com/SMah5sb.gif)
+![](images/20120687hAk5la2gxq.png)  
+![Tool - Analysis](images/SMah5sb.gif)
 
 以範例來看，iOS 比 Android 大了一些，其中 **flutter_assets** 體積佔比較高，可能是圖片和相關資源使用太多，可以從中進行優化。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687Go8PfbYcZq.png)
+![](images/20120687Go8PfbYcZq.png)
 
 ### Dominator Tree
 
@@ -122,16 +122,16 @@ flutter build ipa --analyze-size --flavor prod --target ./lib/main_prod.dart
 ### Call Graph
 
 瀏覽程式碼和套件的依賴關係，誰使用了誰，可以快速地幫助我們確認。**左邊依賴中間、中間依賴右邊。**  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206871DEivOV9jf.png)
+![](images/201206871DEivOV9jf.png)
 
 ### Tool - Diff
 
 - 兩個版本分析資訊的比較，例如：v1 跟 v8
 - 每個部分、每個檔案都會進行比較，**綠色代表大小增加、紅色代表大小減少**。查看是哪些修改才導致有變動
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687cmx4B2SiNf.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206874gfhMUxG86.png)  
-![Tool - Diff](https://i.imgur.com/e2QQYoZ.gif)
+![](images/20120687cmx4B2SiNf.png)  
+![](images/201206874gfhMUxG86.png)  
+![Tool - Diff](images/e2QQYoZ.gif)
 
 ### 如何優化 APP 大小？
 
@@ -149,10 +149,10 @@ flutter build ipa --analyze-size --flavor prod --target ./lib/main_prod.dart
 #### Android
 
 在 **Google Play Console** 介面，再上傳點擊 **Android vitals** 裡面的 **App size** 分頁，瀏覽 APP 的安裝大小。但這資訊只是差不多，實際會根據設備而有所差異。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687bVw8YNzmZi.png)
+![](images/20120687bVw8YNzmZi.png)
 
 另外，也提供了細節分析，了解資源的大小佔比。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687OOEnpyU9xR.png)
+![](images/20120687OOEnpyU9xR.png)
 
 ------------------------------------------------------------------------
 
@@ -170,8 +170,8 @@ flutter screenshot --type=skia --observatory-url=http://127.0.0.1:63013/WwOC4V-U
 
 1.  首先執行 Flutter App，成功運行後會有一個本地的幀錯 URL，它就是指令上的 `observatory-url`，在 Terminal 使用指令生成一個 skia 快照檔案，例如：flutter_01.skp
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687BSuzktXtNN.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206872Xoz7y5zcv.png)
+![](images/20120687BSuzktXtNN.png)  
+![](images/201206872Xoz7y5zcv.png)
 
 1.  在瀏覽器開啟 <https://debugger.skia.org/> 連結，它是 Skia Debugger 工具，開啟剛剛生成出來的 Skia 快照
 
@@ -180,8 +180,8 @@ flutter screenshot --type=skia --observatory-url=http://127.0.0.1:63013/WwOC4V-U
 從範例來看，可以左側了解畫面的處理細節，是否有使用到裁剪以及 Save 等等相關操作，尤其是 saveLayer 操作，本身對於 Skia 較昂貴，濫用的話可能會直接影響到性能、表現幀數。
 
 我們也能從右邊的列表了解每個操作的次數，經過程式碼與 UI 的優化後，再回來比對，接著瀏覽 Performance View，確認性能是否提升。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687HhlvXu53eo.png)  
-![Skia](https://i.imgur.com/Q156oNh.gif)
+![](images/20120687HhlvXu53eo.png)  
+![Skia](images/Q156oNh.gif)
 
 ## 💡其他技巧
 
@@ -205,8 +205,8 @@ IconDataProperty
 ```
 
 查看 Column 元件，使用了 MultiChildRenderObjectWidget，其中定義了幾個屬性  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206879thgCv0PL7.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687beqXpDrkAs.png)
+![](images/201206879thgCv0PL7.png)  
+![](images/20120687beqXpDrkAs.png)
 
 ### checkerboardOffscreenLayers
 
@@ -217,7 +217,7 @@ IconDataProperty
 checkerboardOffscreenLayers: true,
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687dxB51irX6o.png)
+![](images/20120687dxB51irX6o.png)
 
 ### checkerboardRasterCacheImages
 
@@ -228,7 +228,7 @@ checkerboardOffscreenLayers: true,
 checkerboardRasterCacheImages: true,
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687E1ZpoQLMQz.png)
+![](images/20120687E1ZpoQLMQz.png)
 
 ### debugPaintSizeEnabled
 
@@ -239,7 +239,7 @@ checkerboardRasterCacheImages: true,
 debugPaintSizeEnabled = true,
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206871aLq9X69WC.png)
+![](images/201206871aLq9X69WC.png)
 
 #### 僅繪製指定元件
 
@@ -272,8 +272,8 @@ class RenderShowDebugPaint extends RenderProxyBox {
 }
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687e78UAgNBha.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687xGSc8o2Gx7.png)
+![](images/20120687e78UAgNBha.png)  
+![](images/20120687xGSc8o2Gx7.png)
 
 ## Performance FAQ
 
@@ -281,7 +281,7 @@ Flutter 官方整理了相關的 Debugging 和 Optimizing 內容，有時間的�
 
 > [Flutter Doc](https://docs.flutter.dev/perf/faq)
 
-![](https://ithelp.ithome.com.tw/upload/images/20231008/20120687sntq3hlxp5.png)
+![](images/20120687sntq3hlxp5.png)
 
 ------------------------------------------------------------------------
 

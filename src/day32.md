@@ -96,22 +96,22 @@ Scheme: 定義了當你按下 "Build"、"Test"、"Profile" 等按鈕時會發生
 ```
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/20117363keJZomxb7e.png)
+![](images/20117363keJZomxb7e.png)
 
 
 - 新增 Configuration，把 `Debug`, `Release`, `Profile` 都複製一遍，並且加上我們 Scheme 的名稱作為後綴，如 `Debug` → `Debug-dev`
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/20117363MHR5jl0ufc.png)
+![](images/20117363MHR5jl0ufc.png)
 
 
 - 選擇 Manage Scheme，並雙擊 dev 打開控制面板，把每個項目的 `Build Configuration`，切換到 dev，如下圖二所示 Release → Release-dev。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/20117363qz1Lb7AJ8Y.png)
+![](images/20117363qz1Lb7AJ8Y.png)
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/20117363WGoH4pHppd.png)
+![](images/20117363WGoH4pHppd.png)
 
 
 - 到此為止我們已經完成 iOS Flavor 的相關設定，接下來為了印證設定正確，可以來改看看 App 的 Product name。
@@ -121,22 +121,22 @@ Scheme: 定義了當你按下 "Build"、"Test"、"Profile" 等按鈕時會發生
 - 再到 Info.plist 去修改 `Bundle display name`變成 `$(PRODUCT_NAME)`
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/20117363TyVBO9NAu6.png)
+![](images/20117363TyVBO9NAu6.png)
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/20117363ahssNQelqs.png)
+![](images/20117363ahssNQelqs.png)
 
 
 運行 `flutter run --flavor dev`，就可以發現 App name 已經順利被我們更改成功了！
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/201173630gGITS00XX.png)
+![](images/201173630gGITS00XX.png)
 
 
 - 為了編譯出測試 APP 修改 bundleId 也是不可或缺的。一樣到 `Build Setting`，找到 `PRODUCT_BUNDLE_IDENTIFIER` 改成相應的名稱即可。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230917/20117363OaMxH0Z5yD.png)
+![](images/20117363OaMxH0Z5yD.png)
 
 
 ## Flutter Flavorizr

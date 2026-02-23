@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10329956>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 13 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687eKB4zBtrCH.png)
+![](images/20120687eKB4zBtrCH.png)
 
 Pattern 在每個領域的軟體開發當中都會遇到，有時候大家很常使用但卻沒有實際了解為什麼要這樣設計，他們都是為了解決某件事，讓我們很方便的完成開發。而在開發 Flutter App 時，有幾種 Pattern 是很常遇到跟使用的，例如：**Singleton**、**Factory**、**Builder** 和 **Repository** 等等，這四種也是本文的重點，跟大家講解他們是什麼，以及如何在實際的場景使用，提高效率。
 
@@ -71,7 +71,7 @@ class Car {
 ```
 
 當你撰寫預設 Constructor 時，會跳出錯誤訊息，說明匿名 Constructor 已經被宣告了  
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687MyCSNR5AOF.png)
+![](images/20120687MyCSNR5AOF.png)
 
 - 不需要給予回傳值或泛型參數，提高整體可讀性
 - 可以重新指向到另一個 Constructor，包含預設以及命名構造函數，靈活性高
@@ -117,10 +117,10 @@ class Tesla implements Car {
 ```
 
 當只有重新指向的操作可以是 **const**，這點在使用時請注意。  
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687DBgOu2Ck87.png)
+![](images/20120687DBgOu2Ck87.png)
 
 - 當有多個參數要進行傳遞時，可以使用語法糖協助，只需要給予類別的名稱，確保建構參數都相同即可  
-  ![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687zLKdjJ3RRn.png)
+  ![](images/20120687zLKdjJ3RRn.png)
 
 - 開發時使用 **factory** 的常見場景
 
@@ -202,7 +202,7 @@ class HomeState with _$HomeState {
 }
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687osk2au0RxE.png)
+![](images/20120687osk2au0RxE.png)
 
 Factory Pattern 在很多地方都適合使用，我們在定義專案的 Design System 時也會用到，比如要撰寫自己的 AppText 元件，定義出與 UI 設計相同文字配置，透過 factory constructors 先將文字大小、顏色、長寬先定義好，之後在撰寫 UI 畫面時就會非常方便。
 
@@ -219,11 +219,11 @@ Factory Pattern 在很多地方都適合使用，我們在定義專案的 Design
 
 ### Example - ListView.builder()
 
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687aRvccqTQRF.png)
+![](images/20120687aRvccqTQRF.png)
 
 直接快速從源碼來看，實際上 ListView.builder() 裡的 context 就是 **SliverMultiBoxAdaptorElement**，每個 Item 都有自己的 Element 處理更新。  
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687MXbGY0e2vr.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687vSbKiwHFqJ.png)
+![](images/20120687MXbGY0e2vr.png)  
+![](images/20120687vSbKiwHFqJ.png)
 
 ### Example - StatefulBuilder
 
@@ -278,13 +278,13 @@ Repository 就是保管資料的倉庫，以存取資料的情境，在這裡我
 假設我們需要實作註冊、登入有關用戶身份的相關操作，可能會有個 AuthRepository，它單純負責定義介面，跟直白的來說就是有幾種方式可以操作資料。以這個範例來看有註冊、登入以及 Goolge 登入。給予實作類別使用 AuthRepository 介面
 
 在 Dart 3 改版之後，我們可以更精準的定義 Class，建議使用 `abstract interface class`，符合舊有觀念的 interface。  
-![](https://ithelp.ithome.com.tw/upload/images/20230928/201206873IeY8DpdXF.png)
+![](images/201206873IeY8DpdXF.png)
 
 假設情境是實作有關會員身份有關的功能，這時候可能會創建新的 **AuthRepositoryImpl** 類別 implements **AuthRepository**，需要覆寫設置好的方法。接著在 Logic layer 注入 Repository 實體，就能直接呼叫 `signUp()` 完成工作，邏輯層完全不需要知道 Repository 到底做了什麼事，完整地將職責切分開來。  
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687YMHkhzdBqi.png)
+![](images/20120687YMHkhzdBqi.png)
 
 而當我們要測試的時候就可以創建偽造類別，自定義每個 API 的結果，根據場景需求去撰寫。  
-![](https://ithelp.ithome.com.tw/upload/images/20230928/20120687JNqIsJ7Ozf.png)
+![](images/20120687JNqIsJ7Ozf.png)
 
 假設今天的測試場景為登入 API，登入的用戶名稱正常情況下會包含 “Ba” 兩個字母，因此有了以下的簡易測試範例。首先使用了 MockAuthRepository 實體，透過偽造資料進行測試，驗證邏輯是否正常。這也是為什麼建議 Repository Pattern 和其他職責類別使用 abstract interface 的原因。
 

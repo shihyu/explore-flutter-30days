@@ -34,7 +34,7 @@
 可以直接看官方的錄影截圖直觀感受一下：
 
 
-![](https://user-images.githubusercontent.com/847683/187275009-ddbdf963-ce1d-4e07-ac08-b10f145e8894.gif)
+![](images/187275009-ddbdf963-ce1d-4e07-ac08-b10f145e8894.gif)
 
 
 如果對 Maestro 該如何使用有興趣的小夥伴，可以參考 Yii 寫的文章，有很詳細的介紹。這裡就不重造輪子，直接參考他的文章吧。
@@ -118,10 +118,10 @@ flutter test --update-goldens
 你會發現有兩種截圖的樣式，分別是  **CI tests 和 platform tests** ，被塗黑黑的這種是 CI test 保留原本文字的是 platform test，之所以會分成兩種是因為如果是在你本地跑 golden test 文字就不會受到系統的影響而有所改變，但跑在 CI 機器上的話，可能會有系統預設字體等等的問題，導致你的 widget 測試與原本的不同，但是因為字體而讓測試失敗並不是我們想要的。所以這個貼心的功能就是把文字都用黑色遮起來，讓 CI 是哪種裝置上，都可以通過。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/2011736354hKK1MtcG.png)
+![](images/2011736354hKK1MtcG.png)
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20117363oyBDYJogPF.png)
+![](images/20117363oyBDYJogPF.png)
 
 
 **Step 4：** 在我們完成 `--update-goldens` 之後，生成了正確的 Widget 截圖，接下來就是要驗證在其他 CI 流程上，這些 Widget 都沒有被破壞是正確的。這裡只要按照 flutter test 下去跑就可以，如果只跑 golden test，Alchemist 也有提供相應的指令：

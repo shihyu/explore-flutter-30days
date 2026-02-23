@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10331424>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 15 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20230930/20120687OWotWHTFg3.png)
+![](images/20120687OWotWHTFg3.png)
 
 延續上一篇的內容，本文繼續跟大家分享一些正確觀念，為了就是在開發時可以撰寫出品質好的程式碼，寫的任何一個元件都很重要，它們為何存在，使用的優缺點是什麼，都應該清楚了解。如果是以好習慣寫出來的畫面，當然除了性能表現佳之外，後續需要解決的問題也會變少，是很值得前期重視的投資哦！
 
@@ -26,7 +26,7 @@
 
 > 提醒：可使用 Skia Screenshot 協助我們檢查渲染過程，詳細的說明可閱讀另一篇文章(等待上傳)
 
-![](https://ithelp.ithome.com.tw/upload/images/20230930/20120687bsy5Fi3kM5.png)
+![](images/20120687bsy5Fi3kM5.png)
 
 ### Opacity 操作
 
@@ -40,11 +40,11 @@ Text('Hi!', style: TextStyle(color: Colors.blue.withOpacity(1))),
 
 // Image
 Image.network(
-  'https://storage.googleapis.com/cms-storage-bucket/70760bf1e88b184bb1bc.png',
+  'images/70760bf1e88b184bb1bc.png',
     opacity: _animationController,
 ),
 Image.network(
-  'https://storage.googleapis.com/cms-storage-bucket/70760bf1e88b184bb1bc.png',
+  'images/70760bf1e88b184bb1bc.png',
     opacity: AlwaysStoppedAnimation(_animationController.value),
 ),
 ```
@@ -70,7 +70,7 @@ Container(
 
 - App 元件，設置 `checkerboardOffscreenLayers` 為 true
 - 檢查畫面上的元件是否有使用到 `saveLayer()` 相關操作，有的話會透過棋盤格呈現  
-  ![](https://ithelp.ithome.com.tw/upload/images/20230930/20120687SviWtD2ph8.png)
+  ![](images/20120687SviWtD2ph8.png)
 
 ## 使用 RepaintBoundary 重繪邊界
 
@@ -90,7 +90,7 @@ Container(
 - App 元件，設置 `checkerboardRasterCacheImages` 為 true
 - 瀏覽圖片光柵緩存的情況，檢查有沒有給靜態圖像做緩存，沒有的話會導致每次 build 都重新繪製，以棋盤格呈現。
 - 引擎會自動判斷圖像是否複雜到需要 RepaintBoundry，協助我們作出優化決策  
-  ![](https://ithelp.ithome.com.tw/upload/images/20230930/20120687WlilX8gG4m.png)
+  ![](images/20120687WlilX8gG4m.png)
 
 ## 模糊效果，使用 ImageFilter 代替 BackdropFilter
 
@@ -102,7 +102,7 @@ Container(
 Stack(
   children: [
     Image.asset(
-        'https://storage.googleapis.com/cms-storage-bucket/70760bf1e88b184bb1bc.png',
+        'images/70760bf1e88b184bb1bc.png',
         width: 50,
         height: 50,
     ),
@@ -121,7 +121,7 @@ Container(
     child: ImageFiltered(
         imageFilter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Image.asset(
-            'https://storage.googleapis.com/cms-storage-bucket/70760bf1e88b184bb1bc.png',
+            'images/70760bf1e88b184bb1bc.png',
             width: 50,
             height: 50,
         ),
@@ -244,8 +244,8 @@ void _worker(SendPort sendPort) {
 flutter upgrade
 ```
 
-![Upgrade](https://i.imgur.com/pvCrmP6.gif)  
-![](https://ithelp.ithome.com.tw/upload/images/20230930/201206870deFLmkM5e.png)
+![Upgrade](images/pvCrmP6.gif)  
+![](images/201206870deFLmkM5e.png)
 
 ------------------------------------------------------------------------
 

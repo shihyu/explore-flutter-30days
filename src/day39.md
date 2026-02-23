@@ -61,7 +61,7 @@ void eat();
 Pragma 可能是大家相對陌生一點點的，`@pragma` 是用于向編譯器傳達某些訊息或特定的指令，一般來說在開發 App 的過程中不會去使用到，不過如果你最近有使用到 firebaseMessaging 的話，應該會發現他在設定時，有提醒你要加上這一行 `@pragma('vm:entry-point')`。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230924/20117363kKzj1wmxyX.png)
+![](images/20117363kKzj1wmxyX.png)
 
 
 由於 dart 支援 AOT 的特性， `@pragma('vm:entry-point')` 可以用於指示這個函數是某個 vm 的入口，即使沒有被其他程式呼叫，也必須要保留。像上面 firebaseMessaging 的例子，這裡的 _firebaseMessagingBackgroundHandler 就是給 native 呼叫的入口，所以在編譯時可能會因為沒有被呼叫到而被丟棄。為了要在編譯後也能保留，所以必須加上  `@pragma('vm:entry-point')` 。

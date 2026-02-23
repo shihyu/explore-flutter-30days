@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10335918>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 22 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206877MGFi7mRZQ.png)
+![](images/201206877MGFi7mRZQ.png)
 
 來到了 DevTools 系列的第二章，上一篇我們講解了 Flutter Inspector 與 Performance 用法，使用工具瀏覽 Widget Tree 架構，並了解 UI Thread、Raster Thread 每幀表現，有效幫助我們定位出問題來源。本文延續到重要的 CPU Profiler、Memory 與 Logging，可以知道程式碼與函式的消耗時間，從中思考寫法上是否要改變，再來就是記憶體的使用情況，關乎 APP 運行情況的關鍵數據，透過這些工具去優化產品、改善體驗。如果不知道如何使用或不熟悉的話沒關係，跟著我快速認識並掌握它們！
 
@@ -17,30 +17,30 @@
 - **Total Time** → 執行本身之外還包含其他呼叫的相關方法函式，全部所花費的時間
 - **Self Time** → 執行本身所花費的時間
 - 使用方式：點擊 `Record`，操作 APP 指定流程，點擊 `Stop`，資訊會很快地載入出來  
-  ![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687GntbwFB1m8.png)
+  ![](images/20120687GntbwFB1m8.png)
 
 右上角提供了其他操作，包含 **Filter**、**Display guidelines**、**Expand All**、**Collapse All**。很棒的是還能查看其他 Isolate 的運行狀況，從中間下方的選單挑選。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687UquTE2Lfup.png)
+![](images/20120687UquTE2Lfup.png)
 
 ### Bottom Up
 
 - 顯示表格資訊，從上到下的執行，根據花費時間的多少來排列，可以根據欄位進行排序
 
-![Bottom Up](https://i.imgur.com/inKiJh7.gif)
+![Bottom Up](images/inKiJh7.gif)
 
 ### Call Tree
 
 - 顯示表格資訊，專注於長時間處理的部分
 
 以範例來看，畫面是在執行動畫，所以可以看到相關的處理函式  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687UUSOo3288a.png)
+![](images/20120687UUSOo3288a.png)
 
 ### Method Table
 
 - 瀏覽所有函式的時間佔比，呈現 **percent** 數字
 - 點擊每個函式後還可以看到誰呼叫，以及它呼叫了哪些函式
 
-![Method Table](https://i.imgur.com/azJEfwU.gif)
+![Method Table](images/azJEfwU.gif)
 
 ### CPU Flame Chart
 
@@ -48,22 +48,22 @@
 - 上層呼叫下層函式，而每個項目的寬度代表實際在 Call Stack 上花費的時間多寡
 - 可以使用鍵盤的 WASD 來操作左右以及縮放
 
-![CPU Flame Chart](https://i.imgur.com/rLGLMky.gif)
+![CPU Flame Chart](images/rLGLMky.gif)
 
 搜尋框的旁邊有個幫助按鈕 `?`，說明可以執行的介面操作與顏色意義。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687blkTJ0guMs.png)
+![](images/20120687blkTJ0guMs.png)
 
 ### Profile app start up
 
 - 載入第一幀之前的 CPU 資訊，可以識別 APP 啟動前是否有延遲。四個 Tab 都會同時載入相關數據
 - 使用方式：當 APP 第一時間啟動時開啟 DevTools，並立即到 CPU Profiler 點擊 **Profile app start up**
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687zqqfTs2jHl.png)
+![](images/20120687zqqfTs2jHl.png)
 
 ### Load all CPU samples
 
 包含 Main isolate 和其他 isolates 的資訊，當要查看其他 isolate 的運作狀況時必須點擊，載入相關資料。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687QPtQAEyy8v.png)
+![](images/20120687QPtQAEyy8v.png)
 
 ### CPU sampling rate
 
@@ -72,13 +72,13 @@
 - 在 high 模式下，因為需要更頻繁地處理數據，取得更多資料，可能會引響到效能表現
 
 在 **low** 模式，進行指定的操作路徑錄製，花費 2.2 秒，蒐集到 114 筆數據，平均51筆/秒  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687nRa4eqlHlE.png)
+![](images/20120687nRa4eqlHlE.png)
 
 在 **medium** 模式，進行指定的操作路徑錄製，花費 1.5 秒，蒐集到 177 筆數據，平均118筆/秒  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206875m6GDYsPTa.png)
+![](images/201206875m6GDYsPTa.png)
 
 在 **high** 模式，進行指定的操作路徑錄製，花費 2.6 秒，蒐集到 453 筆數據，平均174筆/秒  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687z2NODODaJm.png)
+![](images/20120687z2NODODaJm.png)
 
 ## Memory
 
@@ -95,11 +95,11 @@
 > 適合 Profile 下使用 Memory 檢測，Debug mode 表現上會有些許差異
 
 顯示熱視圖，可以放大並詳細查看正在處理、運算的內容  
-![Memory](https://i.imgur.com/n2baDQv.gif)
+![Memory](images/n2baDQv.gif)
 
 ### Legend Board
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687eF8ctCxCxh.png)
+![](images/20120687eF8ctCxCxh.png)
 
 #### Events
 
@@ -115,33 +115,33 @@
 - **Raster Picture** → Flutter Engine 光柵緩存層裡圖片的記憶體大小
 
 點擊虛線就會顯示指定時間點的記憶體資訊，包含裝置的紀錄時間。另外，如果剛好 Dart 有執行 GC 處理，就會多一個藍色點點。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687Nv4bDiuQHJ.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687EinzlM8QPZ.png)
+![](images/20120687Nv4bDiuQHJ.png)  
+![](images/20120687EinzlM8QPZ.png)
 
 ### Time Range
 
 顯示時間區段內的資料。點擊下拉式選單，可以控制圖表上顯示的時間區段，如果時間越長顯示的數據就會越多，可能就會讓操作有點遲緩。
 
-![Time Range](https://i.imgur.com/1zdjWsv.gif)
+![Time Range](images/1zdjWsv.gif)
 
 ### GC Manually
 
 在 DevTools 支援手動 Garbage Collecting，即時釋放記憶體資源。  
-![GC Manually](https://i.imgur.com/JbZCIan.gif)
+![GC Manually](images/JbZCIan.gif)
 
 ### Profile Memory
 
 如果發現有未使用的物件，那這些實體就是內存洩漏的原因，如果超過設備的可用記憶體容量，APP 就會崩潰。我們可以從表格觀察物件的 **Instances count**、**Total Size**、**Dart Heap Size** 了解記憶體使用狀況，透過欄位幫助排序，更快地找出原因。  
-![Profile Memory](https://i.imgur.com/f7a8jSJ.gif)
+![Profile Memory](images/f7a8jSJ.gif)
 
 可以導出 CSV 報告文件  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/201206872X4Il9qNgl.png)
+![](images/201206872X4Il9qNgl.png)
 
 ### Diff Snapshots
 
 根據當前的 APP 狀況進行快照，擷取所有記憶體使用資訊。可以搜集兩個場景的狀態，使用 Diff 進行比對，可以看到 Instance 數量和記憶體大小的變化，有差異的話前面會有正負號。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687GfMMiDoQVX.png)  
-![Diff Snapshots](https://i.imgur.com/yLo3wNK.gif)
+![](images/20120687GfMMiDoQVX.png)  
+![Diff Snapshots](images/yLo3wNK.gif)
 
 ### Trace Instances
 
@@ -155,7 +155,7 @@
 4.  查看 **Instance** 變化與詳細資訊
 
 以下圖示官方提供。實際使用時 DevTools 會崩潰，無法附上實際 APP 運作狀況，先回報官方等修復。  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687rZ5PX0gHWS.png)
+![](images/20120687rZ5PX0gHWS.png)
 
 ### 幾個記憶體優化的習慣
 
@@ -170,15 +170,15 @@
 - 對物件延遲創建、初始化，在需要時才存在
 - 使用 `factory constructor`、`getter`、`late initializer`
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687FhykQzstNY.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687GJckRb2TWi.png)
+![](images/20120687FhykQzstNY.png)  
+![](images/20120687GJckRb2TWi.png)
 
 #### 3. Discard resources
 
 - 確保在 `dispose()` 裡有準確釋放物件、資源
 - 可以宣告物件為 **nullable**，在 `dispose()` 後給予 null，標示為可以被 GC
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687lygddQbLBV.png)
+![](images/20120687lygddQbLBV.png)
 
 #### 4. Use const constructor
 
@@ -192,14 +192,14 @@
 - 查看 Dart 和 Flutter 資訊，從 `Kind` 藍為辨識，例如：**Dart GC**、**Flutter Framework**、**Image**，還有我們的自定義的訊息
 - 善用搜尋框，即時反應、速度非常快，可以根據類型、關鍵字輸入
 
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687JmdPL7Yxqe.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687UrvC8xY1tn.png)  
-![Logging](https://i.imgur.com/9thNFOU.gif)
+![](images/20120687JmdPL7Yxqe.png)  
+![](images/20120687UrvC8xY1tn.png)  
+![Logging](images/9thNFOU.gif)
 
 - 根據 Kind 種類進行過濾，使用 `k` 代表，以逗點來設置多個關鍵字
 
 以下範例查看 Framework 相關資訊：  
-![](https://ithelp.ithome.com.tw/upload/images/20231007/20120687oX2QriQqoF.png)
+![](images/20120687oX2QriQqoF.png)
 
 ### Flutter Log Printer
 

@@ -5,7 +5,7 @@
 終於撐到第三十天，今天來講軟一點的文章。總結一下自己在這三十天內的心得。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231015/20117363I3WojStYSS.png)
+![](images/20117363I3WojStYSS.png)
 
 
 ### 背景

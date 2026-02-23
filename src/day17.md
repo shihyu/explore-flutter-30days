@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10332717>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 17 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687xcOrJNKIlp.png)
+![](images/20120687xcOrJNKIlp.png)
 
 在 Flutter，狀態管理對於專案來說很重要，不是說一定要用，只是當開發者還不熟悉 Flutter 原理以及刷新觀念，很容易會造成不當開發的效能問題。狀態管理的職責就是讓開發者很輕鬆、容易地去管理狀態，並完成精準更新，省時省力且提升效能。Flutter 本身有提供一些開箱即用的功能**InheritedWidget**、**ChangeNotifier**、**ValueListenableBuilder** 等等，已經可以透過它們實現一個 APP，但是這些 API 總有可改進可加強的部分。
 
@@ -20,7 +20,7 @@ Riverpod 為 **Provider**、**freezed** 原作者 **Remi Rousselet** 所製作�
 
 ------------------------------------------------------------------------
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687gqjdeQctPQ.png)
+![](images/20120687gqjdeQctPQ.png)
 
 Riverpod **is a reactive caching and data-binding framework**。在官網第一眼看到的說明，有發現沒有 State Management 嗎，其實它本身不是狀態管理框架，而是進行響應式緩存以及數據綁定，不是以管理狀態為主軸，但是它有這個能力。這是 “鳥” 與 “鴿” 的問題，當大家說 “狀態管理”（鳥）時，有些人想到的是 “雞”，而 Riverpod 其實是 “鴿子”。Riverpod 可以作為狀態管理者，但很明顯地，它可以做的事更多。大家很常將它認定為狀態管理其實作者也無奈呀。
 
@@ -67,14 +67,14 @@ Riverpod 能夠幫忙處理大部分邏輯，也可以輕鬆執行執行網絡�
   - `overrides` → 在當前 ProviderScope 裡複寫原有的 Provider，替代原有的數據
   - `child` → 包裹元件、Widget Tree
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687pzhBnscjV9.png)
+![](images/20120687pzhBnscjV9.png)
 
 ### UncontrolledProviderScope
 
 - 通常一樣在 Widget Tree 根部使用，替代 ProviderScope，將 ProviderContainer 暴露給 Widget Tree，讓我們可以自行創建和直接操作它，做一些處理之後再設置給 ProviderScope
 - 本身是 InheritedWidget，大部分 API 操作都會經過它，例如：`ref.watch()`、`ref.read()`、`Consumer`，透過 context 在 Element Tree 上取得 ProviderContainer 內容
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687aZyJWwkDPq.png)
+![](images/20120687aZyJWwkDPq.png)
 
 ### ProviderContainer
 
@@ -82,8 +82,8 @@ Riverpod 能夠幫忙處理大部分邏輯，也可以輕鬆執行執行網絡�
 - 正常開發中不會去直接面對它，在 ProviderScope 裡會自然被創建，當然也可以在 UncontrolledProviderScope 使用自己的 ProviderContainer
 
 一般可以使用 `ProviderScope.containerOf(context, listen = xx)` 靜態方法拿到 **ProviderContainer**，不同的是 listen 的值。如果沒有監聽需求，`listen` 參數為 false，接著使用 `getElementForInheritedWidgetOfExactType()` 方法，這樣在數據發生變化時元件就不會觸發 `didChangeDependencies()`，避免Widget執行不必要的重建。過程跟我們熟悉的 InheritedWidget 操作相同，需要監聽的話就會依賴 UncontrolledProviderScope，等待通知。  
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687OGlEcDzREF.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687vfYqWrT7KV.png)
+![](images/20120687OGlEcDzREF.png)  
+![](images/20120687vfYqWrT7KV.png)
 
 ### Consumer
 
@@ -91,33 +91,33 @@ Riverpod 能夠幫忙處理大部分邏輯，也可以輕鬆執行執行網絡�
 - 繼承 **ConsumerWidget**，需要透過它取得 WidgetRef
 - `builder` → 一個 **ConsumerBuilder** typedef，提供 BuildContext、WidgetRef、Widget 三個參數，可以透過 WidgetRef 執行 `ref.read()`、`ref.watch()` 等 API，執行對 Provider 的操作
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687fbF5hf6gnK.png)
+![](images/20120687fbF5hf6gnK.png)
 
 ### ConsumerWidget
 
 - 類似 Flutter 擁有的 StatelessWidget，沒有狀態也無法執行 `setState()`，都是透過 WidgetRef 進行 Provider 與 狀態的操作，在 `build()` 方法會提供
 - 繼承 **ConsumerStatefulWidget** 的抽象類別，將一些 API 方法隱藏起來，只暴露了 `build()` 給外部使用
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687MdPJpIfpYp.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231002/201206870CjhGckksS.png)
+![](images/20120687MdPJpIfpYp.png)  
+![](images/201206870CjhGckksS.png)
 
 ### ConsumerStatefulWidget
 
 實際上就是 Flutter 擁有的 StatefulWidget，只是一個繼承它的抽象類別，跟正常的用法都一樣。搭配 **ConsumerState**，只是 State 多了 WidgetRef 物件可以使用，一樣所有的操作都需要透過它進行
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/201206874BM7jp7cLV.png)  
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687amKSEqta8e.png)
+![](images/201206874BM7jp7cLV.png)  
+![](images/20120687amKSEqta8e.png)
 
 ### WidgetRef
 
 - 一個允許元件跟 Provider 互動的物件，透過它存取資料、執行任務處理，所有的狀態管理操作都需要經過 WidgetRef
 - 抽象類別，提供許多常用的互動 API，例如：`exists()`、`read()`、`watch()`、`listen()`、`listenManual()`、`refresh()`、`invalidate()`，有經驗的朋友們應該對他們很熟悉吧。實際在使用他們的時候，內部還是使用了 `context`，因為前面提到 Tree Root 使用 **InheritedWidget**，便於在實作時從 **Element Tree** 取得指定 Provider，讓我們高效存取 **ProviderContainer**。
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/201206871Bxl79KLaB.png)
+![](images/201206871Bxl79KLaB.png)
 
 - WidgetRef 本身其實也是 **BuildContext**，內部都是透過 context 轉型，讓開發者可以直接使用操作 API。對於 ConsumerWidget 和 ConsumerStatefulWidget 來說 BuildContext 就是 **ConsumerStatefulElement**，API 細節都在這裡面
 
-![](https://ithelp.ithome.com.tw/upload/images/20231002/20120687JQQfiI4kXU.png)
+![](images/20120687JQQfiI4kXU.png)
 
 以下為 API 簡易說明：
 
@@ -158,7 +158,7 @@ Riverpod 能夠幫忙處理大部分邏輯，也可以輕鬆執行執行網絡�
 1.  首先檢查 `maintainState` 屬性，這部分屬於舊版寫法，false 代表不保存狀態
 2.  檢查有沒有監聽者，可能是元件或是其他 Provider
 3.  現在都是使用 keepAlive 來判斷是否持續存活，如果沒有使用的話代表不保存狀態  
-    ![](https://ithelp.ithome.com.tw/upload/images/20231002/201206870KMs9SSYjM.png)
+    ![](images/201206870KMs9SSYjM.png)
 
 > 之後可以在開一篇文章，我們來探討細部 API 背後所做的一舉一動，應該蠻有趣的
 

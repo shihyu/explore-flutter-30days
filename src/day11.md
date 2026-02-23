@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10328634>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 11 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20120687dqIqpEIv81.png)
+![](images/20120687dqIqpEIv81.png)
 
 在 Flutter 中，動畫在大部分開發情境下不太常使用到，很多產品都以功能為導向，有時候有趣的體驗或是酷炫的效果都會被忽略甚至是排在後面，視為往後優化的部分，所以大部分實際遇到需要動畫的情況也不多，就我了解，大部分開發者除了自身興趣外應該都對它沒有很熟悉。所以藉這個機會跟大家分享一些撰寫動畫的重點，也包含一些實作經驗與範例，希望能讓你更熟悉它。
 
@@ -78,7 +78,7 @@
 | AnimatedPositioned            | 位置動畫                                   |
 | AnimatedPositionedDirectional | 位置方向動畫                               |
 
-![Implicit Animation](https://i.imgur.com/xUeSG6v.gif)
+![Implicit Animation](images/xUeSG6v.gif)
 
 ## 動畫控制器 (AnimationController)
 
@@ -184,7 +184,7 @@ class TypingTween extends Tween<String> {
 }
 ```
 
-![Custom Tween](https://i.imgur.com/6T6p8Aw.gif)
+![Custom Tween](images/6T6p8Aw.gif)
 
 ## Curve
 
@@ -226,15 +226,15 @@ Animation animation2 = CurvedAnimation(
 
 > 再提醒一次，切記盡量不要使用 `addListener()` 和 `setState()` 進行動畫刷新，尤其是擁有一個 Long widget tree，會降低 APP 性能
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20120687cn2Wjhz4dO.png)  
-![AnimatedBuilder](https://i.imgur.com/Au4l4T2.gif)
+![](images/20120687cn2Wjhz4dO.png)  
+![AnimatedBuilder](images/Au4l4T2.gif)
 
 ## AnimatedWidget(Custom Animation Widget)
 
 - 如果 `build()` 的 Widget Tree 變得腫大且難閱讀時，可以將動畫部分獨立出來一個新的 Widget。這時候很適合使用自定義的 AnimatedWidget，將 AnimatedBuilder 包成 Widget，除了可讀性高之外，以後也可以複用，不需要重寫相同效果，可以實作一個自己的動畫元件集合
 - 屬於顯示動畫，需要 `Listenable` 作為參數，AnimationController、Animation 都是它的子類，根據命名規則，通常會以 **xxxTransition** 的命名方式
 - 建議暴露一個 `child` 參數作為性能優化，可以提前創建不被影響  
-  ![](https://ithelp.ithome.com.tw/upload/images/20230926/20120687KSs081QIvA.png)
+  ![](images/20120687KSs081QIvA.png)
 
 ## TweenAnimationBuilder
 
@@ -265,14 +265,14 @@ TweenAnimationBuilder(
 )
 ```
 
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20120687TwsxceO4Yt.png)
+![](images/20120687TwsxceO4Yt.png)
 
 ------------------------------------------------------------------------
 
 ## 動畫的選擇
 
 以下是在實際開發場景中，我們如何針對動畫的需求條件來決定要使用哪種方式來實現。(此圖參考 Emily Fortura 製作中文版本)  
-![](https://ithelp.ithome.com.tw/upload/images/20230926/20120687qi5B1fU2vc.png)
+![](images/20120687qi5B1fU2vc.png)
 
 ## 補充
 
@@ -288,7 +288,7 @@ TweenAnimationBuilder(
   3.  Transform
 - 觀察動畫，歸納出我們看到的效果，例如：重疊、變小、位移、更換元件，分解之後再接著一步一步實作它們
 - 了解三角函數對畫東西、做動畫有幫助。例如：當數值一下負一下正，數值來回移動，可以判斷為三角函數的 `sin(value)`，數值越長頻率越高，越小波形越平緩  
-  ![](https://ithelp.ithome.com.tw/upload/images/20230926/20120687LIQZ8xNSHN.png)
+  ![](images/20120687LIQZ8xNSHN.png)
 
 ### 撰寫有關時間的測試
 

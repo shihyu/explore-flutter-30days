@@ -6,7 +6,7 @@ Hi 各位 it 幫的朋友們！我是 Dorara，目前任職於 KryptoGO ，負�
 
 
 開篇先來聊聊 Flutter 以外的事。
-![](https://ithelp.ithome.com.tw/upload/images/20230916/201173634qiJHVnW2s.png)
+![](images/201173634qiJHVnW2s.png)
 
 
 在工作了 3~5 年後，基本技能已經得到完善，在專業領域上擁有獨立作業與成長的能力，那接下來呢？如何自我突破一直是人生最大的課題，下面的文章是我做為 Senior 工程師路上的求道者，與大家分享我的思考，希望能達到拋磚引玉的效果，讓更多人一起攻克這些難題。

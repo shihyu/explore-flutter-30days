@@ -26,7 +26,7 @@ TDD 的過程包括三個步驟：
 最後，重構這個代碼以改善其設計。這可能意味著提取重複的代碼、簡化複雜的邏輯或者改進代碼的可讀性等等。完成重構之後，再次運行測試以確保這個功能仍然正常運作。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231005/20117363CyZxFWdbVu.png)
+![](images/20117363CyZxFWdbVu.png)
 
 
 接下來就根據上面的三步驟，來用實際的程式碼舉例給大家看：
@@ -150,7 +150,7 @@ expect(reslut2, 2.7)
 在測試驅動開發（TDD）中，Mocking 是用於測試代碼的一種技術，它可以模擬尚未存在的物件或組件。本文將介紹幾種常見的 Mocking 技術，包括 Dummy、Stub、Spy、Mock 和 Fake。這些技術可以幫助開發人員更好地進行 TDD，以確保開發的代碼符合所需求並具有高質量。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231005/20117363JAsrY3XAUM.png)
+![](images/20117363JAsrY3XAUM.png)
 
 
 ```jsx

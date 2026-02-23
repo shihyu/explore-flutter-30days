@@ -30,11 +30,11 @@ runApp(const MyApp());
 或是在 widget inspector 打開
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231012/20117363rA5bczfrIg.png)
+![](images/20117363rA5bczfrIg.png)
 
 
 打開後就能看到彩虹邊框的效果：
-![](https://ithelp.ithome.com.tw/upload/images/20231012/20117363IZCcHN5H13.png)
+![](images/20117363IZCcHN5H13.png)
 
 
 接下來就可以觀察 App 裡面有哪裡會被重複繪製，我們接下來可以看一個例子：
@@ -140,7 +140,7 @@ return false;
 
 
 我們在 MyPainter 被重繪時，印出 paint ，接下來滑動中間的 `SingleChildScrollView`，就會注意到 paint 一直被打印出來，顯示我們的 widget 一直不斷被重繪。
-![](https://ithelp.ithome.com.tw/upload/images/20231012/20117363taZ1Vanc3S.png)
+![](images/20117363taZ1Vanc3S.png)
 
 
 接下來掏出秘密武器 `RepaintBoundary`，再來看看會是什麼效果：
@@ -161,7 +161,7 @@ height: 50,
 
 
 可以看到重新繪製的情形就消失了，這會大大的提升你的畫面性能
-![](https://ithelp.ithome.com.tw/upload/images/20231012/20117363j0kn5HX1oJ.png)
+![](images/20117363j0kn5HX1oJ.png)
 
 
 看完效果以後，結合一開始說的 Layer Tree 的概念，你大概就可以猜到，`RepaintBundary` 他的作用在於幫助這個 Widget 建立自己獨立的 Layer。獨立出來以後就不會受到外部的影響，這部分可以直接查看 `RepaintBundary` 的 `RenderObject` ： **RenderRepaintBundary**，他會把 isRepaintBoundary 設置為 true，建立出自己的 Render 屏障從而不再往上尋找需要重新繪製的對象。

@@ -4,7 +4,7 @@
 - 原文連結：<https://ithelp.ithome.com.tw/articles/10334626>
 - 系列標記：探索 Flutter 由裡到外，三十天帶你前往進階系列 第 20 篇
 
-![](https://ithelp.ithome.com.tw/upload/images/20231005/20120687ljLfmVOv4I.png)
+![](images/20120687ljLfmVOv4I.png)
 
 Riverpod 是什麼？相信大家都已經有初步了解了，甚至大家都已經運用在自己的專案了對吧？它本身的使用方式很多樣，是個很靈活的框架，但在很方便開發的同時，也很容易造成多成員開發方式不同的問題，所以需要有規範去執行，不管是個人還是團隊都一樣，如果本身對專案與程式碼品質有要求的話，相信大家都是對自己很有要求的開發者。
 
@@ -162,7 +162,7 @@ Widget build(BuildContext context) {
 }
 ```
 
-![NotifierProvider](https://i.imgur.com/gJG2Skm.gif)
+![NotifierProvider](images/gJG2Skm.gif)
 
 如果要前面的跟 Provider 一樣直接取得 User 呢？就可以把 Notifier 當作 Controller，透過裡面的 `getUser()` 直接取得資料。當然取得後 **userProvider** 裡的狀態也會被刷新。
 
@@ -230,7 +230,7 @@ ref.watch(userProvider).when(
 )
 ```
 
-![AsyncNotifierProvider](https://i.imgur.com/gJG2Skm.gif)
+![AsyncNotifierProvider](images/gJG2Skm.gif)
 
 跟前面一樣，那 AsyncNotifierProvider 直接觸發非同步任務的方式呢？第一種方式透過 future，如果是第一次存取 Provider，就會初始化執行 `build()`，裡面會請求資料並緩存，而我們也可以拿到新的狀態回傳值。
 
@@ -279,7 +279,7 @@ final hasInternetStreamProvider = StreamProvider.autoDispose<bool>((ref) async* 
 ```
 
 完成 UI 畫面根據網路狀態反應的需求  
-![](https://ithelp.ithome.com.tw/upload/images/20231005/20120687g0dttbsKgJ.png)
+![](images/20120687g0dttbsKgJ.png)
 
 ``` dart
 @override
@@ -346,7 +346,7 @@ final hasInternetStreamProvider = StreamProvider.autoDispose<bool>((ref) async* 
 ```
 
 UI 的寫法都一樣，根據狀態顯示元件  
-![](https://ithelp.ithome.com.tw/upload/images/20231005/20120687tUOarnT7W0.png)
+![](images/20120687tUOarnT7W0.png)
 
 ### NotifierProvider
 

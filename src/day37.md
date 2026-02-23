@@ -424,7 +424,7 @@ Clean Architecture 中的每一層都有其獨立的職責和功能。這些層�
 - 介面層(Interface Layer)
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230922/201173636UN3TtcTAM.png)
+![](images/201173636UN3TtcTAM.png)
 
 
 ### 實體層(Entity Layer)

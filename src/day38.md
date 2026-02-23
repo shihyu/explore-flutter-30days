@@ -14,7 +14,7 @@
 一樣先開始介紹先擺上最常見的這張圈圈圖，理解 Flutter 的功能與 Clean Architecture 之間的對應關係。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230923/20117363akWpiUEhMM.png)
+![](images/20117363akWpiUEhMM.png)
 
 
 - Entities → Models

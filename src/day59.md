@@ -11,7 +11,7 @@
 有興趣可以看看 Flutter 初次露出的珍貴影像：
 
 
-[![](https://img.youtube.com/vi/PnIWl33YMwA/0.jpg)](https://www.youtube.com/watch?v=PnIWl33YMwA)
+[![](images/0.jpg)](https://www.youtube.com/watch?v=PnIWl33YMwA)
 
 
 Google Fuchsia 本來的立意就是想打造跨平台的 OS，所以 Flutter 這些得天獨厚的條件都要感謝 Fuchsia 。
@@ -63,7 +63,7 @@ Flutter 的架構可以想像成一座由下至上建造的大樓，每一層都
 每個層都不是單一的結構，而是由一系列獨立的庫組成，這些庫只依賴於它們下面的層的功能。這樣的設計讓第三方開發者能夠輕鬆地添加擴展到 Flutter SDK，並且這些層的結構使得每個層都不具有對下層的特權訪問，每個層只能使用由下層公開的 API。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231014/201173637GcGwmCORl.png)
+![](images/201173637GcGwmCORl.png)
 
 
 ## Rendering and layout
@@ -114,7 +114,7 @@ Container(
 color: Colors.blue,
 child: Row(
 children: [
-Image.network('https://www.example.com/1.png'),
+Image.network('images/1.png'),
 const Text('A'),
 ],
 ),
@@ -150,7 +150,7 @@ current = ColoredBox(color: color!, child: current);
 以圖片來看就是像下面這樣：
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231014/20117363zWqeYiGqKb.png)
+![](images/20117363zWqeYiGqKb.png)
 
 
 接下來就到繪製的步驟了：**佈局和渲染**的過程主要涉及以下幾個步驟：
@@ -163,13 +163,13 @@ current = ColoredBox(color: color!, child: current);
 - **繪製**：`RenderObject` 定義了繪製的抽象模型，例如 `RenderParagraph` 用於渲染文本，`RenderImage` 用於渲染圖像，而 `RenderTransform` 用於在繪製其子元素之前應用變換。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231014/20117363sSzTCvhkov.png)
+![](images/20117363sSzTCvhkov.png)
 
 
 更深入的講解可以看 Flutter 的官方頻道：
 
 
-[![](https://img.youtube.com/vi/996ZgFRENMs/0.jpg)](https://www.youtube.com/watch?v=996ZgFRENMs)
+[![](images/0.jpg)](https://www.youtube.com/watch?v=996ZgFRENMs)
 
 
 ## Render 場景
@@ -202,7 +202,7 @@ Constraint 由父對象通過調用其子對象的 layout 方法向下傳遞。
 因此佈局期間，每個渲染對象最多被訪問兩次：一次是在樹向下的過程中，另一次是在樹向上的過程中。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20231014/20117363VJToCHG8ca.png)
+![](images/20117363VJToCHG8ca.png)
 
 
 - **immutable Widget：**

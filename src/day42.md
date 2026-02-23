@@ -11,7 +11,7 @@ GLSL 是一種用於在 OpenGL 和 OpenGL ES 中編程著色器的高級著色�
 在 Flutter 的工作中，通常會把要繪製到畫面上的方法分成兩種：Widget 與 Canvas ，這兩者都能協助我們在螢幕上呈現畫面的效果，Widget 是透過 RenderObject 來描述要如何繪製到畫面上，而 Canvas 則是透過操作 Painter 直接告知畫面要如何繪製，顯而易見的 Widget 是透過 RenderObject 轉譯過後的內容，效能上肯定不比直接繪製的好，所以一般來說如果要繪製更複雜的動畫效果，我們同常會使用 Canvas 來操作，如果大家對 Canvas 有興趣，之後也能做一期專門的解說。
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230927/20117363aDPGNsacu0.png)
+![](images/20117363aDPGNsacu0.png)
 
 
 而 Shader 就是在操作 Canvas 的過程中，幫助我們達到更客製化的渲染效果。如最簡單、常見的 `LinearGradient`，其中 createShader 其實就是幫助我們透過 API 的方法去建立 shader 。
@@ -217,7 +217,7 @@ return true;
 在我們設定好之後，就可以把專案跑起來看看啦！是一個完美的藍色呢！
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230927/20117363H0bVY8I8Df.png)
+![](images/20117363H0bVY8I8Df.png)
 
 
 **正規化螢幕解析度**：打鐵趁熱，由於我們的設備可能是各種大小的窗口，但是在 shader 的世界中我們希望把他對應成 0~1 會更有利於我們後續的所有操作。為了把各式各樣的視窗大小對應成 0~1 ，我們需要把窗口的 uSize 也傳進去給 shader，並透過 Flutter 提供的 runtime_effect。透過
@@ -349,7 +349,7 @@ FragColor = mix(uColor1, uColor2, uv.x);
 hot reload 就能看到我們的最終成果啦～ 恭喜你已經自己完成用 shader 製作 LinearGradient 的整個流程！是不是很有成就感呀！
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230927/20117363IZD0D3nKXc.png)
+![](images/20117363IZD0D3nKXc.png)
 
 
 ### 總結
@@ -358,4 +358,4 @@ hot reload 就能看到我們的最終成果啦～ 恭喜你已經自己完成�
 使用 shaders 在 Flutter 中可以開啟全新的視覺效果之門。通過學習和實驗 GLSL 語言，你可以為你的 Flutter 應用程序打造獨特和令人印象深刻的動畫和特效。希望本篇文章可以為你提供一個良好的起點，開始你的 shader 旅程！（或是當作有趣的知識看看也很不錯呀 ），其實 shader 還能做到更不可思議的渲染，但是礙於長度與難度問題，我就只在這裡分享幾個案例（發現 gif 傳不上來，不然這些都是會動的哦！），詳細的解說未來有機會再詳細分享摟！
 
 
-![](https://ithelp.ithome.com.tw/upload/images/20230927/20117363DXyOq0zK8T.png)![](https://ithelp.ithome.com.tw/upload/images/20230927/20117363mVSK0pRMLy.png)
+![](images/20117363DXyOq0zK8T.png)![](images/20117363mVSK0pRMLy.png)
